@@ -7,4 +7,7 @@ Pomodoro Technique timer for macOS with Touch Bar support
 :white_check_mark: Touch Bar support\
 :white_check_mark: Sandboxed with no entitlements
 
+![travis-ci](https://api.travis-ci.org/ivoronin/TomatoBar.svg?branch=master)
+![HitCount](http://hits.dwyl.io/ivoronin/TomatoBar.svg)
+
 Download: [Tomato.Bar.1.0.0.dmg](https://github.com/ivoronin/TomatoBar/releases/download/v1.0.0/Tomato.Bar.1.0.0.dmg)
