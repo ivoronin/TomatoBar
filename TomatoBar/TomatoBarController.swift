@@ -45,6 +45,7 @@ public class TomatoBarController: NSViewController {
 
         /* Initialize status bar */
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem?.button?.alignment = .right
         statusBarButton?.image = NSImage(named: NSImage.Name("BarIcon"))
         statusBarButton?.imagePosition = .imageOnly
         statusItem?.menu = statusMenu
@@ -70,6 +71,7 @@ public class TomatoBarController: NSViewController {
         touchBarButton.imagePosition = .noImage
         statusBarButton?.imagePosition = .imageLeft
         swap(&startMenuItem.isHidden, &stopMenuItem.isHidden)
+        statusItem?.length = 70
         timeLeft = intervalLengthSeconds
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in self.tick() }
         updateViews()
@@ -82,6 +84,7 @@ public class TomatoBarController: NSViewController {
         touchBarButton.imagePosition = .imageOnly
         statusBarButton?.imagePosition = .imageOnly
         swap(&startMenuItem.isHidden, &stopMenuItem.isHidden)
+        statusItem?.length = NSStatusItem.variableLength
     }
 
     /** Called every second by timer */

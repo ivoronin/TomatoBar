@@ -58,7 +58,7 @@
                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mRg-nO-wpt">
                     <rect key="frame" x="157" y="20" width="15" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                    <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="1" maxValue="120" doubleValue="1" id="Kw5-V1-ogF"/>
+                    <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="1" maxValue="99" doubleValue="1" id="Kw5-V1-ogF"/>
                     <connections>
                         <binding destination="zu7-7u-g3N" name="value" keyPath="values.intervalLength" id="Ttw-8a-Pz4"/>
                     </connections>
@@ -105,9 +105,9 @@
                 <touchBarItem identifier="tomatoBarItem" id="XoL-nZ-4Ed">
                     <viewController key="viewController" id="fef-6B-Es1">
                         <button key="view" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Af7-RJ-eH8">
-                            <rect key="frame" x="0.0" y="0.0" width="144" height="41"/>
+                            <rect key="frame" x="0.0" y="0.0" width="144" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <buttonCell key="cell" type="push" bezelStyle="rounded" image="BarIcon" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EsI-fR-3ck">
+                            <buttonCell key="cell" type="push" bezelStyle="rounded" image="BarIcon" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EsI-fR-3ck">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" usesAppearanceFont="YES"/>
                             </buttonCell>
