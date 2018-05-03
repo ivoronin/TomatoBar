@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaDFRPlugin" version="14019"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="the Touch Bar" minToolsVersion="8.1" minSystemVersion="10.12.2" requiredIntegratedClassName="NSTouchBar"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+            <connections>
+                <outlet property="delegate" destination="xIK-CL-wQU" id="vx0-YW-fkL"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customObject id="xIK-CL-wQU" customClass="AppDelegate" customModule="Tomato_Bar" customModuleProvider="target"/>
+        <customView id="npz-J1-m5y" userLabel="Settings View">
+            <rect key="frame" x="0.0" y="0.0" width="180" height="41"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+            <userGuides>
+                <userLayoutGuide location="155" affinity="minX"/>
+            </userGuides>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ld3-Mf-rpZ">
+                    <rect key="frame" x="20" y="23" width="50" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Interval" id="zUO-AB-qgM">
+                        <font key="font" metaFont="menuBar"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FWj-30-Cso">
+                    <rect key="frame" x="20" y="0.0" width="152" height="16"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Sound" bezelStyle="regularSquare" imagePosition="right" state="on" inset="2" id="tqk-pP-cR1">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="menuBar"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.isSoundEnabled" id="Zut-wY-Lk7"/>
+                    </connections>
+                </button>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DCo-pq-j0c">
+                    <rect key="frame" x="103" y="22" width="44" height="19"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" bezelStyle="round" id="QYF-zW-W2p">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.intervalLength" id="O4W-Rt-TsO"/>
+                    </connections>
+                </textField>
+                <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mRg-nO-wpt">
+                    <rect key="frame" x="157" y="20" width="15" height="22"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="1" maxValue="120" doubleValue="1" id="Kw5-V1-ogF"/>
+                    <connections>
+                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.intervalLength" id="Ttw-8a-Pz4"/>
+                    </connections>
+                </stepper>
+            </subviews>
+            <point key="canvasLocation" x="7" y="-85"/>
+        </customView>
+        <menu id="bCg-Po-li9">
+            <items>
+                <menuItem title="Start" keyEquivalent="s" id="HpR-HB-ygX">
+                    <connections>
+                        <action selector="startStopAction:" target="fBA-S8-bL1" id="Dvb-Nl-eNQ"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Stop" hidden="YES" keyEquivalent="s" id="6US-ej-bXN">
+                    <connections>
+                        <action selector="startStopAction:" target="fBA-S8-bL1" id="zv8-xF-noR"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="323-fL-fN5"/>
+                <menuItem title="Settings" id="lbH-cB-d4x">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <outlet property="view" destination="npz-J1-m5y" id="1nh-c4-V52"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="6tm-Ru-NVD"/>
+                <menuItem title="About Tomato Bar" id="exD-fT-9pp">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="orderFrontStandardAboutPanel:" target="-1" id="xFK-nj-m1G"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Quit" keyEquivalent="q" id="bdF-Dy-7W8">
+                    <connections>
+                        <action selector="stop:" target="-1" id="EgY-O2-ec1"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="7" y="110.5"/>
+        </menu>
+        <touchBar id="xeH-6m-II7">
+            <touchBarItems>
+                <touchBarItem identifier="tomatoBarItem" id="XoL-nZ-4Ed">
+                    <viewController key="viewController" id="fef-6B-Es1">
+                        <button key="view" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Af7-RJ-eH8">
+                            <rect key="frame" x="0.0" y="0.0" width="144" height="41"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="push" bezelStyle="rounded" image="BarIcon" imagePosition="overlaps" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EsI-fR-3ck">
+                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                <font key="font" usesAppearanceFont="YES"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="startStopAction:" target="fBA-S8-bL1" id="dRx-dz-lgl"/>
+                            </connections>
+                        </button>
+                    </viewController>
+                    <size key="designTimeSize" width="144" height="30"/>
+                </touchBarItem>
+            </touchBarItems>
+            <point key="canvasLocation" x="-88" y="222"/>
+        </touchBar>
+        <viewController id="fBA-S8-bL1" customClass="TomatoBarController" customModule="Tomato_Bar" customModuleProvider="target">
+            <connections>
+                <outlet property="isSoundEnabledCheckBox" destination="FWj-30-Cso" id="Hf3-pg-qsu"/>
+                <outlet property="startMenuItem" destination="HpR-HB-ygX" id="kOo-VG-qF2"/>
+                <outlet property="statusMenu" destination="bCg-Po-li9" id="AQK-D2-HXi"/>
+                <outlet property="stopMenuItem" destination="6US-ej-bXN" id="sEU-Df-3ZB"/>
+                <outlet property="touchBarButton" destination="Af7-RJ-eH8" id="Tkq-G6-zZI"/>
+                <outlet property="touchBarItem" destination="XoL-nZ-4Ed" id="Sij-4w-72s"/>
+                <outlet property="view" destination="npz-J1-m5y" id="Qtt-hg-NNO"/>
+            </connections>
+        </viewController>
+        <numberFormatter formatterBehavior="default10_4" localizesFormat="NO" usesGroupingSeparator="NO" groupingSize="0" minimumIntegerDigits="0" maximumIntegerDigits="42" id="Ol2-HA-mmI">
+            <real key="minimum" value="1"/>
+        </numberFormatter>
+        <userDefaultsController representsSharedInstance="YES" id="zu7-7u-g3N"/>
+    </objects>
+    <resources>
+        <image name="BarIcon" width="24" height="24"/>
+    </resources>
+</document>
