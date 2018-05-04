@@ -57,33 +57,48 @@ public class TomatoBarController: NSViewController {
 
     /** Called on Touch Bar button and Start and Stop menu items clicks */
     @IBAction private func startStopAction(_ sender: Any) {
-        if timer == nil {
-            playSound()
-            start()
-        } else {
-            playSound()
-            finish()
-        }
+        timer == nil ? start() : cancel()
     }
 
-    /** Starts timer */
+    /** Starts interval */
     private func start() {
+        /* Prepare UI */
         touchBarButton.imagePosition = .noImage
         statusBarButton?.imagePosition = .imageLeft
         swap(&startMenuItem.isHidden, &stopMenuItem.isHidden)
         statusItem?.length = 70
+
+        /* Start timer */
         timeLeft = intervalLengthSeconds
         let queue: DispatchQueue = DispatchQueue(label: "Timer")
         timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
         timer?.schedule(deadline: .now(), repeating: .seconds(1), leeway: .never)
         timer?.setEventHandler(handler: self.tick)
         timer?.resume()
+
+        playSound()
     }
 
-    /** Called on finish */
+    /** Called on interval finish */
     private func finish() {
+        sendNotication()
+        reset()
+        playSound()
+    }
+
+    /** Cancels interval */
+    private func cancel() {
+        reset()
+        playSound()
+    }
+
+    /** Resets controller to initial state */
+    private func reset() {
+        /* Reset timer */
         timer?.cancel()
         timer = nil
+
+        /* Reset UI */
         touchBarButton.imagePosition = .imageOnly
         statusBarButton?.imagePosition = .imageOnly
         swap(&startMenuItem.isHidden, &stopMenuItem.isHidden)
@@ -98,13 +113,7 @@ public class TomatoBarController: NSViewController {
                 self.touchBarButton.title = self.timeLeftString
                 self.statusBarButton?.title = self.timeLeftString
             } else {
-                self.playSound()
                 self.finish()
-                /* Send notification */
-                let notification: NSUserNotification = NSUserNotification()
-                notification.title = "Time's up"
-                notification.informativeText = "Keep up the good work!"
-                NSUserNotificationCenter.default.deliver(notification)
             }
         }
     }
@@ -117,4 +126,11 @@ public class TomatoBarController: NSViewController {
         NSSound.beep()
     }
 
+    /** Sends notification */
+    private func sendNotication() {
+        let notification: NSUserNotification = NSUserNotification()
+        notification.title = "Time's up"
+        notification.informativeText = "Keep up the good work!"
+        NSUserNotificationCenter.default.deliver(notification)
+    }
 }
