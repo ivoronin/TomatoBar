@@ -64,6 +64,7 @@ public class TomatoBarController: NSViewController {
     private func start() {
         /* Prepare UI */
         touchBarButton.imagePosition = .noImage
+        touchBarButton.bezelColor = NSColor.systemGreen
         statusBarButton?.imagePosition = .imageLeft
         swap(&startMenuItem.isHidden, &stopMenuItem.isHidden)
         statusItem?.length = 70
@@ -100,6 +101,7 @@ public class TomatoBarController: NSViewController {
 
         /* Reset UI */
         touchBarButton.imagePosition = .imageOnly
+        touchBarButton.bezelColor = NSColor.clear
         statusBarButton?.imagePosition = .imageOnly
         swap(&startMenuItem.isHidden, &stopMenuItem.isHidden)
         statusItem?.length = NSStatusItem.variableLength

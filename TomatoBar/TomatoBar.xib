@@ -106,7 +106,7 @@
                     <viewController key="viewController" id="fef-6B-Es1">
                         <button key="view" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Af7-RJ-eH8">
                             <rect key="frame" x="0.0" y="0.0" width="144" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="push" title="00:00" bezelStyle="rounded" image="BarIcon" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EsI-fR-3ck">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" usesAppearanceFont="YES"/>
