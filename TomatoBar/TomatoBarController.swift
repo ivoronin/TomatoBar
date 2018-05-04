@@ -20,7 +20,7 @@ public class TomatoBarController: NSViewController {
         return String(format: "%.2i:%.2i", timeLeft / 60, timeLeft % 60)
     }
     /** Timer instance */
-    private var timer: Timer?
+    private var timer: DispatchSourceTimer?
 
     /** Status bar item */
     public var statusItem: NSStatusItem?
@@ -73,13 +73,16 @@ public class TomatoBarController: NSViewController {
         swap(&startMenuItem.isHidden, &stopMenuItem.isHidden)
         statusItem?.length = 70
         timeLeft = intervalLengthSeconds
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in self.tick() }
-        updateViews()
+        let queue: DispatchQueue = DispatchQueue(label: "Timer")
+        timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
+        timer?.schedule(deadline: .now(), repeating: .seconds(1), leeway: .never)
+        timer?.setEventHandler(handler: self.tick)
+        timer?.resume()
     }
 
     /** Called on finish */
     private func finish() {
-        timer?.invalidate()
+        timer?.cancel()
         timer = nil
         touchBarButton.imagePosition = .imageOnly
         statusBarButton?.imagePosition = .imageOnly
@@ -90,23 +93,20 @@ public class TomatoBarController: NSViewController {
     /** Called every second by timer */
     private func tick() {
         timeLeft -= 1
-        if timeLeft >= 0 {
-            updateViews()
-        } else {
-            playSound()
-            finish()
-            /* Send notification */
-            let notification: NSUserNotification = NSUserNotification()
-            notification.title = "Time's up"
-            notification.informativeText = "Keep up the good work!"
-            NSUserNotificationCenter.default.deliver(notification)
+        DispatchQueue.main.async {
+            if self.timeLeft >= 0 {
+                self.touchBarButton.title = self.timeLeftString
+                self.statusBarButton?.title = self.timeLeftString
+            } else {
+                self.playSound()
+                self.finish()
+                /* Send notification */
+                let notification: NSUserNotification = NSUserNotification()
+                notification.title = "Time's up"
+                notification.informativeText = "Keep up the good work!"
+                NSUserNotificationCenter.default.deliver(notification)
+            }
         }
-    }
-
-    /** Updates status and touch bar buttons text */
-    private func updateViews() {
-        touchBarButton.title = timeLeftString
-        statusBarButton?.title = timeLeftString
     }
 
     /** Plays sound */
