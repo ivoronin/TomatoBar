@@ -8,17 +8,17 @@ public class TomatoBarController: NSViewController {
     }
 
     /** Interval length, in minutes */
-    private var intervalLength: Int {
+    private var intervalLengthMinutes: Int {
         return UserDefaults.standard.integer(forKey: "intervalLength")
     }
     /** Interval length as seconds */
-    private var intervalLengthSeconds: Int { return intervalLength * 60 }
+    private var intervalLengthSeconds: Int { return intervalLengthMinutes * 60 }
 
     /** Time left, in seconds */
-    private var timeLeft: Int = 0
+    private var timeLeftSeconds: Int = 0
     /** Time left as MM:SS */
     private var timeLeftString: String {
-        return String(format: "%.2i:%.2i", timeLeft / 60, timeLeft % 60)
+        return String(format: "%.2i:%.2i", timeLeftSeconds / 60, timeLeftSeconds % 60)
     }
     /** Timer instance */
     private var timer: DispatchSourceTimer?
@@ -98,7 +98,7 @@ public class TomatoBarController: NSViewController {
         statusItem?.length = 70
 
         /* Start timer */
-        timeLeft = intervalLengthSeconds
+        timeLeftSeconds = intervalLengthSeconds
         let queue: DispatchQueue = DispatchQueue(label: "Timer")
         timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
         timer?.schedule(deadline: .now(), repeating: .seconds(1), leeway: .never)
@@ -136,9 +136,9 @@ public class TomatoBarController: NSViewController {
 
     /** Called every second by timer */
     private func tick() {
-        timeLeft -= 1
+        timeLeftSeconds -= 1
         DispatchQueue.main.async {
-            if self.timeLeft >= 0 {
+            if self.timeLeftSeconds >= 0 {
                 self.touchBarButton.title = self.timeLeftString
                 self.statusBarButton?.title = self.timeLeftString
             } else {
