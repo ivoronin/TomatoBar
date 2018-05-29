@@ -1,5 +1,6 @@
 import AVFoundation
 import Cocoa
+import os.log
 
 public class TomatoBarController: NSViewController {
     /** Is sound enabled flag */
@@ -46,7 +47,7 @@ public class TomatoBarController: NSViewController {
         guard let windupSoundAsset: NSDataAsset = NSDataAsset(name: NSDataAsset.Name(rawValue: "windup")),
             let ringingSoundAsset: NSDataAsset = NSDataAsset(name: NSDataAsset.Name(rawValue: "ringing"))
             else {
-                NSLog("Unable to load sound data assets")
+                os_log("Unable to load sound data assets")
                 return nil
         }
 
@@ -54,7 +55,7 @@ public class TomatoBarController: NSViewController {
             windupSound = try AVAudioPlayer(data: windupSoundAsset.data)
             ringingSound = try AVAudioPlayer(data: ringingSoundAsset.data)
         } catch {
-            NSLog("Unable to create player instances: \(error.localizedDescription)")
+            os_log("Unable to create player instances: %{public}@", error.localizedDescription)
             return nil
         }
 
