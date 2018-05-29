@@ -11,3 +11,6 @@ Pomodoro Technique timer for macOS with Touch Bar support
 ![HitCount](http://hits.dwyl.io/ivoronin/TomatoBar.svg)
 
 Download: [Tomato.Bar.1.1.0.dmg](https://github.com/ivoronin/TomatoBar/releases/download/v1.1.0/Tomato.Bar.1.1.0.dmg)
+
+# Licenses
+ - Timer sounds are licensed from buddhabeats

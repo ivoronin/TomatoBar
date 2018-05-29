@@ -1,3 +1,4 @@
+import AVFoundation
 import Cocoa
 
 public class TomatoBarController: NSViewController {
@@ -29,12 +30,39 @@ public class TomatoBarController: NSViewController {
         return statusItem?.button
     }
 
+    /* Sounds */
+    private let windupSound: AVAudioPlayer
+    private let ringingSound: AVAudioPlayer
+
     @IBOutlet private var statusMenu: NSMenu!
     @IBOutlet private var touchBarItem: NSTouchBarItem!
     @IBOutlet private var touchBarButton: NSButton!
     @IBOutlet private var startMenuItem: NSMenuItem!
     @IBOutlet private var stopMenuItem: NSMenuItem!
     @IBOutlet private var isSoundEnabledCheckBox: NSButton!
+
+    required public init?(coder: NSCoder) {
+        /* Init sounds */
+        guard let windupSoundAsset: NSDataAsset = NSDataAsset(name: NSDataAsset.Name(rawValue: "windup")),
+            let ringingSoundAsset: NSDataAsset = NSDataAsset(name: NSDataAsset.Name(rawValue: "ringing"))
+            else {
+                NSLog("Unable to load sound data assets")
+                return nil
+        }
+
+        do {
+            windupSound = try AVAudioPlayer(data: windupSoundAsset.data)
+            ringingSound = try AVAudioPlayer(data: ringingSoundAsset.data)
+        } catch {
+            NSLog("Unable to create player instances: \(error.localizedDescription)")
+            return nil
+        }
+
+        windupSound.prepareToPlay()
+        ringingSound.prepareToPlay()
+
+        super.init(coder: coder)
+    }
 
     /* Loaded because of fake view */
     override public func viewDidLoad() {
@@ -77,20 +105,19 @@ public class TomatoBarController: NSViewController {
         timer?.setEventHandler(handler: self.tick)
         timer?.resume()
 
-        playSound()
+        playSound(windupSound)
     }
 
     /** Called on interval finish */
     private func finish() {
         sendNotication()
         reset()
-        playSound()
+        playSound(ringingSound)
     }
 
     /** Cancels interval */
     private func cancel() {
         reset()
-        playSound()
     }
 
     /** Resets controller to initial state */
@@ -121,11 +148,10 @@ public class TomatoBarController: NSViewController {
     }
 
     /** Plays sound */
-    private func playSound() {
-        guard isSoundEnabled else {
-            return
+    private func playSound(_ sound: AVAudioPlayer) {
+        if isSoundEnabled {
+            sound.play()
         }
-        NSSound.beep()
     }
 
     /** Sends notification */
