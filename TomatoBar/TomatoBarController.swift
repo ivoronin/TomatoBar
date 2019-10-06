@@ -128,7 +128,7 @@ public class TomatoBarController: NSViewController {
         sendNotication()
         reset()
         playSound(ringingSound)
-        UserDefaults.standard.set(true, forKey: "isResting")
+        UserDefaults.standard.set(!isResting, forKey: "isResting")
         start()
     }
 
