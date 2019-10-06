@@ -7,13 +7,25 @@ public class TomatoBarController: NSViewController {
     private var isSoundEnabled: Bool {
         return UserDefaults.standard.bool(forKey: "isSoundEnabled")
     }
-
-    /** Interval length, in minutes */
-    private var intervalLengthMinutes: Int {
-        return UserDefaults.standard.integer(forKey: "intervalLength")
+    
+    /** Is working flag */
+    private var isResting: Bool {
+        return UserDefaults.standard.bool(forKey: "isResting")
     }
-    /** Interval length as seconds */
+
+    /** Working interval length, in minutes */
+    private var intervalLengthMinutes: Int {
+        return UserDefaults.standard.integer(forKey: "workingIntervalLength")
+    }
+    /** Working interval length as seconds */
     private var intervalLengthSeconds: Int { return intervalLengthMinutes * 60 }
+    
+    /** Resting interval length, in minutes */
+    private var restingIntervalLengthMinutes: Int {
+        return UserDefaults.standard.integer(forKey: "restingIntervalLength")
+    }
+    /** Resting interval length as seconds */
+    private var restingIntervalLengthSeconds: Int { return restingIntervalLengthMinutes * 60 }
 
     /** Time left, in seconds */
     private var timeLeftSeconds: Int = 0
@@ -69,8 +81,10 @@ public class TomatoBarController: NSViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         /* Register defaults */
-        UserDefaults.standard.register(defaults: ["intervalLength": 25,
-                                                  "isSoundEnabled": true])
+        UserDefaults.standard.register(defaults: ["workingIntervalLength": 25,
+                                                  "isSoundEnabled": true,
+                                                  "restingIntervalLength": 5,
+                                                  "isResting": true])
 
         /* Initialize status bar */
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -99,7 +113,7 @@ public class TomatoBarController: NSViewController {
         statusItem?.length = 70
 
         /* Start timer */
-        timeLeftSeconds = intervalLengthSeconds
+        timeLeftSeconds = isResting ? restingIntervalLengthSeconds : intervalLengthSeconds
         let queue: DispatchQueue = DispatchQueue(label: "Timer")
         timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
         timer?.schedule(deadline: .now(), repeating: .seconds(1), leeway: .never)
@@ -114,6 +128,8 @@ public class TomatoBarController: NSViewController {
         sendNotication()
         reset()
         playSound(ringingSound)
+        UserDefaults.standard.set(true, forKey: "isResting")
+        start()
     }
 
     /** Cancels interval */

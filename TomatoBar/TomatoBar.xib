@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14868" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaDFRPlugin" version="14019"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaDFRPlugin" version="14550"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14868"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="the Touch Bar" minToolsVersion="8.1" minSystemVersion="10.12.2" requiredIntegratedClassName="NSTouchBar"/>
     </dependencies>
@@ -17,23 +17,56 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="xIK-CL-wQU" customClass="AppDelegate" customModule="Tomato_Bar" customModuleProvider="target"/>
         <customView id="npz-J1-m5y" userLabel="Settings View">
-            <rect key="frame" x="0.0" y="0.0" width="180" height="41"/>
+            <rect key="frame" x="0.0" y="0.0" width="192" height="126"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
             <userGuides>
-                <userLayoutGuide location="155" affinity="minX"/>
+                <userLayoutGuide affinity="maxX"/>
             </userGuides>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ld3-Mf-rpZ">
-                    <rect key="frame" x="20" y="23" width="50" height="17"/>
+                    <rect key="frame" x="4" y="102" width="110" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Interval" id="zUO-AB-qgM">
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Working interval" id="zUO-AB-qgM">
                         <font key="font" metaFont="menuBar"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DCo-pq-j0c">
+                    <rect key="frame" x="119" y="102" width="44" height="19"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" bezelStyle="round" id="QYF-zW-W2p">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.workingIntervalLength" id="dW1-gG-qoP"/>
+                    </connections>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kzb-xG-igV">
+                    <rect key="frame" x="4" y="77" width="109" height="19"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Resting interval" id="6BF-CZ-uUF">
+                        <font key="font" metaFont="menuBar"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fcl-rc-srx">
+                    <rect key="frame" x="119" y="77" width="44" height="19"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" bezelStyle="round" id="zLi-2O-RGU">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                    <connections>
+                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.restingIntervalLength" id="sCH-q3-kLK"/>
+                    </connections>
+                </textField>
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FWj-30-Cso">
-                    <rect key="frame" x="20" y="0.0" width="152" height="16"/>
+                    <rect key="frame" x="4" y="44" width="174" height="16"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Sound" bezelStyle="regularSquare" imagePosition="right" state="on" inset="2" id="tqk-pP-cR1">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -43,28 +76,35 @@
                         <binding destination="zu7-7u-g3N" name="value" keyPath="values.isSoundEnabled" id="Zut-wY-Lk7"/>
                     </connections>
                 </button>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DCo-pq-j0c">
-                    <rect key="frame" x="103" y="22" width="44" height="19"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
-                    <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" bezelStyle="round" id="QYF-zW-W2p">
-                        <font key="font" metaFont="smallSystem"/>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                    <connections>
-                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.intervalLength" id="O4W-Rt-TsO"/>
-                    </connections>
-                </textField>
                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mRg-nO-wpt">
-                    <rect key="frame" x="157" y="20" width="15" height="22"/>
+                    <rect key="frame" x="169" y="101" width="15" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="1" maxValue="99" doubleValue="1" id="Kw5-V1-ogF"/>
                     <connections>
-                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.intervalLength" id="Ttw-8a-Pz4"/>
+                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.workingIntervalLength" id="sf6-pD-A5f"/>
                     </connections>
                 </stepper>
+                <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fZ6-0C-Fus">
+                    <rect key="frame" x="169" y="76" width="15" height="22"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="1" maxValue="99" doubleValue="1" id="OPb-2H-Ohg"/>
+                    <connections>
+                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.restingIntervalLength" id="cKt-1y-1Nw"/>
+                    </connections>
+                </stepper>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jWy-2e-Ra7">
+                    <rect key="frame" x="4" y="11" width="174" height="23"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Resting" bezelStyle="regularSquare" imagePosition="right" state="on" inset="2" id="qKe-wP-Bbc">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="menuBar"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.isResting" id="kB7-cB-Xgt"/>
+                    </connections>
+                </button>
             </subviews>
-            <point key="canvasLocation" x="7" y="-85"/>
+            <point key="canvasLocation" x="1" y="-43"/>
         </customView>
         <menu id="bCg-Po-li9">
             <items>
@@ -106,7 +146,6 @@
                     <viewController key="viewController" id="fef-6B-Es1">
                         <button key="view" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Af7-RJ-eH8">
                             <rect key="frame" x="0.0" y="0.0" width="144" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="push" title="00:00" bezelStyle="rounded" image="BarIcon" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EsI-fR-3ck">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" usesAppearanceFont="YES"/>
@@ -136,8 +175,11 @@
             <real key="minimum" value="1"/>
         </numberFormatter>
         <userDefaultsController representsSharedInstance="YES" id="zu7-7u-g3N"/>
+        <stepperCell controlSize="small" continuous="YES" alignment="left" maxValue="100" valueWraps="YES" id="PVi-Kk-FWh">
+            <font key="font" metaFont="smallSystem"/>
+        </stepperCell>
     </objects>
     <resources>
-        <image name="BarIcon" width="24" height="24"/>
+        <image name="BarIcon" width="16" height="16"/>
     </resources>
 </document>
