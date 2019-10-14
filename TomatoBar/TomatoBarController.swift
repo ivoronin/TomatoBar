@@ -83,8 +83,7 @@ public class TomatoBarController: NSViewController {
         /* Register defaults */
         UserDefaults.standard.register(defaults: ["workingIntervalLength": 25,
                                                   "isSoundEnabled": true,
-                                                  "restingIntervalLength": 5,
-                                                  "isResting": true])
+                                                  "restingIntervalLength": 5])
 
         /* Initialize status bar */
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
