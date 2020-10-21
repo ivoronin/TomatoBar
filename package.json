@@ -1,6 +1,6 @@
 {
   "name": "archivemounter",
   "devDependencies": {
-    "create-dmg": "^3.1.0"
+    "create-dmg": "^5.3.0"
   }
 }
