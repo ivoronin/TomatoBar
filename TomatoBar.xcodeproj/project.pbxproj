@@ -112,6 +112,7 @@
 				TargetAttributes = {
 					8A112DD52099E8AE00DDBDD0 = {
 						CreatedOnToolsVersion = 9.3;
+						LastSwiftMigration = 1150;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 1;
@@ -310,7 +311,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = TomatoBar/BridgingHeader.h;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
@@ -335,7 +336,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = TomatoBar/BridgingHeader.h;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",

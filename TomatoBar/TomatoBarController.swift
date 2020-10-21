@@ -62,8 +62,8 @@ public class TomatoBarController: NSViewController {
 
     required public init?(coder: NSCoder) {
         /* Init sounds */
-        guard let windupSoundAsset: NSDataAsset = NSDataAsset(name: NSDataAsset.Name(rawValue: "windup")),
-            let ringingSoundAsset: NSDataAsset = NSDataAsset(name: NSDataAsset.Name(rawValue: "ringing"))
+        guard let windupSoundAsset: NSDataAsset = NSDataAsset(name: "windup"),
+            let ringingSoundAsset: NSDataAsset = NSDataAsset(name: "ringing")
             else {
                 os_log("Unable to load sound data assets")
                 return nil
@@ -94,7 +94,7 @@ public class TomatoBarController: NSViewController {
         /* Initialize status bar */
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem?.button?.alignment = .right
-        statusBarButton?.image = NSImage(named: NSImage.Name("BarIcon"))
+        statusBarButton?.image = NSImage(named: "BarIcon")
         statusBarButton?.imagePosition = .imageOnly
         statusItem?.menu = statusMenu
 
