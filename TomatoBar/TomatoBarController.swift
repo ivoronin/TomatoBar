@@ -2,6 +2,14 @@ import AVFoundation
 import Cocoa
 import os.log
 
+/** TomatoBar mode */
+public enum TomatoBarMode {
+    /** Working */
+    case work
+    /** Resting */
+    case rest
+}
+
 public class TomatoBarController: NSViewController {
     /** Is sound enabled flag */
     private var isSoundEnabled: Bool {
@@ -9,11 +17,21 @@ public class TomatoBarController: NSViewController {
     }
 
     /** Interval length, in minutes */
-    private var intervalLengthMinutes: Int {
-        return UserDefaults.standard.integer(forKey: "intervalLength")
+    private var workIntervalLengthMinutes: Int {
+        return UserDefaults.standard.integer(forKey: "workIntervalLength")
     }
     /** Interval length as seconds */
-    private var intervalLengthSeconds: Int { return intervalLengthMinutes * 60 }
+    private var workIntervalLengthSeconds: Int { return workIntervalLengthMinutes * 60 }
+
+    /** Break length, in minutes */
+    private var restIntervalLengthMinutes: Int {
+        return UserDefaults.standard.integer(forKey: "restIntervalLength")
+    }
+    /** Break length as seconds */
+    private var restIntervalLengthSeconds: Int { return restIntervalLengthMinutes * 60 }
+
+    /** Current mode (interval or break) */
+    private var currentMode: TomatoBarMode = .work
 
     /** Time left, in seconds */
     private var timeLeftSeconds: Int = 0
@@ -69,7 +87,8 @@ public class TomatoBarController: NSViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         /* Register defaults */
-        UserDefaults.standard.register(defaults: ["intervalLength": 25,
+        UserDefaults.standard.register(defaults: ["workIntervalLength": 25,
+                                                  "restIntervalLength": 5,
                                                   "isSoundEnabled": true])
 
         /* Initialize status bar */
@@ -93,13 +112,21 @@ public class TomatoBarController: NSViewController {
     private func start() {
         /* Prepare UI */
         touchBarButton.imagePosition = .noImage
-        touchBarButton.bezelColor = NSColor.systemGreen
+        if currentMode == .work {
+            touchBarButton.bezelColor = NSColor.systemGreen
+        } else {
+            touchBarButton.bezelColor = NSColor.systemYellow
+        }
         statusBarButton?.imagePosition = .imageLeft
         swap(&startMenuItem.isHidden, &stopMenuItem.isHidden)
         statusItem?.length = 70
 
         /* Start timer */
-        timeLeftSeconds = intervalLengthSeconds
+        if currentMode == .work {
+            timeLeftSeconds = workIntervalLengthSeconds
+        } else {
+            timeLeftSeconds = restIntervalLengthSeconds
+        }
         let queue: DispatchQueue = DispatchQueue(label: "Timer")
         timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
         timer?.schedule(deadline: .now(), repeating: .seconds(1), leeway: .never)
@@ -112,8 +139,14 @@ public class TomatoBarController: NSViewController {
     /** Called on interval finish */
     private func finish() {
         sendNotication()
-        reset()
+        //reset()
         playSound(ringingSound)
+        if currentMode == .work {
+            currentMode = .rest
+        } else {
+            currentMode = .work
+        }
+        start()
     }
 
     /** Cancels interval */
@@ -159,7 +192,11 @@ public class TomatoBarController: NSViewController {
     private func sendNotication() {
         let notification: NSUserNotification = NSUserNotification()
         notification.title = "Time's up"
-        notification.informativeText = "Keep up the good work!"
+        if currentMode == .work {
+            notification.informativeText = "It's time for a break!"
+        } else {
+            notification.informativeText = "Keep up the good work!"
+        }
         NSUserNotificationCenter.default.deliver(notification)
     }
 }
