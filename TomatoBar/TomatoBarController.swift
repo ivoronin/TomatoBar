@@ -144,7 +144,6 @@ public class TomatoBarController: NSViewController {
     /** Called on interval finish */
     private func finish() {
         sendNotication()
-        //reset()
         playSound(ringingSound)
         if currentMode == .work {
             currentMode = .rest
@@ -164,6 +163,8 @@ public class TomatoBarController: NSViewController {
         /* Reset timer */
         timer?.cancel()
         timer = nil
+
+        currentMode = .work
 
         /* Reset UI */
         touchBarButton.imagePosition = .imageOnly
