@@ -5,12 +5,13 @@ Pomodoro Technique timer for macOS with Touch Bar support
 
 :white_check_mark: Minimalistic app, contains no bloat or unnecessary features\
 :white_check_mark: Touch Bar support\
-:white_check_mark: Sandboxed with no entitlements
+:white_check_mark: Sandboxed with no entitlements\
+:white_check_mark: Working/Resting feature
 
 ![travis-ci](https://api.travis-ci.org/ivoronin/TomatoBar.svg?branch=master)
 ![HitCount](http://hits.dwyl.io/ivoronin/TomatoBar.svg)
 
-Download: [Tomato.Bar.1.2.0.dmg](https://github.com/ivoronin/TomatoBar/releases/download/v1.2.0/Tomato.Bar.1.2.0.dmg)
+Download: [Tomato.Bar.1.3.1.dmg](https://github.com/ivoronin/TomatoBar/releases/download/v1.3.1/Tomato.Bar.1.3.1.dmg)
 
 # Licenses
  - Timer sounds are licensed from buddhabeats
