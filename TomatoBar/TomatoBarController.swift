@@ -1,3 +1,4 @@
+// swiftlint:disable prohibited_interface_builder
 import AVFoundation
 import Cocoa
 import os.log
@@ -13,22 +14,22 @@ public enum TomatoBarMode {
 public class TomatoBarController: NSViewController {
     /** Is sound enabled flag */
     private var isSoundEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: "isSoundEnabled")
+        UserDefaults.standard.bool(forKey: "isSoundEnabled")
     }
 
     /** Interval length, in minutes */
     private var workIntervalLengthMinutes: Int {
-        return UserDefaults.standard.integer(forKey: "workIntervalLength")
+        UserDefaults.standard.integer(forKey: "workIntervalLength")
     }
     /** Interval length as seconds */
-    private var workIntervalLengthSeconds: Int { return workIntervalLengthMinutes * 60 }
+    private var workIntervalLengthSeconds: Int { workIntervalLengthMinutes * 60 }
 
     /** Break length, in minutes */
     private var restIntervalLengthMinutes: Int {
-        return UserDefaults.standard.integer(forKey: "restIntervalLength")
+        UserDefaults.standard.integer(forKey: "restIntervalLength")
     }
     /** Break length as seconds */
-    private var restIntervalLengthSeconds: Int { return restIntervalLengthMinutes * 60 }
+    private var restIntervalLengthSeconds: Int { restIntervalLengthMinutes * 60 }
 
     /** Current mode (interval or break) */
     private var currentMode: TomatoBarMode = .work
@@ -37,7 +38,7 @@ public class TomatoBarController: NSViewController {
     private var timeLeftSeconds: Int = 0
     /** Time left as MM:SS */
     private var timeLeftString: String {
-        return String(format: "%.2i:%.2i", timeLeftSeconds / 60, timeLeftSeconds % 60)
+        String(format: "%.2i:%.2i", timeLeftSeconds / 60, timeLeftSeconds % 60)
     }
     /** Timer instance */
     private var timer: DispatchSourceTimer?
@@ -46,7 +47,7 @@ public class TomatoBarController: NSViewController {
     public var statusItem: NSStatusItem?
     /** Status bar button */
     private var statusBarButton: NSButton? {
-        return statusItem?.button
+        statusItem?.button
     }
 
     /* Sounds */
@@ -60,10 +61,10 @@ public class TomatoBarController: NSViewController {
     @IBOutlet private var stopMenuItem: NSMenuItem!
     @IBOutlet private var isSoundEnabledCheckBox: NSButton!
 
-    required public init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         /* Init sounds */
-        guard let windupSoundAsset: NSDataAsset = NSDataAsset(name: "windup"),
-            let ringingSoundAsset: NSDataAsset = NSDataAsset(name: "ringing")
+        guard let windupSoundAsset = NSDataAsset(name: "windup"),
+            let ringingSoundAsset = NSDataAsset(name: "ringing")
             else {
                 os_log("Unable to load sound data assets")
                 return nil
@@ -87,14 +88,17 @@ public class TomatoBarController: NSViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         /* Register defaults */
-        UserDefaults.standard.register(defaults: ["workIntervalLength": 25,
-                                                  "restIntervalLength": 5,
-                                                  "isSoundEnabled": true])
+        UserDefaults.standard.register(defaults: [
+            "workIntervalLength": 25,
+            "restIntervalLength": 5,
+            "isSoundEnabled": true
+        ])
 
         /* Initialize status bar */
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem?.button?.alignment = .right
-        statusBarButton?.image = NSImage(named: "BarIcon")
+        // swiftlint:disable:next discouraged_object_literal
+        statusBarButton?.image = #imageLiteral(resourceName: "BarIcon")
         statusBarButton?.imagePosition = .imageOnly
         statusItem?.menu = statusMenu
 
@@ -127,7 +131,8 @@ public class TomatoBarController: NSViewController {
         } else {
             timeLeftSeconds = restIntervalLengthSeconds
         }
-        let queue: DispatchQueue = DispatchQueue(label: "Timer")
+        // swiftlint:disable:next explicit_type_interface
+        let queue = DispatchQueue(label: "Timer")
         timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
         timer?.schedule(deadline: .now(), repeating: .seconds(1), leeway: .never)
         timer?.setEventHandler(handler: self.tick)
@@ -190,7 +195,8 @@ public class TomatoBarController: NSViewController {
 
     /** Sends notification */
     private func sendNotication() {
-        let notification: NSUserNotification = NSUserNotification()
+        // swiftlint:disable:next explicit_type_interface
+        let notification = NSUserNotification()
         notification.title = "Time's up"
         if currentMode == .work {
             notification.informativeText = "It's time for a break!"
@@ -199,4 +205,6 @@ public class TomatoBarController: NSViewController {
         }
         NSUserNotificationCenter.default.deliver(notification)
     }
+
+    deinit { }
 }

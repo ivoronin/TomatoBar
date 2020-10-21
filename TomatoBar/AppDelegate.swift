@@ -7,4 +7,6 @@ public class AppDelegate: NSObject, NSApplicationDelegate {
 
     public func applicationWillTerminate(_ aNotification: Notification) {
     }
+
+    deinit { }
 }
