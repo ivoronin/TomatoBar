@@ -3,18 +3,27 @@ import AVFoundation
 import Cocoa
 import os.log
 
-/** TomatoBar mode */
-public enum TomatoBarMode {
-    /** Working */
-    case work
-    /** Resting */
-    case rest
-}
-
 public class TomatoBarController: NSViewController {
+    /** TomatoBar mode */
+    public enum Mode {
+        /** Idle */
+        case idle
+        /** Working */
+        case work
+        /** Resting, should be named "break", but it's a reserved work :) */
+        case rest
+    }
+
+    /** Current mode (interval or break) */
+    private var currentMode: Mode = .idle
+
     /** Is sound enabled flag */
     private var isSoundEnabled: Bool {
         UserDefaults.standard.bool(forKey: "isSoundEnabled")
+    }
+
+    private var stopAfterBreak: Bool {
+        UserDefaults.standard.bool(forKey: "stopAfterBreak")
     }
 
     /** Interval length, in minutes */
@@ -31,14 +40,18 @@ public class TomatoBarController: NSViewController {
     /** Break length as seconds */
     private var restIntervalLengthSeconds: Int { restIntervalLengthMinutes * 60 }
 
-    /** Current mode (interval or break) */
-    private var currentMode: TomatoBarMode = .work
-
     /** Time left, in seconds */
     private var timeLeftSeconds: Int = 0
+    // swiftlint:disable:next explicit_type_interface
+    private var timeLeftFont = NSFont.monospacedDigitSystemFont(
+        ofSize: 0, weight: .regular
+    )
     /** Time left as MM:SS */
-    private var timeLeftString: String {
-        String(format: "%.2i:%.2i", timeLeftSeconds / 60, timeLeftSeconds % 60)
+    private var timeLeftString: NSAttributedString {
+        NSAttributedString(
+            string: String(format: "%.2i:%.2i", timeLeftSeconds / 60, timeLeftSeconds % 60),
+            attributes: [NSAttributedString.Key.font: self.timeLeftFont]
+        )
     }
     /** Timer instance */
     private var timer: DispatchSourceTimer?
@@ -90,7 +103,8 @@ public class TomatoBarController: NSViewController {
         UserDefaults.standard.register(defaults: [
             "workIntervalLength": 25,
             "restIntervalLength": 5,
-            "isSoundEnabled": true
+            "isSoundEnabled": true,
+            "stopAfterBreak": false
         ])
 
         /* Initialize status bar */
@@ -98,7 +112,6 @@ public class TomatoBarController: NSViewController {
         statusItem?.button?.alignment = .right
         // swiftlint:disable:next discouraged_object_literal
         statusBarButton?.image = #imageLiteral(resourceName: "BarIcon")
-        statusBarButton?.imagePosition = .imageOnly
         statusItem?.menu = statusMenu
 
         /* Initialize touch bar, WARNING: uses private framework methods */
@@ -108,28 +121,47 @@ public class TomatoBarController: NSViewController {
 
     /** Called on Touch Bar button and Start and Stop menu items clicks */
     @IBAction private func startStopAction(_ sender: Any) {
-        timer == nil ? start() : cancel()
+        currentMode == .idle ? start(mode: .work) : cancel()
+    }
+
+    private func setMode(mode: Mode) {
+        switch mode {
+        case .idle:
+            touchBarButton.imagePosition = .imageOnly
+            touchBarButton.bezelColor = NSColor.clear
+            statusBarButton?.imagePosition = .imageOnly
+            startMenuItem.isHidden = false
+            stopMenuItem.isHidden = true
+            statusItem?.length = NSStatusItem.variableLength
+
+        case .work:
+            touchBarButton.imagePosition = .noImage
+            touchBarButton.bezelColor = NSColor.systemGreen
+            statusBarButton?.imagePosition = .imageLeft
+            startMenuItem.isHidden = true
+            stopMenuItem.isHidden = false
+            statusItem?.length = 70
+
+        case .rest:
+            touchBarButton.bezelColor = NSColor.systemYellow
+        }
+        currentMode = mode
     }
 
     /** Starts interval */
-    private func start() {
-        /* Prepare UI */
-        touchBarButton.imagePosition = .noImage
-        if currentMode == .work {
-            touchBarButton.bezelColor = NSColor.systemGreen
-        } else {
-            touchBarButton.bezelColor = NSColor.systemYellow
-        }
-        statusBarButton?.imagePosition = .imageLeft
-        swap(&startMenuItem.isHidden, &stopMenuItem.isHidden)
-        statusItem?.length = 70
-
-        /* Start timer */
-        if currentMode == .work {
+    private func start(mode: Mode) {
+        switch mode {
+        case .work:
             timeLeftSeconds = workIntervalLengthSeconds
-        } else {
+
+        case .rest:
             timeLeftSeconds = restIntervalLengthSeconds
+
+        default:
+            fatalError("Unexpected mode")
         }
+        setMode(mode: mode)
+
         // swiftlint:disable:next explicit_type_interface
         let queue = DispatchQueue(label: "Timer")
         timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
@@ -142,44 +174,39 @@ public class TomatoBarController: NSViewController {
 
     /** Called on interval finish */
     private func finish() {
+        assert(currentMode != .idle)
         sendNotication()
         playSound(ringingSound)
-        if currentMode == .work {
-            currentMode = .rest
-        } else {
-            currentMode = .work
+        switch currentMode {
+        case .work:
+            start(mode: .rest)
+
+        case .rest:
+            stopAfterBreak ? cancel() : start(mode: .work)
+
+        default:
+            fatalError("Unexpected mode")
         }
-        start()
     }
 
     /** Cancels interval */
     private func cancel() {
-        reset()
-    }
-
-    /** Resets controller to initial state */
-    private func reset() {
+        assert(currentMode != .idle)
         /* Reset timer */
         timer?.cancel()
         timer = nil
 
-        currentMode = .work
-
-        /* Reset UI */
-        touchBarButton.imagePosition = .imageOnly
-        touchBarButton.bezelColor = NSColor.clear
-        statusBarButton?.imagePosition = .imageOnly
-        swap(&startMenuItem.isHidden, &stopMenuItem.isHidden)
-        statusItem?.length = NSStatusItem.variableLength
+        setMode(mode: .idle)
     }
 
     /** Called every second by timer */
     private func tick() {
+        assert(currentMode != .idle)
         timeLeftSeconds -= 1
         DispatchQueue.main.async {
             if self.timeLeftSeconds >= 0 {
-                self.touchBarButton.title = self.timeLeftString
-                self.statusBarButton?.title = self.timeLeftString
+                self.touchBarButton.attributedTitle = self.timeLeftString
+                self.statusBarButton?.attributedTitle = self.timeLeftString
             } else {
                 self.finish()
             }
@@ -198,10 +225,15 @@ public class TomatoBarController: NSViewController {
         // swiftlint:disable:next explicit_type_interface
         let notification = NSUserNotification()
         notification.title = "Time's up"
-        if currentMode == .work {
+        switch currentMode {
+        case .work:
             notification.informativeText = "It's time for a break!"
-        } else {
+
+        case .rest:
             notification.informativeText = "Keep up the good work!"
+
+        default:
+            fatalError("Unexpected mode")
         }
         NSUserNotificationCenter.default.deliver(notification)
     }
