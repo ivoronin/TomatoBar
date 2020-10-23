@@ -59,7 +59,6 @@ public class TomatoBarController: NSViewController {
     @IBOutlet private var touchBarButton: NSButton!
     @IBOutlet private var startMenuItem: NSMenuItem!
     @IBOutlet private var stopMenuItem: NSMenuItem!
-    @IBOutlet private var isSoundEnabledCheckBox: NSButton!
 
     public required init?(coder: NSCoder) {
         /* Init sounds */

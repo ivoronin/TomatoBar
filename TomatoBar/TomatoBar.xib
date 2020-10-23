@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17156" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaDFRPlugin" version="16002"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaDFRPlugin" version="17008"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="the Touch Bar" minToolsVersion="8.1" minSystemVersion="10.12.2" requiredIntegratedClassName="NSTouchBar"/>
     </dependencies>
@@ -148,7 +148,6 @@
         </touchBar>
         <viewController id="fBA-S8-bL1" customClass="TomatoBarController" customModule="Tomato_Bar" customModuleProvider="target">
             <connections>
-                <outlet property="isSoundEnabledCheckBox" destination="FWj-30-Cso" id="Hf3-pg-qsu"/>
                 <outlet property="startMenuItem" destination="HpR-HB-ygX" id="kOo-VG-qF2"/>
                 <outlet property="statusMenu" destination="bCg-Po-li9" id="AQK-D2-HXi"/>
                 <outlet property="stopMenuItem" destination="6US-ej-bXN" id="sEU-Df-3ZB"/>
