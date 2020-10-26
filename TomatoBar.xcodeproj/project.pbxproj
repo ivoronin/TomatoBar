@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,6 +12,9 @@
 		8A112DEA2099F1A500DDBDD0 /* TomatoBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A112DE92099F1A500DDBDD0 /* TomatoBar.xib */; };
 		8A112E0A2099FB8000DDBDD0 /* DFRFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A112E092099FB8000DDBDD0 /* DFRFoundation.framework */; };
 		8A112E0C2099FD1A00DDBDD0 /* TomatoBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A112E0B2099FD1A00DDBDD0 /* TomatoBarController.swift */; };
+		8AA1D306254337B700391A51 /* SwiftState in Frameworks */ = {isa = PBXBuildFile; productRef = 8AA1D305254337B700391A51 /* SwiftState */; };
+		8AA1D30E2546F8D700391A51 /* TomatoBarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA1D30A2546F76E00391A51 /* TomatoBarSettings.swift */; };
+		8AA1D3172546FC4100391A51 /* TomatoBarPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA1D3102546FA6700391A51 /* TomatoBarPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +28,8 @@
 		8A112E072099F9D000DDBDD0 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
 		8A112E092099FB8000DDBDD0 /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
 		8A112E0B2099FD1A00DDBDD0 /* TomatoBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarController.swift; sourceTree = "<group>"; };
+		8AA1D30A2546F76E00391A51 /* TomatoBarSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarSettings.swift; sourceTree = "<group>"; };
+		8AA1D3102546FA6700391A51 /* TomatoBarPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarPlayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AA1D306254337B700391A51 /* SwiftState in Frameworks */,
 				8A112E0A2099FB8000DDBDD0 /* DFRFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -61,6 +67,8 @@
 			children = (
 				8A112DD92099E8AE00DDBDD0 /* AppDelegate.swift */,
 				8A112E0B2099FD1A00DDBDD0 /* TomatoBarController.swift */,
+				8AA1D3102546FA6700391A51 /* TomatoBarPlayer.swift */,
+				8AA1D30A2546F76E00391A51 /* TomatoBarSettings.swift */,
 				8A112DE92099F1A500DDBDD0 /* TomatoBar.xib */,
 				8A112DDD2099E8B000DDBDD0 /* Assets.xcassets */,
 				8A112DE22099E8B100DDBDD0 /* Info.plist */,
@@ -96,6 +104,9 @@
 			dependencies = (
 			);
 			name = "Tomato Bar";
+			packageProductDependencies = (
+				8AA1D305254337B700391A51 /* SwiftState */,
+			);
 			productName = "Tomato Bar";
 			productReference = 8A112DD62099E8AE00DDBDD0 /* Tomato Bar.app */;
 			productType = "com.apple.product-type.application";
@@ -130,6 +141,9 @@
 				Base,
 			);
 			mainGroup = 8A112DCD2099E8AE00DDBDD0;
+			packageReferences = (
+				8AA1D304254337B700391A51 /* XCRemoteSwiftPackageReference "SwiftState" */,
+			);
 			productRefGroup = 8A112DD72099E8AE00DDBDD0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -164,7 +178,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "[ \"${CI}\" ] || swiftlint --enable-all-rules";
+			shellScript = "[ \"${CI}\" ] || swiftlint --enable-all-rules\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -173,6 +187,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8AA1D3172546FC4100391A51 /* TomatoBarPlayer.swift in Sources */,
+				8AA1D30E2546F8D700391A51 /* TomatoBarSettings.swift in Sources */,
 				8A112DDA2099E8AE00DDBDD0 /* AppDelegate.swift in Sources */,
 				8A112E0C2099FD1A00DDBDD0 /* TomatoBarController.swift in Sources */,
 			);
@@ -311,7 +327,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = TomatoBar/BridgingHeader.h;
@@ -338,7 +354,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = TomatoBar/BridgingHeader.h;
@@ -372,6 +388,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8AA1D304254337B700391A51 /* XCRemoteSwiftPackageReference "SwiftState" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ivoronin/SwiftState";
+			requirement = {
+				branch = swift/5.0;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8AA1D305254337B700391A51 /* SwiftState */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8AA1D304254337B700391A51 /* XCRemoteSwiftPackageReference "SwiftState" */;
+			productName = SwiftState;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8A112DCE2099E8AE00DDBDD0 /* Project object */;
 }
