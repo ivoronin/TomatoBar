@@ -148,7 +148,7 @@ public class TomatoBarController: NSViewController {
     }
 
     private func onRestFinish(context: TomatoBarContext) {
-        sendNotication(title: "Time's up", text: "Keep up the good work!")
+        sendNotication(title: "Break is over", text: "Keep up the good work!")
     }
 
     private func onIdleStart(context: TomatoBarContext) {
