@@ -6,15 +6,7 @@ import os.log
 import SwiftState
 
 public class TomatoBarController: NSViewController {
-    private typealias TomatoBarContext = StateMachine<TomatoBarState, TomatoBarEvent>.Context
-    private enum TomatoBarState: StateType {
-        case ready, idle, work, rest
-    }
-    private enum TomatoBarEvent: EventType {
-        case startStop, timerFired
-    }
-
-    private var stateMachine = StateMachine<TomatoBarState, TomatoBarEvent>(state: .ready)
+    private var stateMachine = TomatoBarStateMachine(state: .ready)
     private var timeLeftSeconds: Int = 0
     private let timeLeftFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
     private var timer: DispatchSourceTimer?

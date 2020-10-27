@@ -15,6 +15,7 @@
 		8AA1D306254337B700391A51 /* SwiftState in Frameworks */ = {isa = PBXBuildFile; productRef = 8AA1D305254337B700391A51 /* SwiftState */; };
 		8AA1D30E2546F8D700391A51 /* TomatoBarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA1D30A2546F76E00391A51 /* TomatoBarSettings.swift */; };
 		8AA1D3172546FC4100391A51 /* TomatoBarPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA1D3102546FA6700391A51 /* TomatoBarPlayer.swift */; };
+		8AA1D31D25483D1200391A51 /* TomatoBarState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA1D31C25483D1200391A51 /* TomatoBarState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		8A112E0B2099FD1A00DDBDD0 /* TomatoBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarController.swift; sourceTree = "<group>"; };
 		8AA1D30A2546F76E00391A51 /* TomatoBarSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarSettings.swift; sourceTree = "<group>"; };
 		8AA1D3102546FA6700391A51 /* TomatoBarPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarPlayer.swift; sourceTree = "<group>"; };
+		8AA1D31C25483D1200391A51 /* TomatoBarState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 			children = (
 				8A112DD92099E8AE00DDBDD0 /* AppDelegate.swift */,
 				8A112E0B2099FD1A00DDBDD0 /* TomatoBarController.swift */,
+				8AA1D31C25483D1200391A51 /* TomatoBarState.swift */,
 				8AA1D3102546FA6700391A51 /* TomatoBarPlayer.swift */,
 				8AA1D30A2546F76E00391A51 /* TomatoBarSettings.swift */,
 				8A112DE92099F1A500DDBDD0 /* TomatoBar.xib */,
@@ -189,6 +192,7 @@
 			files = (
 				8AA1D3172546FC4100391A51 /* TomatoBarPlayer.swift in Sources */,
 				8AA1D30E2546F8D700391A51 /* TomatoBarSettings.swift in Sources */,
+				8AA1D31D25483D1200391A51 /* TomatoBarState.swift in Sources */,
 				8A112DDA2099E8AE00DDBDD0 /* AppDelegate.swift in Sources */,
 				8A112E0C2099FD1A00DDBDD0 /* TomatoBarController.swift in Sources */,
 			);
