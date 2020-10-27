@@ -8,7 +8,7 @@ import SwiftState
 public class TomatoBarController: NSViewController {
     private typealias TomatoBarContext = StateMachine<TomatoBarState, TomatoBarEvent>.Context
     private enum TomatoBarState: StateType {
-        case ready, idle, work, workFinished, rest, restFinished
+        case ready, idle, work, rest
     }
     private enum TomatoBarEvent: EventType {
         case startStop, timerFired
@@ -46,27 +46,21 @@ public class TomatoBarController: NSViewController {
 
         stateMachine.addRoute(.ready => .idle)
         stateMachine.addRoutes(event: .startStop, transitions: [
-            .idle => .work,
-            .work => .idle,
-            .workFinished => .idle,
-            .rest => .idle,
-            .restFinished => .idle
+            .idle => .work, .work => .idle, .rest => .idle
         ])
-        stateMachine.addRoutes(event: .timerFired, transitions: [
-            .work => .workFinished
-        ])
-        stateMachine.addRoutes(event: .timerFired, transitions: [
-            .rest => .restFinished
-        ])
-        stateMachine.addRoute(.workFinished => .rest)
-        stateMachine.addRoute(.restFinished => .work)
-        stateMachine.addRoute(.restFinished => .idle)
+        stateMachine.addRoutes(event: .timerFired, transitions: [.work => .rest])
+        stateMachine.addRoutes(event: .timerFired, transitions: [.rest => .idle]) { _ in
+            self.settings.stopAfterBreak
+        }
+        stateMachine.addRoutes(event: .timerFired, transitions: [.rest => .work]) { _ in
+            !self.settings.stopAfterBreak
+        }
 
         stateMachine.addAnyHandler(.any => .work, handler: onWorkStart)
-        stateMachine.addAnyHandler(.work => .workFinished, handler: onWorkFinish)
-        stateMachine.addAnyHandler(.workFinished => .rest, handler: onRestStart)
-        stateMachine.addAnyHandler(.rest => .restFinished, handler: onRestFinish)
-        stateMachine.addAnyHandler(.work => .any, handler: onWorkEnd)
+        stateMachine.addAnyHandler(.work => .rest, order: 0, handler: onWorkFinish)
+        stateMachine.addAnyHandler(.work => .any, order: 1, handler: onWorkEnd)
+        stateMachine.addAnyHandler(.any => .rest, handler: onRestStart)
+        stateMachine.addAnyHandler(.rest => .any, handler: onRestFinish)
         stateMachine.addAnyHandler(.any => .idle, handler: onIdleStart)
 
         stateMachine.addErrorHandler { ctx in
@@ -142,7 +136,6 @@ public class TomatoBarController: NSViewController {
     private func onWorkFinish(context: TomatoBarContext) {
         sendNotication(title: "Time's up", text: "It's time for a break!")
         player.playRinging()
-        stateMachine <- .rest
     }
 
     private func onWorkEnd(context: TomatoBarContext) {
@@ -156,11 +149,6 @@ public class TomatoBarController: NSViewController {
 
     private func onRestFinish(context: TomatoBarContext) {
         sendNotication(title: "Time's up", text: "Keep up the good work!")
-        if settings.stopAfterBreak {
-            stateMachine <- .idle
-        } else {
-            stateMachine <- .work
-        }
     }
 
     private func onIdleStart(context: TomatoBarContext) {
