@@ -97,7 +97,7 @@
                         <font key="font" metaFont="menu" size="14"/>
                     </buttonCell>
                     <connections>
-                        <action selector="toggleTicking:" target="fBA-S8-bL1" id="kN5-iZ-ut7"/>
+                        <action selector="toggleTickingAction:" target="fBA-S8-bL1" id="kN5-iZ-ut7"/>
                         <binding destination="zu7-7u-g3N" name="value" keyPath="values.isTickingEnabled" id="GZu-6g-JDC"/>
                     </connections>
                 </button>

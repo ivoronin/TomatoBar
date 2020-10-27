@@ -83,7 +83,7 @@ public class TomatoBarController: NSViewController {
     }
 
     /** Called when user clicks on the "Ticking sound" checkbox */
-    @IBAction private func toggleTicking(_ sender: Any) {
+    @IBAction private func toggleTickingAction(_ sender: Any) {
         if stateMachine.state == .work {
             player.toggleTicking()
         }
