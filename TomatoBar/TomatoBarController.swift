@@ -1,12 +1,13 @@
 // swiftlint:disable prohibited_interface_builder
 // swiftlint:disable explicit_type_interface
 // swiftlint:disable required_deinit
+// swiftlint:disable indentation_width
 import Cocoa
 import os.log
 import SwiftState
 
 public class TomatoBarController: NSViewController {
-    private var stateMachine = TomatoBarStateMachine(state: .ready)
+    private let stateMachine = TomatoBarStateMachine(state: .ready)
     private var timeLeftSeconds: Int = 0
     private let timeLeftFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
     private var timer: DispatchSourceTimer?
@@ -17,10 +18,10 @@ public class TomatoBarController: NSViewController {
     private let player = TomatoBarPlayer.shared
 
     @IBOutlet private var statusMenu: NSMenu!
-    @IBOutlet private var touchBarItem: NSTouchBarItem!
-    @IBOutlet private var touchBarButton: NSButton!
     @IBOutlet private var startMenuItem: NSMenuItem!
     @IBOutlet private var stopMenuItem: NSMenuItem!
+    @IBOutlet private var touchBarItem: NSTouchBarItem!
+    @IBOutlet private var touchBarButton: NSButton!
 
     /* Loaded because of the fake view */
     override public func viewDidLoad() {
@@ -28,14 +29,34 @@ public class TomatoBarController: NSViewController {
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem?.button?.alignment = .right
+        statusItem?.menu = statusMenu
         // swiftlint:disable:next discouraged_object_literal
         statusBarButton?.image = #imageLiteral(resourceName: "BarIcon")
-        statusItem?.menu = statusMenu
 
         /* Initialize touch bar, WARNING: uses private framework methods */
         NSTouchBarItem.addSystemTrayItem(touchBarItem)
         DFRElementSetControlStripPresenceForIdentifier(touchBarItem.identifier.rawValue, true)
 
+        /*
+         * State diagram
+         *
+         *                               start/stop
+         *                     +--------------+-------------+
+         *                     |              |             |
+         *       viewDidLoad   |  start/stop  |  timerFired |
+         *            |        V    |         |    |        |
+         * +--------+ |  +--------+ |  +--------+  | +--------+
+         * | ready  |--->| idle   |--->| work   |--->| rest   |
+         * +--------+    +--------+    +--------+    +--------+
+         *                 A                  A        |    |
+         *                 |                  |        |    |
+         *                 |                  +--------+    |
+         *                 |  timerFired (!stopAfterBreak)  |
+         *                 |                                |
+         *                 +--------------------------------+
+         *                    timerFired (stopAfterBreak)
+         *
+         */
         stateMachine.addRoute(.ready => .idle)
         stateMachine.addRoutes(event: .startStop, transitions: [
             .idle => .work, .work => .idle, .rest => .idle
@@ -48,6 +69,10 @@ public class TomatoBarController: NSViewController {
             !self.settings.stopAfterBreak
         }
 
+        /*
+         * "Finish" handlers are called when time interval ended
+         * "End"    handlers are called when time interval ended or was cancelled
+         */
         stateMachine.addAnyHandler(.any => .work, handler: onWorkStart)
         stateMachine.addAnyHandler(.work => .rest, order: 0, handler: onWorkFinish)
         stateMachine.addAnyHandler(.work => .any, order: 1, handler: onWorkEnd)
