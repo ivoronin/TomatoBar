@@ -60,7 +60,7 @@ public class TomatoBarController: NSViewController {
         stateMachine.addAnyHandler(.work => .rest, order: 0, handler: onWorkFinish)
         stateMachine.addAnyHandler(.work => .any, order: 1, handler: onWorkEnd)
         stateMachine.addAnyHandler(.any => .rest, handler: onRestStart)
-        stateMachine.addAnyHandler(.rest => .any, handler: onRestFinish)
+        stateMachine.addAnyHandler(.rest => .work, handler: onRestFinish)
         stateMachine.addAnyHandler(.any => .idle, handler: onIdleStart)
 
         stateMachine.addErrorHandler { ctx in
