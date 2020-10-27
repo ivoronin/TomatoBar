@@ -55,16 +55,7 @@ public class TomatoBarController: NSViewController {
         stateMachine.addAnyHandler(.rest => .work, handler: onRestFinish)
         stateMachine.addAnyHandler(.any => .idle, handler: onIdleStart)
 
-        stateMachine.addErrorHandler { ctx in
-            fatalError(
-                """
-                stateMachine error: \
-                transition \(ctx.fromState) => \(ctx.toState), \
-                event \(String(describing: ctx.event)), \
-                userInfo \(String(describing: ctx.userInfo))
-                """
-            )
-        }
+        stateMachine.addErrorHandler { ctx in fatalError("state machine context: <\(ctx)>") }
 
         stateMachine <- .idle
     }
