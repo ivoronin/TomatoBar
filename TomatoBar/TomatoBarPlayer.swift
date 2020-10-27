@@ -21,10 +21,10 @@ public class TomatoBarPlayer {
         windupSound = try! AVAudioPlayer(data: windupSoundAsset!.data, fileTypeHint: "wav")
         ringingSound = try! AVAudioPlayer(data: ringingSoundAsset!.data, fileTypeHint: "wav")
         tickingSound = try! AVAudioPlayer(data: tickingSoundAsset!.data, fileTypeHint: "wav")
-        tickingSound.numberOfLoops = -1
         // swiftlint:enable force_try force_unwrapping
         windupSound.prepareToPlay()
         ringingSound.prepareToPlay()
+        tickingSound.numberOfLoops = -1
         tickingSound.prepareToPlay()
     }
 
