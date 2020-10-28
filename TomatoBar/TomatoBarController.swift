@@ -85,6 +85,11 @@ public class TomatoBarController: NSViewController {
         stateMachine <- .idle
     }
 
+    @IBAction private func aboutAction(_ sender: Any) {
+        NSApp.activate(ignoringOtherApps: true)
+        NSApp.orderFrontStandardAboutPanel()
+    }
+
     /** Called on Touch Bar button and Start and Stop menu items clicks */
     @IBAction private func startStopAction(_ sender: Any) {
         stateMachine <-! .startStop

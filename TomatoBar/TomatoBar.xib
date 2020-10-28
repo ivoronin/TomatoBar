@@ -138,7 +138,7 @@
                 <menuItem title="About Tomato Bar" id="exD-fT-9pp">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
-                        <action selector="orderFrontStandardAboutPanel:" target="-1" id="xFK-nj-m1G"/>
+                        <action selector="aboutAction:" target="fBA-S8-bL1" id="kwJ-8s-Wd0"/>
                     </connections>
                 </menuItem>
                 <menuItem title="Quit" keyEquivalent="q" id="bdF-Dy-7W8">
