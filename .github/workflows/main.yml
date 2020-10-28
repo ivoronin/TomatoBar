@@ -11,6 +11,10 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      - name: Create slug
+        id: crate_slug
+        run: echo ::set-env name=COMMIT_SLUG::${GITHUB_REF#refs/*/}
+
       - uses: actions/checkout@v2
 
       - name: Build
@@ -18,7 +22,7 @@ jobs:
         run: |
           xcodebuild archive -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release -archivePath TomatoBar.xcarchive
           xcodebuild archive -archivePath TomatoBar.xcarchive -exportArchive -exportOptionsPlist export_options.plist -exportPath .
-          zip -r "TomatoBar-${{ github.ref }}.zip" "Tomato Bar.app"
+          zip -r "TomatoBar-${COMMIT_SLUG}.zip" "Tomato Bar.app"
 
       - name: Create Release
         id: create_release
@@ -40,6 +44,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./"TomatoBar-${{ github.ref }}.zip"
-          asset_name: "TomatoBar-${{ github.ref }}.zip"
+          asset_path: ./"TomatoBar-${COMMIT_SLUG}.zip"
+          asset_name: "TomatoBar-${COMMIT_SLUG}.zip"
           asset_content_type: application/zip
