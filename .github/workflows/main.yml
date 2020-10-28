@@ -13,5 +13,33 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build and archive
-        run: xcodebuild archive -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release -archivePath TomatoBar.xcarchive
+      - name: Build
+        id: build
+        run: |
+          xcodebuild archive -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release -archivePath TomatoBar.xcarchive
+          xcodebuild archive -archivePath TomatoBar.xcarchive -exportArchive -exportOptionsPlist export_options.plist -exportPath .
+          zip -r "TomatoBar-${{ github.ref }}.zip" "Tomato Bar.app"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Version ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./"TomatoBar-${{ github.ref }}.zip"
+          asset_name: "TomatoBar-${{ github.ref }}.zip"
+          asset_content_type: application/zip
