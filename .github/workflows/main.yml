@@ -2,9 +2,8 @@ name: main
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -28,7 +27,6 @@ jobs:
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
@@ -40,7 +38,6 @@ jobs:
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
-        if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
