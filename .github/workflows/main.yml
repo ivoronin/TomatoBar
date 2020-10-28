@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Create slug
         id: crate_slug
-        run: echo ::set-env name=COMMIT_SLUG::${GITHUB_REF#refs/*/}
+        run: echo "COMMIT_SLUG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - uses: actions/checkout@v2
 
@@ -23,6 +23,7 @@ jobs:
           xcodebuild archive -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release -archivePath TomatoBar.xcarchive
           xcodebuild archive -archivePath TomatoBar.xcarchive -exportArchive -exportOptionsPlist export_options.plist -exportPath .
           zip -r "TomatoBar-${COMMIT_SLUG}.zip" "Tomato Bar.app"
+          stat -x "TomatoBar-${COMMIT_SLUG}.zip"
 
       - name: Create Release
         id: create_release
