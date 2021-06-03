@@ -9,6 +9,7 @@ public class TomatoBarSettings {
     private var defaults = UserDefaults.standard
     public var isRingingEnabled: Bool { defaults.bool(forKey: "isRingingEnabled") }
     public var isTickingEnabled: Bool { defaults.bool(forKey: "isTickingEnabled") }
+    public var isWindupEnabled: Bool { defaults.bool(forKey: "isWindupEnabled") }
     public var stopAfterBreak: Bool { defaults.bool(forKey: "stopAfterBreak") }
     public var workIntervalLength: Int { defaults.integer(forKey: "workIntervalLength") }
     public var restIntervalLength: Int { defaults.integer(forKey: "restIntervalLength") }
@@ -19,6 +20,7 @@ public class TomatoBarSettings {
             "restIntervalLength": 5,
             "isRingingEnabled": true,
             "isTickingEnabled": true,
+            "isWindupEnabled": true,
             "stopAfterBreak": false
         ])
     }

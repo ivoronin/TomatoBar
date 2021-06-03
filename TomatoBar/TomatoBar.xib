@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17156" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaDFRPlugin" version="17008"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
         <capability name="the Touch Bar" minToolsVersion="8.1" minSystemVersion="10.12.2" requiredIntegratedClassName="NSTouchBar"/>
     </dependencies>
@@ -17,11 +17,11 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="xIK-CL-wQU" customClass="AppDelegate" customModule="Tomato_Bar" customModuleProvider="target"/>
         <customView id="npz-J1-m5y" userLabel="Settings View">
-            <rect key="frame" x="0.0" y="0.0" width="190" height="109"/>
+            <rect key="frame" x="0.0" y="0.0" width="190" height="130"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ld3-Mf-rpZ">
-                    <rect key="frame" x="18" y="90" width="89" height="17"/>
+                    <rect key="frame" x="18" y="111" width="89" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Work interval" id="zUO-AB-qgM">
                         <font key="font" metaFont="menu" size="14"/>
@@ -30,7 +30,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hy3-fT-IuN">
-                    <rect key="frame" x="18" y="67" width="84" height="17"/>
+                    <rect key="frame" x="18" y="88" width="84" height="17"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Rest interval" id="4xm-0h-d9d">
                         <font key="font" metaFont="menu" size="14"/>
@@ -39,7 +39,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DCo-pq-j0c">
-                    <rect key="frame" x="119" y="88" width="44" height="19"/>
+                    <rect key="frame" x="119" y="109" width="44" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" bezelStyle="round" id="QYF-zW-W2p">
                         <font key="font" metaFont="message" size="11"/>
@@ -51,7 +51,7 @@
                     </connections>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AKg-1u-r3t">
-                    <rect key="frame" x="119" y="65" width="44" height="19"/>
+                    <rect key="frame" x="119" y="86" width="44" height="19"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <textFieldCell key="cell" controlSize="small" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" bezelStyle="round" id="Zb1-3W-T50">
                         <font key="font" metaFont="message" size="11"/>
@@ -63,7 +63,7 @@
                     </connections>
                 </textField>
                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZWN-pN-KOY">
-                    <rect key="frame" x="169" y="63" width="15" height="22"/>
+                    <rect key="frame" x="169" y="84" width="15" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="1" maxValue="99" doubleValue="1" id="KI0-gG-cPn"/>
                     <connections>
@@ -71,15 +71,26 @@
                     </connections>
                 </stepper>
                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mRg-nO-wpt">
-                    <rect key="frame" x="169" y="86" width="15" height="22"/>
+                    <rect key="frame" x="169" y="107" width="15" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                     <stepperCell key="cell" controlSize="small" continuous="YES" alignment="left" minValue="1" maxValue="99" doubleValue="1" id="Kw5-V1-ogF"/>
                     <connections>
                         <binding destination="zu7-7u-g3N" name="value" keyPath="values.workIntervalLength" id="Yjc-nS-M4C"/>
                     </connections>
                 </stepper>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NLH-n0-GFl">
+                    <rect key="frame" x="18" y="64" width="166" height="18"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="check" title="Windup sound" bezelStyle="regularSquare" imagePosition="right" state="on" inset="2" id="deg-Hl-UEb">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="menu" size="14"/>
+                    </buttonCell>
+                    <connections>
+                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.isWindupEnabled" id="edS-aY-qKc"/>
+                    </connections>
+                </button>
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FWj-30-Cso">
-                    <rect key="frame" x="18" y="43" width="166" height="18"/>
+                    <rect key="frame" x="18" y="44" width="166" height="18"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Ringing sound" bezelStyle="regularSquare" imagePosition="right" state="on" inset="2" id="tqk-pP-cR1">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -90,7 +101,7 @@
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R52-aA-DEq">
-                    <rect key="frame" x="18" y="23" width="166" height="18"/>
+                    <rect key="frame" x="18" y="24" width="166" height="18"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                     <buttonCell key="cell" type="check" title="Ticking sound" bezelStyle="regularSquare" imagePosition="right" state="on" inset="2" id="sqM-S2-y4s">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -101,19 +112,19 @@
                         <binding destination="zu7-7u-g3N" name="value" keyPath="values.isTickingEnabled" id="GZu-6g-JDC"/>
                     </connections>
                 </button>
-                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cRR-iX-vjt">
-                    <rect key="frame" x="18" y="3" width="166" height="18"/>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dh4-Mk-V6R">
+                    <rect key="frame" x="18" y="4" width="166" height="18"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Stop after break" bezelStyle="regularSquare" imagePosition="right" state="on" inset="2" id="9JF-gR-YGr">
+                    <buttonCell key="cell" type="check" title="Stop after break" bezelStyle="regularSquare" imagePosition="right" state="on" inset="2" id="gC6-dT-wLb">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="menu" size="14"/>
                     </buttonCell>
                     <connections>
-                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.stopAfterBreak" id="vju-9a-zwB"/>
+                        <binding destination="zu7-7u-g3N" name="value" keyPath="values.stopAfterBreak" id="WBi-z0-xgA"/>
                     </connections>
                 </button>
             </subviews>
-            <point key="canvasLocation" x="10" y="-44.5"/>
+            <point key="canvasLocation" x="10" y="-34"/>
         </customView>
         <menu id="bCg-Po-li9">
             <items>
@@ -155,6 +166,7 @@
                     <viewController key="viewController" id="fef-6B-Es1">
                         <button key="view" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Af7-RJ-eH8">
                             <rect key="frame" x="0.0" y="0.0" width="144" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             <buttonCell key="cell" type="push" title="00:00" bezelStyle="rounded" image="BarIcon" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EsI-fR-3ck">
                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                 <font key="font" usesAppearanceFont="YES"/>
