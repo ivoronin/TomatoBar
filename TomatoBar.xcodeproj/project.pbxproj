@@ -27,7 +27,7 @@
 		8A112DE92099F1A500DDBDD0 /* TomatoBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TomatoBar.xib; sourceTree = "<group>"; };
 		8A112E052099F8A000DDBDD0 /* TouchBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchBar.h; sourceTree = "<group>"; };
 		8A112E072099F9D000DDBDD0 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
-		8A112E092099FB8000DDBDD0 /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
+		8A112E092099FB8000DDBDD0 /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = /System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<absolute>"; };
 		8A112E0B2099FD1A00DDBDD0 /* TomatoBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarController.swift; sourceTree = "<group>"; };
 		8AA1D30A2546F76E00391A51 /* TomatoBarSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarSettings.swift; sourceTree = "<group>"; };
 		8AA1D3102546FA6700391A51 /* TomatoBarPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarPlayer.swift; sourceTree = "<group>"; };
@@ -331,7 +331,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
-				MARKETING_VERSION = 2.0.3;
+				MARKETING_VERSION = 0.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = TomatoBar/BridgingHeader.h;
@@ -358,7 +358,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
-				MARKETING_VERSION = 2.0.3;
+				MARKETING_VERSION = 0.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = TomatoBar/BridgingHeader.h;
