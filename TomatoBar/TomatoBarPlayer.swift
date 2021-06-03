@@ -29,7 +29,9 @@ public class TomatoBarPlayer {
     }
 
     public func playWindup() {
-        windupSound.play()
+        if settings.isWindupEnabled {
+            windupSound.play()
+        }
     }
 
     public func playRinging() {
