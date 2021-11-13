@@ -27,7 +27,7 @@
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2020 Ilya Voronin. All rights reserved. https://github.com/ivoronin/TomatoBar</string>
+	<string>Copyright © 2021 Ilya Voronin. All rights reserved. https://github.com/ivoronin/TomatoBar</string>
 	<key>NSMainNibFile</key>
 	<string>TomatoBar</string>
 	<key>NSPrincipalClass</key>
