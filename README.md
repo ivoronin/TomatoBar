@@ -9,7 +9,7 @@ Pomodoro Technique timer for macOS with Touch Bar support
 :white_check_mark: Working/Resting feature
 
 # Screenshot
-![Screenshot](screenshot.png?raw=true "Screenshot")
+<img src="https://github.com/ivoronin/TomatoBar/raw/readme/screenshot.png?raw=true" width="50%" height="50%"/>
 
 # Download
 [Latest release](https://github.com/ivoronin/TomatoBar/releases/latest/)
