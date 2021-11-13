@@ -14,9 +14,11 @@ public class TomatoBarPlayer {
     private var tickingSound: AVAudioPlayer
 
     public required init() {
+        // swiftlint:disable legacy_objc_type
         let windupSoundAsset = NSDataAsset(name: "windup")
         let ringingSoundAsset = NSDataAsset(name: "ringing")
         let tickingSoundAsset = NSDataAsset(name: "ticking")
+        // swiftlint:enable legacy_objc_type
         // swiftlint:disable force_try force_unwrapping
         windupSound = try! AVAudioPlayer(data: windupSoundAsset!.data, fileTypeHint: "wav")
         ringingSound = try! AVAudioPlayer(data: ringingSoundAsset!.data, fileTypeHint: "wav")
