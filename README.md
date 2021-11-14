@@ -3,6 +3,9 @@
 <p>
  
 <h1 align="center">TomatoBar</h1>
+<p align="center">
+<img src="https://img.shields.io/github/workflow/status/ivoronin/TomatoBar/main"/> <img src="https://img.shields.io/github/downloads/ivoronin/TomatoBar/total"/> <img src="https://img.shields.io/github/v/release/ivoronin/TomatoBar?display_name=tag"/>
+</p>
 
 <img
   src="https://github.com/ivoronin/TomatoBar/raw/badges/screenshot.png?raw=true"
@@ -17,7 +20,6 @@ TomatoBar is world's neatest Pomodoro timer for the macOS menu bar and the touch
 
 Download the latest release <a href="https://github.com/ivoronin/TomatoBar/releases/latest/">here</a>.
 
-![Build](https://img.shields.io/github/workflow/status/ivoronin/TomatoBar/main) ![Downloads](https://img.shields.io/github/downloads/ivoronin/TomatoBar/total) ![Release](https://img.shields.io/github/v/release/ivoronin/TomatoBar?display_name=tag)
 
 
 ## Licenses
