@@ -1,18 +1,26 @@
+<p align="center">
 <img src="https://raw.githubusercontent.com/ivoronin/TomatoBar/master/TomatoBar/Assets.xcassets/AppIcon.appiconset/icon_128x128%402x.png" width="128" height="128"/>
+<p>
+ 
+<h1 align="center">TomatoBar</h1>
+<p align="center">
+<img src="https://img.shields.io/github/workflow/status/ivoronin/TomatoBar/main"/> <img src="https://img.shields.io/github/downloads/ivoronin/TomatoBar/total"/> <img src="https://img.shields.io/github/v/release/ivoronin/TomatoBar?display_name=tag"/>
+</p>
 
-# TomatoBar
-Pomodoro Technique timer for macOS with Touch Bar support
+<img
+  src="https://github.com/ivoronin/TomatoBar/raw/badges/screenshot.png?raw=true"
+  alt="Screenshot"
+  width="50%"
+  align="right"
+/>
 
-:white_check_mark: Minimalistic app, contains no bloat or unnecessary features\
-:white_check_mark: Touch Bar support\
-:white_check_mark: Sandboxed with no entitlements\
-:white_check_mark: Working/Resting feature
+Have you ever heard of Pomodoro? It’s a great technique to help you keep track of time and stay on task during your studies or work. Read more about it on <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique">Wikipedia</a>.
 
-# Screenshot
-![Screenshot](screenshot.png?raw=true "Screenshot")
+TomatoBar is world's neatest Pomodoro timer for the macOS menu bar and the touch bar on the relevant devices. All the essential features are here - configurable work and rest intervals, optional sounds, discreet notifications.
 
-# Download
-[Latest release](https://github.com/ivoronin/TomatoBar/releases/latest/)
+Download the latest release <a href="https://github.com/ivoronin/TomatoBar/releases/latest/">here</a>.
 
-# Licenses
+
+
+## Licenses
  - Timer sounds are licensed from buddhabeats
