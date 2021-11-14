@@ -15,8 +15,6 @@ Have you ever heard of Pomodoro? It’s a great technique to help you keep track
 
 TomatoBar is world's neatest Pomodoro timer for the macOS menu bar and the touch bar on the relevant devices. All the essential features are here - configurable work and rest intervals, optional sounds, discreet notifications.
 
-Official builds are provided for Intel and M1 machines with macOS 10.12.2 and later. They are fully sandboxed and use entitlements (not a single one is needed, though).
-
 Download the latest release <a href="https://github.com/ivoronin/TomatoBar/releases/latest/">here</a>.
 
 ![Build](https://img.shields.io/github/workflow/status/ivoronin/TomatoBar/main) ![Downloads](https://img.shields.io/github/downloads/ivoronin/TomatoBar/total) ![Release](https://img.shields.io/github/v/release/ivoronin/TomatoBar?display_name=tag)
