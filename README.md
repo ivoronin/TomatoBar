@@ -8,11 +8,14 @@ Pomodoro Technique timer for macOS with Touch Bar support
 :white_check_mark: Sandboxed with no entitlements\
 :white_check_mark: Working/Resting feature
 
-# Screenshot
+## Badges
+![Build](https://img.shields.io/github/workflow/status/ivoronin/TomatoBar/main) ![Downloads](https://img.shields.io/github/downloads/ivoronin/TomatoBar/total) ![Release](https://img.shields.io/github/v/release/ivoronin/TomatoBar?display_name=tag)
+
+## Screenshot
 ![Screenshot](screenshot.png?raw=true "Screenshot")
 
-# Download
+## Download
 [Latest release](https://github.com/ivoronin/TomatoBar/releases/latest/)
 
-# Licenses
+## Licenses
  - Timer sounds are licensed from buddhabeats
