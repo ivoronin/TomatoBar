@@ -9,10 +9,10 @@ public struct TomatoBarView: View {
                 timer.startStopAction()
                 AppDelegate.shared.closePopover(nil)
             } label: {
-                Text("\(timer.startStopString) (⌘S)")
+                Text(timer.startStopString)
                     .frame(maxWidth: .infinity)
             }
-            .keyboardShortcut("S")
+            .keyboardShortcut(.defaultAction)
             Toggle(isOn: $timer.stopAfterBreak) {
                 Text("Stop after break").frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
