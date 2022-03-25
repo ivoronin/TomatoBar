@@ -1,30 +1,24 @@
-// swiftlint:disable explicit_type_interface
-// swiftlint:disable missing_docs
-// swiftlint:disable required_deinit
+import AppKit
 import AVFoundation
 import Foundation
 
 public class TomatoBarPlayer {
-    public static let shared = TomatoBarPlayer()
-
-    private let settings = TomatoBarSettings.shared
-
     private var windupSound: AVAudioPlayer
     private var ringingSound: AVAudioPlayer
     private var tickingSound: AVAudioPlayer
 
-    public required init() {
-        // swiftlint:disable legacy_objc_type
+    init() {
         let windupSoundAsset = NSDataAsset(name: "windup")
         let ringingSoundAsset = NSDataAsset(name: "ringing")
         let tickingSoundAsset = NSDataAsset(name: "ticking")
-        // swiftlint:enable legacy_objc_type
-        // swiftlint:disable force_try force_unwrapping
+
         let wav = AVFileType.wav.rawValue
+        // swiftlint:disable force_try
         windupSound = try! AVAudioPlayer(data: windupSoundAsset!.data, fileTypeHint: wav)
         ringingSound = try! AVAudioPlayer(data: ringingSoundAsset!.data, fileTypeHint: wav)
         tickingSound = try! AVAudioPlayer(data: tickingSoundAsset!.data, fileTypeHint: wav)
-        // swiftlint:enable force_try force_unwrapping
+        // swiftlint:enable force_try
+
         windupSound.prepareToPlay()
         ringingSound.prepareToPlay()
         tickingSound.numberOfLoops = -1
@@ -32,21 +26,15 @@ public class TomatoBarPlayer {
     }
 
     public func playWindup() {
-        if settings.isWindupEnabled {
-            windupSound.play()
-        }
+        windupSound.play()
     }
 
     public func playRinging() {
-        if settings.isRingingEnabled {
-            ringingSound.play()
-        }
+        ringingSound.play()
     }
 
     public func startTicking() {
-        if settings.isTickingEnabled {
-            tickingSound.play()
-        }
+        tickingSound.play()
     }
 
     public func stopTicking() {

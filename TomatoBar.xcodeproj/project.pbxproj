@@ -3,89 +3,87 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8A112DDA2099E8AE00DDBDD0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A112DD92099E8AE00DDBDD0 /* AppDelegate.swift */; };
-		8A112DDE2099E8B000DDBDD0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A112DDD2099E8B000DDBDD0 /* Assets.xcassets */; };
-		8A112DEA2099F1A500DDBDD0 /* TomatoBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8A112DE92099F1A500DDBDD0 /* TomatoBar.xib */; };
-		8A112E0A2099FB8000DDBDD0 /* DFRFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A112E092099FB8000DDBDD0 /* DFRFoundation.framework */; };
-		8A112E0C2099FD1A00DDBDD0 /* TomatoBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A112E0B2099FD1A00DDBDD0 /* TomatoBarController.swift */; };
-		8AA1D306254337B700391A51 /* SwiftState in Frameworks */ = {isa = PBXBuildFile; productRef = 8AA1D305254337B700391A51 /* SwiftState */; };
-		8AA1D30E2546F8D700391A51 /* TomatoBarSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA1D30A2546F76E00391A51 /* TomatoBarSettings.swift */; };
-		8AA1D3172546FC4100391A51 /* TomatoBarPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA1D3102546FA6700391A51 /* TomatoBarPlayer.swift */; };
-		8AA1D31D25483D1200391A51 /* TomatoBarState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA1D31C25483D1200391A51 /* TomatoBarState.swift */; };
+		8A21B78C27EE31A20009E5DB /* TomatoBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78B27EE31A20009E5DB /* TomatoBarApp.swift */; };
+		8A21B78E27EE31A20009E5DB /* TomatoBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78D27EE31A20009E5DB /* TomatoBarView.swift */; };
+		8A21B79027EE31A30009E5DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A21B78F27EE31A30009E5DB /* Assets.xcassets */; };
+		8A21B79327EE31A30009E5DB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A21B79227EE31A30009E5DB /* Preview Assets.xcassets */; };
+		8A9F700927EE396E0012A1EC /* TomatoBarState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F700827EE396E0012A1EC /* TomatoBarState.swift */; };
+		8A9F700F27EE3AED0012A1EC /* SwiftState in Frameworks */ = {isa = PBXBuildFile; productRef = 8A9F700E27EE3AED0012A1EC /* SwiftState */; };
+		8A9F701927EE3DAF0012A1EC /* TomatoBarTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F701827EE3DAF0012A1EC /* TomatoBarTimer.swift */; };
+		8A9F701F27EE536D0012A1EC /* TomatoBarPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F701E27EE536D0012A1EC /* TomatoBarPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8A112DD62099E8AE00DDBDD0 /* Tomato Bar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tomato Bar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8A112DD92099E8AE00DDBDD0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8A112DDD2099E8B000DDBDD0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8A112DE22099E8B100DDBDD0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8A112DE32099E8B100DDBDD0 /* TomatoBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TomatoBar.entitlements; sourceTree = "<group>"; };
-		8A112DE92099F1A500DDBDD0 /* TomatoBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TomatoBar.xib; sourceTree = "<group>"; };
-		8A112E052099F8A000DDBDD0 /* TouchBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TouchBar.h; sourceTree = "<group>"; };
-		8A112E072099F9D000DDBDD0 /* BridgingHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgingHeader.h; sourceTree = "<group>"; };
-		8A112E092099FB8000DDBDD0 /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
-		8A112E0B2099FD1A00DDBDD0 /* TomatoBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarController.swift; sourceTree = "<group>"; };
-		8AA1D30A2546F76E00391A51 /* TomatoBarSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarSettings.swift; sourceTree = "<group>"; };
-		8AA1D3102546FA6700391A51 /* TomatoBarPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarPlayer.swift; sourceTree = "<group>"; };
-		8AA1D31C25483D1200391A51 /* TomatoBarState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarState.swift; sourceTree = "<group>"; };
+		8A21B78827EE31A20009E5DB /* TomatoBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TomatoBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A21B78B27EE31A20009E5DB /* TomatoBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarApp.swift; sourceTree = "<group>"; };
+		8A21B78D27EE31A20009E5DB /* TomatoBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarView.swift; sourceTree = "<group>"; };
+		8A21B78F27EE31A30009E5DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8A21B79227EE31A30009E5DB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8A21B79427EE31A30009E5DB /* TomatoBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TomatoBar.entitlements; sourceTree = "<group>"; };
+		8A9F700827EE396E0012A1EC /* TomatoBarState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarState.swift; sourceTree = "<group>"; };
+		8A9F701827EE3DAF0012A1EC /* TomatoBarTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarTimer.swift; sourceTree = "<group>"; };
+		8A9F701E27EE536D0012A1EC /* TomatoBarPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarPlayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		8A112DD32099E8AE00DDBDD0 /* Frameworks */ = {
+		8A21B78527EE31A20009E5DB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AA1D306254337B700391A51 /* SwiftState in Frameworks */,
-				8A112E0A2099FB8000DDBDD0 /* DFRFoundation.framework in Frameworks */,
+				8A9F700F27EE3AED0012A1EC /* SwiftState in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8A112DCD2099E8AE00DDBDD0 = {
+		8A21B77F27EE31A20009E5DB = {
 			isa = PBXGroup;
 			children = (
-				8A112DD82099E8AE00DDBDD0 /* TomatoBar */,
-				8A112DD72099E8AE00DDBDD0 /* Products */,
-				8A112E082099FB7F00DDBDD0 /* Frameworks */,
+				8A21B78A27EE31A20009E5DB /* TomatoBar */,
+				8A21B78927EE31A20009E5DB /* Products */,
+				8A9F700D27EE3AED0012A1EC /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		8A112DD72099E8AE00DDBDD0 /* Products */ = {
+		8A21B78927EE31A20009E5DB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8A112DD62099E8AE00DDBDD0 /* Tomato Bar.app */,
+				8A21B78827EE31A20009E5DB /* TomatoBar.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8A112DD82099E8AE00DDBDD0 /* TomatoBar */ = {
+		8A21B78A27EE31A20009E5DB /* TomatoBar */ = {
 			isa = PBXGroup;
 			children = (
-				8A112DD92099E8AE00DDBDD0 /* AppDelegate.swift */,
-				8A112E0B2099FD1A00DDBDD0 /* TomatoBarController.swift */,
-				8AA1D31C25483D1200391A51 /* TomatoBarState.swift */,
-				8AA1D3102546FA6700391A51 /* TomatoBarPlayer.swift */,
-				8AA1D30A2546F76E00391A51 /* TomatoBarSettings.swift */,
-				8A112DE92099F1A500DDBDD0 /* TomatoBar.xib */,
-				8A112DDD2099E8B000DDBDD0 /* Assets.xcassets */,
-				8A112DE22099E8B100DDBDD0 /* Info.plist */,
-				8A112DE32099E8B100DDBDD0 /* TomatoBar.entitlements */,
-				8A112E052099F8A000DDBDD0 /* TouchBar.h */,
-				8A112E072099F9D000DDBDD0 /* BridgingHeader.h */,
+				8A21B78B27EE31A20009E5DB /* TomatoBarApp.swift */,
+				8A21B78D27EE31A20009E5DB /* TomatoBarView.swift */,
+				8A9F700827EE396E0012A1EC /* TomatoBarState.swift */,
+				8A9F701827EE3DAF0012A1EC /* TomatoBarTimer.swift */,
+				8A9F701E27EE536D0012A1EC /* TomatoBarPlayer.swift */,
+				8A21B78F27EE31A30009E5DB /* Assets.xcassets */,
+				8A21B79427EE31A30009E5DB /* TomatoBar.entitlements */,
+				8A21B79127EE31A30009E5DB /* Preview Content */,
 			);
 			path = TomatoBar;
 			sourceTree = "<group>";
 		};
-		8A112E082099FB7F00DDBDD0 /* Frameworks */ = {
+		8A21B79127EE31A30009E5DB /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				8A112E092099FB8000DDBDD0 /* DFRFoundation.framework */,
+				8A21B79227EE31A30009E5DB /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		8A9F700D27EE3AED0012A1EC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -93,122 +91,119 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8A112DD52099E8AE00DDBDD0 /* Tomato Bar */ = {
+		8A21B78727EE31A20009E5DB /* TomatoBar */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8A112DE62099E8B100DDBDD0 /* Build configuration list for PBXNativeTarget "Tomato Bar" */;
+			buildConfigurationList = 8A21B79727EE31A30009E5DB /* Build configuration list for PBXNativeTarget "TomatoBar" */;
 			buildPhases = (
-				8A112DD22099E8AE00DDBDD0 /* Sources */,
-				8A112DD32099E8AE00DDBDD0 /* Frameworks */,
-				8A112DD42099E8AE00DDBDD0 /* Resources */,
-				8A112E0F209A0BCE00DDBDD0 /* Swiftlint */,
+				8A9F702027EE5A870012A1EC /* Swiftlint */,
+				8A21B78427EE31A20009E5DB /* Sources */,
+				8A21B78527EE31A20009E5DB /* Frameworks */,
+				8A21B78627EE31A20009E5DB /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "Tomato Bar";
+			name = TomatoBar;
 			packageProductDependencies = (
-				8AA1D305254337B700391A51 /* SwiftState */,
+				8A9F700E27EE3AED0012A1EC /* SwiftState */,
 			);
-			productName = "Tomato Bar";
-			productReference = 8A112DD62099E8AE00DDBDD0 /* Tomato Bar.app */;
+			productName = TomatoBar;
+			productReference = 8A21B78827EE31A20009E5DB /* TomatoBar.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		8A112DCE2099E8AE00DDBDD0 /* Project object */ = {
+		8A21B78027EE31A20009E5DB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0930;
-				LastUpgradeCheck = 1210;
-				ORGANIZATIONNAME = "Ilya Voronin";
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1330;
+				LastUpgradeCheck = 1330;
 				TargetAttributes = {
-					8A112DD52099E8AE00DDBDD0 = {
-						CreatedOnToolsVersion = 9.3;
-						LastSwiftMigration = 1150;
-						SystemCapabilities = {
-							com.apple.Sandbox = {
-								enabled = 1;
-							};
-						};
+					8A21B78727EE31A20009E5DB = {
+						CreatedOnToolsVersion = 13.3;
 					};
 				};
 			};
-			buildConfigurationList = 8A112DD12099E8AE00DDBDD0 /* Build configuration list for PBXProject "TomatoBar" */;
-			compatibilityVersion = "Xcode 9.3";
+			buildConfigurationList = 8A21B78327EE31A20009E5DB /* Build configuration list for PBXProject "TomatoBar" */;
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 8A112DCD2099E8AE00DDBDD0;
+			mainGroup = 8A21B77F27EE31A20009E5DB;
 			packageReferences = (
-				8AA1D304254337B700391A51 /* XCRemoteSwiftPackageReference "SwiftState" */,
+				8A9F700C27EE3AA70012A1EC /* XCRemoteSwiftPackageReference "SwiftState" */,
 			);
-			productRefGroup = 8A112DD72099E8AE00DDBDD0 /* Products */;
+			productRefGroup = 8A21B78927EE31A20009E5DB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8A112DD52099E8AE00DDBDD0 /* Tomato Bar */,
+				8A21B78727EE31A20009E5DB /* TomatoBar */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		8A112DD42099E8AE00DDBDD0 /* Resources */ = {
+		8A21B78627EE31A20009E5DB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A112DEA2099F1A500DDBDD0 /* TomatoBar.xib in Resources */,
-				8A112DDE2099E8B000DDBDD0 /* Assets.xcassets in Resources */,
+				8A21B79327EE31A30009E5DB /* Preview Assets.xcassets in Resources */,
+				8A21B79027EE31A30009E5DB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		8A112E0F209A0BCE00DDBDD0 /* Swiftlint */ = {
+		8A9F702027EE5A870012A1EC /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
 			);
 			name = Swiftlint;
+			outputFileListPaths = (
+			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "[ \"${CI}\" ] || swiftlint --enable-all-rules\n";
+			shellScript = "[ ${CI} ] || swiftlint\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		8A112DD22099E8AE00DDBDD0 /* Sources */ = {
+		8A21B78427EE31A20009E5DB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AA1D3172546FC4100391A51 /* TomatoBarPlayer.swift in Sources */,
-				8AA1D30E2546F8D700391A51 /* TomatoBarSettings.swift in Sources */,
-				8AA1D31D25483D1200391A51 /* TomatoBarState.swift in Sources */,
-				8A112DDA2099E8AE00DDBDD0 /* AppDelegate.swift in Sources */,
-				8A112E0C2099FD1A00DDBDD0 /* TomatoBarController.swift in Sources */,
+				8A9F701F27EE536D0012A1EC /* TomatoBarPlayer.swift in Sources */,
+				8A21B78E27EE31A20009E5DB /* TomatoBarView.swift in Sources */,
+				8A9F701927EE3DAF0012A1EC /* TomatoBarTimer.swift in Sources */,
+				8A21B78C27EE31A20009E5DB /* TomatoBarApp.swift in Sources */,
+				8A9F700927EE396E0012A1EC /* TomatoBarState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		8A112DE42099E8B100DDBDD0 /* Debug */ = {
+		8A21B79527EE31A30009E5DB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -234,7 +229,6 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -253,8 +247,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MTL_ENABLE_DEBUG_INFO = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -262,14 +257,13 @@
 			};
 			name = Debug;
 		};
-		8A112DE52099E8B100DDBDD0 /* Release */ = {
+		8A21B79627EE31A30009E5DB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -295,7 +289,6 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -308,33 +301,41 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
-		8A112DE72099E8B100DDBDD0 /* Debug */ = {
+		8A21B79827EE31A30009E5DB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TomatoBar/TomatoBar.entitlements;
-				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"TomatoBar/Preview Content\"";
 				DEVELOPMENT_TEAM = 4C6H8UTMAG;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TomatoBar/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Ilya Voronin. All rights reserved. https://github.com/ivoronin/TomatoBar";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
-				MARKETING_VERSION = 0.0.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = TomatoBar/BridgingHeader.h;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -343,25 +344,32 @@
 			};
 			name = Debug;
 		};
-		8A112DE82099E8B100DDBDD0 /* Release */ = {
+		8A21B79927EE31A30009E5DB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TomatoBar/TomatoBar.entitlements;
-				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"TomatoBar/Preview Content\"";
 				DEVELOPMENT_TEAM = 4C6H8UTMAG;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TomatoBar/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 Ilya Voronin. All rights reserved. https://github.com/ivoronin/TomatoBar";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
-				MARKETING_VERSION = 0.0.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.3;
+				MARKETING_VERSION = 3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = TomatoBar/BridgingHeader.h;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -373,20 +381,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		8A112DD12099E8AE00DDBDD0 /* Build configuration list for PBXProject "TomatoBar" */ = {
+		8A21B78327EE31A20009E5DB /* Build configuration list for PBXProject "TomatoBar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8A112DE42099E8B100DDBDD0 /* Debug */,
-				8A112DE52099E8B100DDBDD0 /* Release */,
+				8A21B79527EE31A30009E5DB /* Debug */,
+				8A21B79627EE31A30009E5DB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8A112DE62099E8B100DDBDD0 /* Build configuration list for PBXNativeTarget "Tomato Bar" */ = {
+		8A21B79727EE31A30009E5DB /* Build configuration list for PBXNativeTarget "TomatoBar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8A112DE72099E8B100DDBDD0 /* Debug */,
-				8A112DE82099E8B100DDBDD0 /* Release */,
+				8A21B79827EE31A30009E5DB /* Debug */,
+				8A21B79927EE31A30009E5DB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -394,7 +402,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		8AA1D304254337B700391A51 /* XCRemoteSwiftPackageReference "SwiftState" */ = {
+		8A9F700C27EE3AA70012A1EC /* XCRemoteSwiftPackageReference "SwiftState" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ivoronin/SwiftState";
 			requirement = {
@@ -405,12 +413,12 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		8AA1D305254337B700391A51 /* SwiftState */ = {
+		8A9F700E27EE3AED0012A1EC /* SwiftState */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8AA1D304254337B700391A51 /* XCRemoteSwiftPackageReference "SwiftState" */;
+			package = 8A9F700C27EE3AA70012A1EC /* XCRemoteSwiftPackageReference "SwiftState" */;
 			productName = SwiftState;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 8A112DCE2099E8AE00DDBDD0 /* Project object */;
+	rootObject = 8A21B78027EE31A20009E5DB /* Project object */;
 }

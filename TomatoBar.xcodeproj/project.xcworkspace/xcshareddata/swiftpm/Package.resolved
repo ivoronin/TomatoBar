@@ -1,16 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "SwiftState",
-        "repositoryURL": "https://github.com/ivoronin/SwiftState",
-        "state": {
-          "branch": "swift/5.0",
-          "revision": "f2d1aad4a88491b012369c782e3303301dab5fe7",
-          "version": null
-        }
+  "pins" : [
+    {
+      "identity" : "swiftstate",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ivoronin/SwiftState",
+      "state" : {
+        "branch" : "swift/5.0",
+        "revision" : "f2d1aad4a88491b012369c782e3303301dab5fe7"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }
