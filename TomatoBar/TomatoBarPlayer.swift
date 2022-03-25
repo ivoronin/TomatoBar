@@ -13,11 +13,13 @@ public class TomatoBarPlayer {
         let tickingSoundAsset = NSDataAsset(name: "ticking")
 
         let wav = AVFileType.wav.rawValue
-        // swiftlint:disable force_try
-        windupSound = try! AVAudioPlayer(data: windupSoundAsset!.data, fileTypeHint: wav)
-        ringingSound = try! AVAudioPlayer(data: ringingSoundAsset!.data, fileTypeHint: wav)
-        tickingSound = try! AVAudioPlayer(data: tickingSoundAsset!.data, fileTypeHint: wav)
-        // swiftlint:enable force_try
+        do {
+            windupSound = try AVAudioPlayer(data: windupSoundAsset!.data, fileTypeHint: wav)
+            ringingSound = try AVAudioPlayer(data: ringingSoundAsset!.data, fileTypeHint: wav)
+            tickingSound = try AVAudioPlayer(data: tickingSoundAsset!.data, fileTypeHint: wav)
+        } catch {
+            fatalError("Error initializing players: \(error)")
+        }
 
         windupSound.prepareToPlay()
         ringingSound.prepareToPlay()
