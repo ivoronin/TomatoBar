@@ -74,12 +74,10 @@ public class TomatoBarTimer: ObservableObject {
         stateMachine <- .idle
     }
 
-    /** Called on Touch Bar button and Start and Stop menu items clicks */
     public func startStopAction() {
         stateMachine <-! .startStop
     }
 
-    /** Called when user clicks on the "Ticking sound" checkbox */
     public func toggleTickingAction() {
         if stateMachine.state == .work {
             player.toggleTicking()
@@ -98,7 +96,6 @@ public class TomatoBarTimer: ObservableObject {
         timer?.resume()
     }
 
-    /** Called every second by the timer */
     private func onTimerTick() {
         timeLeftSeconds -= 1
         DispatchQueue.main.async {
