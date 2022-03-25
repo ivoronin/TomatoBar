@@ -13,6 +13,7 @@ public struct TomatoBarView: View {
                     .frame(maxWidth: .infinity)
             }
             .keyboardShortcut(.defaultAction)
+            Divider()
             Toggle(isOn: $timer.stopAfterBreak) {
                 Text("Stop after break").frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
@@ -24,6 +25,7 @@ public struct TomatoBarView: View {
                 Text("Rest interval:").frame(maxWidth: .infinity, alignment: .leading)
                 Text("\(timer.restIntervalLength) min")
             }
+            Divider()
             Text("Sounds:")
             HStack {
                 Toggle("Windup", isOn: $timer.isWindupEnabled)
