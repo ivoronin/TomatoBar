@@ -40,11 +40,3 @@ public struct TomatoBarView: View {
         }.padding(12)
     }
 }
-
-#if DEBUG
-    public struct TomatoBarView_Previews: PreviewProvider {
-        public static var previews: some View {
-            TomatoBarView()
-        }
-    }
-#endif
