@@ -1,52 +1,42 @@
-// swiftlint:disable explicit_type_interface
-// swiftlint:disable missing_docs
-// swiftlint:disable required_deinit
+import AppKit
 import AVFoundation
 import Foundation
 
 public class TomatoBarPlayer {
-    public static let shared = TomatoBarPlayer()
-
-    private let settings = TomatoBarSettings.shared
-
     private var windupSound: AVAudioPlayer
-    private var ringingSound: AVAudioPlayer
+    private var dingSound: AVAudioPlayer
     private var tickingSound: AVAudioPlayer
 
-    public required init() {
-        // swiftlint:disable legacy_objc_type
+    init() {
         let windupSoundAsset = NSDataAsset(name: "windup")
-        let ringingSoundAsset = NSDataAsset(name: "ringing")
+        let dingSoundAsset = NSDataAsset(name: "ding")
         let tickingSoundAsset = NSDataAsset(name: "ticking")
-        // swiftlint:enable legacy_objc_type
-        // swiftlint:disable force_try force_unwrapping
+
         let wav = AVFileType.wav.rawValue
-        windupSound = try! AVAudioPlayer(data: windupSoundAsset!.data, fileTypeHint: wav)
-        ringingSound = try! AVAudioPlayer(data: ringingSoundAsset!.data, fileTypeHint: wav)
-        tickingSound = try! AVAudioPlayer(data: tickingSoundAsset!.data, fileTypeHint: wav)
-        // swiftlint:enable force_try force_unwrapping
+        do {
+            windupSound = try AVAudioPlayer(data: windupSoundAsset!.data, fileTypeHint: wav)
+            dingSound = try AVAudioPlayer(data: dingSoundAsset!.data, fileTypeHint: wav)
+            tickingSound = try AVAudioPlayer(data: tickingSoundAsset!.data, fileTypeHint: wav)
+        } catch {
+            fatalError("Error initializing players: \(error)")
+        }
+
         windupSound.prepareToPlay()
-        ringingSound.prepareToPlay()
+        dingSound.prepareToPlay()
         tickingSound.numberOfLoops = -1
         tickingSound.prepareToPlay()
     }
 
     public func playWindup() {
-        if settings.isWindupEnabled {
-            windupSound.play()
-        }
+        windupSound.play()
     }
 
-    public func playRinging() {
-        if settings.isRingingEnabled {
-            ringingSound.play()
-        }
+    public func playDing() {
+        dingSound.play()
     }
 
     public func startTicking() {
-        if settings.isTickingEnabled {
-            tickingSound.play()
-        }
+        tickingSound.play()
     }
 
     public func stopTicking() {

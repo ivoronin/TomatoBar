@@ -1,7 +1,7 @@
 {
   "data" : [
     {
-      "filename" : "windup.wav",
+      "filename" : "ding.wav",
       "idiom" : "universal",
       "universal-type-identifier" : "com.microsoft.waveform-audio"
     }

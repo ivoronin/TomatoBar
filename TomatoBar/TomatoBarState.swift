@@ -1,4 +1,3 @@
-// swiftlint:disable missing_docs
 import Foundation
 import SwiftState
 
