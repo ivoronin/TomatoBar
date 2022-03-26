@@ -10,7 +10,6 @@
 		8A21B78C27EE31A20009E5DB /* TomatoBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78B27EE31A20009E5DB /* TomatoBarApp.swift */; };
 		8A21B78E27EE31A20009E5DB /* TomatoBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78D27EE31A20009E5DB /* TomatoBarView.swift */; };
 		8A21B79027EE31A30009E5DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A21B78F27EE31A30009E5DB /* Assets.xcassets */; };
-		8A21B79327EE31A30009E5DB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A21B79227EE31A30009E5DB /* Preview Assets.xcassets */; };
 		8A9F700927EE396E0012A1EC /* TomatoBarState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F700827EE396E0012A1EC /* TomatoBarState.swift */; };
 		8A9F700F27EE3AED0012A1EC /* SwiftState in Frameworks */ = {isa = PBXBuildFile; productRef = 8A9F700E27EE3AED0012A1EC /* SwiftState */; };
 		8A9F701927EE3DAF0012A1EC /* TomatoBarTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F701827EE3DAF0012A1EC /* TomatoBarTimer.swift */; };
@@ -22,7 +21,6 @@
 		8A21B78B27EE31A20009E5DB /* TomatoBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarApp.swift; sourceTree = "<group>"; };
 		8A21B78D27EE31A20009E5DB /* TomatoBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarView.swift; sourceTree = "<group>"; };
 		8A21B78F27EE31A30009E5DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8A21B79227EE31A30009E5DB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8A21B79427EE31A30009E5DB /* TomatoBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TomatoBar.entitlements; sourceTree = "<group>"; };
 		8A9F700827EE396E0012A1EC /* TomatoBarState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarState.swift; sourceTree = "<group>"; };
 		8A9F701827EE3DAF0012A1EC /* TomatoBarTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarTimer.swift; sourceTree = "<group>"; };
@@ -68,17 +66,8 @@
 				8A9F701E27EE536D0012A1EC /* TomatoBarPlayer.swift */,
 				8A21B78F27EE31A30009E5DB /* Assets.xcassets */,
 				8A21B79427EE31A30009E5DB /* TomatoBar.entitlements */,
-				8A21B79127EE31A30009E5DB /* Preview Content */,
 			);
 			path = TomatoBar;
-			sourceTree = "<group>";
-		};
-		8A21B79127EE31A30009E5DB /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				8A21B79227EE31A30009E5DB /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 		8A9F700D27EE3AED0012A1EC /* Frameworks */ = {
@@ -153,7 +142,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A21B79327EE31A30009E5DB /* Preview Assets.xcassets in Resources */,
 				8A21B79027EE31A30009E5DB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -319,7 +307,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"TomatoBar/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -353,7 +341,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"TomatoBar/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
