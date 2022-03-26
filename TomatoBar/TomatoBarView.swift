@@ -38,6 +38,7 @@ public struct TomatoBarView: View {
                         timer.toggleTickingAction()
                     }
             }
-        }.padding(12)
+        }
+        .padding(12)
     }
 }
