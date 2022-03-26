@@ -12,6 +12,7 @@ public struct TomatoBarView: View {
                 Text(timer.startStopString)
                     .frame(maxWidth: .infinity)
             }
+            .controlSize(.large)
             .keyboardShortcut(.defaultAction)
             Divider()
             Toggle(isOn: $timer.stopAfterBreak) {
