@@ -19,6 +19,7 @@ jobs:
       - name: Build
         id: build
         run: |
+          find . -name Package.resolved -exec rm {} \;
           xcodebuild archive -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release -archivePath TomatoBar.xcarchive MARKETING_VERSION=${COMMIT_SLUG}
           xcodebuild archive -archivePath TomatoBar.xcarchive -exportArchive -exportOptionsPlist export_options.plist -exportPath .
           zip -r "TomatoBar-${COMMIT_SLUG}.zip" "Tomato Bar.app"
