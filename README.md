@@ -8,7 +8,7 @@
 </p>
 
 <img
-  src="https://github.com/ivoronin/TomatoBar/raw/dev/screenshot.png?raw=true"
+  src="https://github.com/ivoronin/TomatoBar/raw/main/screenshot.png?raw=true"
   alt="Screenshot"
   width="50%"
   align="right"
