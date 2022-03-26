@@ -30,7 +30,7 @@ public struct TomatoBarView: View {
             HStack {
                 Toggle("Windup", isOn: $timer.isWindupEnabled)
                 Spacer()
-                Toggle("Ringing", isOn: $timer.isRingingEnabled)
+                Toggle("Ding", isOn: $timer.isDingEnabled)
                 Spacer()
                 Toggle("Ticking", isOn: $timer.isTickingEnabled)
                     .onChange(of: timer.isTickingEnabled) { _ in

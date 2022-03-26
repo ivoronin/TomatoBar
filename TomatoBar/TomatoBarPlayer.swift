@@ -4,25 +4,25 @@ import Foundation
 
 public class TomatoBarPlayer {
     private var windupSound: AVAudioPlayer
-    private var ringingSound: AVAudioPlayer
+    private var dingSound: AVAudioPlayer
     private var tickingSound: AVAudioPlayer
 
     init() {
         let windupSoundAsset = NSDataAsset(name: "windup")
-        let ringingSoundAsset = NSDataAsset(name: "ringing")
+        let dingSoundAsset = NSDataAsset(name: "ding")
         let tickingSoundAsset = NSDataAsset(name: "ticking")
 
         let wav = AVFileType.wav.rawValue
         do {
             windupSound = try AVAudioPlayer(data: windupSoundAsset!.data, fileTypeHint: wav)
-            ringingSound = try AVAudioPlayer(data: ringingSoundAsset!.data, fileTypeHint: wav)
+            dingSound = try AVAudioPlayer(data: dingSoundAsset!.data, fileTypeHint: wav)
             tickingSound = try AVAudioPlayer(data: tickingSoundAsset!.data, fileTypeHint: wav)
         } catch {
             fatalError("Error initializing players: \(error)")
         }
 
         windupSound.prepareToPlay()
-        ringingSound.prepareToPlay()
+        dingSound.prepareToPlay()
         tickingSound.numberOfLoops = -1
         tickingSound.prepareToPlay()
     }
@@ -31,8 +31,8 @@ public class TomatoBarPlayer {
         windupSound.play()
     }
 
-    public func playRinging() {
-        ringingSound.play()
+    public func playDing() {
+        dingSound.play()
     }
 
     public func startTicking() {

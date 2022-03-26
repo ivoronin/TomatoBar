@@ -8,7 +8,7 @@ let digitFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
 
 public class TomatoBarTimer: ObservableObject {
     @AppStorage("isWindupEnabled") public var isWindupEnabled = true
-    @AppStorage("isRingingEnabled") public var isRingingEnabled = true
+    @AppStorage("isDingEnabled") public var isDingEnabled = true
     @AppStorage("isTickingEnabled") public var isTickingEnabled = true
     @AppStorage("stopAfterBreak") public var stopAfterBreak = false
     @AppStorage("workIntervalLength") public var workIntervalLength = 25
@@ -127,8 +127,8 @@ public class TomatoBarTimer: ObservableObject {
 
     private func onWorkFinish(context _: TomatoBarContext) {
         sendNotification(title: "Time's up", body: "It's time for a break!")
-        if isRingingEnabled {
-            player.playRinging()
+        if isDingEnabled {
+            player.playDing()
         }
     }
 
