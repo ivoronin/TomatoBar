@@ -11,6 +11,7 @@ public class TomatoBarTimer: ObservableObject {
     @AppStorage("isDingEnabled") public var isDingEnabled = true
     @AppStorage("isTickingEnabled") public var isTickingEnabled = true
     @AppStorage("stopAfterBreak") public var stopAfterBreak = false
+    @AppStorage("showTimerInMenuBar") public var showTimerInMenuBar = true
     @AppStorage("workIntervalLength") public var workIntervalLength = 25
     @AppStorage("restIntervalLength") public var restIntervalLength = 5
 
@@ -97,20 +98,27 @@ public class TomatoBarTimer: ObservableObject {
         timer?.resume()
     }
 
+    public func renderTimeLeft() {
+        var buttonTitle = NSAttributedString()
+        timeLeftString = String(
+            format: "%.2i:%.2i",
+            timeLeftSeconds / 60,
+            timeLeftSeconds % 60
+        )
+        if showTimerInMenuBar {
+            buttonTitle = NSAttributedString(
+                string: " \(timeLeftString)",
+                attributes: [NSAttributedString.Key.font: digitFont]
+            )
+        }
+        statusBarItem?.button?.attributedTitle = buttonTitle
+    }
+
     private func onTimerTick() {
         timeLeftSeconds -= 1
         DispatchQueue.main.async {
             if self.timeLeftSeconds >= 0 {
-                self.timeLeftString = String(
-                    format: "%.2i:%.2i",
-                    self.timeLeftSeconds / 60,
-                    self.timeLeftSeconds % 60
-                )
-                let buttonTitle = NSAttributedString(
-                    string: " \(self.timeLeftString)",
-                    attributes: [NSAttributedString.Key.font: digitFont]
-                )
-                self.statusBarItem?.button?.attributedTitle = buttonTitle
+                self.renderTimeLeft()
             } else {
                 self.stateMachine <-! .timerFired
             }

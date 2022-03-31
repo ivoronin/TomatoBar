@@ -27,6 +27,13 @@ public struct TomatoBarView: View {
             Toggle(isOn: $timer.stopAfterBreak) {
                 Text("Stop after break").frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
+            Toggle(isOn: $timer.showTimerInMenuBar) {
+                Text("Show timer in menu bar").frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .onChange(of: timer.showTimerInMenuBar) { _ in
+                timer.renderTimeLeft()
+            }
+            .toggleStyle(.switch)
             Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
                 Text("Work interval:").frame(maxWidth: .infinity, alignment: .leading)
                 Text("\(timer.workIntervalLength) min")
