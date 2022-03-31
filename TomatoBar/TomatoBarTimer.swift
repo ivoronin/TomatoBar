@@ -15,8 +15,9 @@ public class TomatoBarTimer: ObservableObject {
     @AppStorage("restIntervalLength") public var restIntervalLength = 5
 
     @Published var startStopString: String = "Start"
+    @Published var timeLeftString: String = ""
 
-    private var stateMachine = TomatoBarStateMachine(state: .ready)
+    @Published var stateMachine = TomatoBarStateMachine(state: .ready)
     private var statusBarItem: NSStatusItem? {
         return AppDelegate.shared.statusBarItem
     }
@@ -100,12 +101,13 @@ public class TomatoBarTimer: ObservableObject {
         timeLeftSeconds -= 1
         DispatchQueue.main.async {
             if self.timeLeftSeconds >= 0 {
+                self.timeLeftString = String(
+                    format: "%.2i:%.2i",
+                    self.timeLeftSeconds / 60,
+                    self.timeLeftSeconds % 60
+                )
                 let buttonTitle = NSAttributedString(
-                    string: String(
-                        format: " %.2i:%.2i",
-                        self.timeLeftSeconds / 60,
-                        self.timeLeftSeconds % 60
-                    ),
+                    string: " \(self.timeLeftString)",
                     attributes: [NSAttributedString.Key.font: digitFont]
                 )
                 self.statusBarItem?.button?.attributedTitle = buttonTitle

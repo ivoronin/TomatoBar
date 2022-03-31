@@ -2,6 +2,11 @@ import SwiftUI
 
 public struct TomatoBarView: View {
     @ObservedObject var timer = TomatoBarTimer()
+    @State private var buttonHovered = false
+
+    private var showButtonTimer: Bool {
+        [.work, .rest].contains(timer.stateMachine.state) && !buttonHovered
+    }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -9,8 +14,12 @@ public struct TomatoBarView: View {
                 timer.startStopAction()
                 AppDelegate.shared.closePopover(nil)
             } label: {
-                Text(timer.startStopString)
+                Text(showButtonTimer ? timer.timeLeftString : timer.startStopString)
+                    .font(.system(.body).monospacedDigit())
                     .frame(maxWidth: .infinity)
+            }
+            .onHover { over in
+                buttonHovered = over
             }
             .controlSize(.large)
             .keyboardShortcut(.defaultAction)
