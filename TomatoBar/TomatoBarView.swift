@@ -5,7 +5,7 @@ public struct TomatoBarView: View {
     @State private var buttonHovered = false
 
     private var showButtonTimer: Bool {
-        [.work, .rest].contains(timer.stateMachine.state) && !buttonHovered
+        timer.isActive() && !buttonHovered
     }
 
     public var body: some View {

@@ -18,7 +18,7 @@ public class TomatoBarTimer: ObservableObject {
     @Published var startStopString: String = "Start"
     @Published var timeLeftString: String = ""
 
-    @Published var stateMachine = TomatoBarStateMachine(state: .ready)
+    var stateMachine = TomatoBarStateMachine(state: .ready)
     private var statusBarItem: NSStatusItem? {
         return AppDelegate.shared.statusBarItem
     }
@@ -98,6 +98,11 @@ public class TomatoBarTimer: ObservableObject {
         timer?.resume()
     }
 
+    public func isActive() -> Bool {
+        print("isActive")
+        return [.work, .rest].contains(stateMachine.state)
+    }
+
     public func renderTimeLeft() {
         var buttonTitle = NSAttributedString()
         timeLeftString = String(
@@ -105,7 +110,7 @@ public class TomatoBarTimer: ObservableObject {
             timeLeftSeconds / 60,
             timeLeftSeconds % 60
         )
-        if showTimerInMenuBar {
+        if showTimerInMenuBar, isActive() {
             buttonTitle = NSAttributedString(
                 string: " \(timeLeftString)",
                 attributes: [NSAttributedString.Key.font: digitFont]
