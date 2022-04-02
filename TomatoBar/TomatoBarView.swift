@@ -41,10 +41,20 @@ public struct TomatoBarView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Text("\(timer.workIntervalLength) min")
                 }
-                Stepper(value: $timer.restIntervalLength, in: 1 ... 60) {
-                    Text("Rest interval:")
+                Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
+                    Text("Short rest interval:")
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("\(timer.restIntervalLength) min")
+                    Text("\(timer.shortRestIntervalLength) min")
+                }
+                Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
+                    Text("Long rest interval:")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("\(timer.longRestIntervalLength) min")
+                }
+                Stepper(value: $timer.workIntervalsInSet, in: 1 ... 10) {
+                    Text("Work intervals in set:")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("\(timer.workIntervalsInSet)")
                 }
             }
             Divider()
@@ -99,7 +109,7 @@ public struct TomatoBarView: View {
             )
         #endif
             /* Use values from GeometryReader */
-            .frame(width: 226, height: 267)
+            .frame(width: 226, height: 323)
             .padding(12)
     }
 }

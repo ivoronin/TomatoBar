@@ -10,7 +10,7 @@ enum BarIcon {
     static var idle = #imageLiteral(resourceName: "BarIconIdle")
     static var work = #imageLiteral(resourceName: "BarIconWork")
     static var shortRest = #imageLiteral(resourceName: "BarIconShortRest")
-    static var longRest = #imageLiteral(resourceName: "BarIconShortRest")
+    static var longRest = #imageLiteral(resourceName: "BarIconLongRest")
 }
 
 public class TomatoBarTimer: ObservableObject {
@@ -20,7 +20,9 @@ public class TomatoBarTimer: ObservableObject {
     @AppStorage("stopAfterBreak") public var stopAfterBreak = false
     @AppStorage("showTimerInMenuBar") public var showTimerInMenuBar = true
     @AppStorage("workIntervalLength") public var workIntervalLength = 25
-    @AppStorage("restIntervalLength") public var restIntervalLength = 5
+    @AppStorage("shortRestIntervalLength") public var shortRestIntervalLength = 5
+    @AppStorage("longRestIntervalLength") public var longRestIntervalLength = 15
+    @AppStorage("workIntervalsInSet") public var workIntervalsInSet = 4
 
     @Published var startStopString: String = "Start"
     @Published var timeLeftString: String = ""
@@ -32,6 +34,7 @@ public class TomatoBarTimer: ObservableObject {
 
     private let player = TomatoBarPlayer()
     private var timeLeftSeconds: Int = 0
+    private var consecutiveWorkIntervals: Int = 0
     private var timer: DispatchSourceTimer?
 
     init() {
@@ -148,7 +151,7 @@ public class TomatoBarTimer: ObservableObject {
     }
 
     private func onWorkFinish(context _: TomatoBarContext) {
-        sendNotification(title: "Time's up", body: "It's time for a break!")
+        consecutiveWorkIntervals += 1
         if isDingEnabled {
             player.playDing()
         }
@@ -159,8 +162,21 @@ public class TomatoBarTimer: ObservableObject {
     }
 
     private func onRestStart(context _: TomatoBarContext) {
-        statusBarItem?.button?.image = BarIcon.shortRest
-        startTimer(seconds: restIntervalLength * 60)
+        var kind = "short"
+        var length = shortRestIntervalLength
+        var image = BarIcon.shortRest
+        if consecutiveWorkIntervals >= workIntervalsInSet {
+            kind = "long"
+            length = longRestIntervalLength
+            image = BarIcon.longRest
+            consecutiveWorkIntervals = 0
+        }
+        sendNotification(
+            title: "Time's up",
+            body: "It's time for \(kind) a break!"
+        )
+        statusBarItem?.button?.image = image
+        startTimer(seconds: length * 60)
     }
 
     private func onRestFinish(context _: TomatoBarContext) {
@@ -171,6 +187,7 @@ public class TomatoBarTimer: ObservableObject {
         startStopString = "Start"
         statusBarItem?.button?.title = ""
         statusBarItem?.button?.image = BarIcon.idle
+        consecutiveWorkIntervals = 0
 
         if timer != nil {
             timer?.cancel()
