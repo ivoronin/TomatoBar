@@ -23,16 +23,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     static var shared: AppDelegate!
 
     func applicationDidFinishLaunching(_: Notification) {
-        UNUserNotificationCenter
-            .current()
-            .requestAuthorization(
-                options: [.alert]
-            ) { _, error in
-                if error != nil {
-                    print("Error requesting notification authorization: \(error!)")
-                }
-            }
-
         let view = TomatoBarView()
 
         popover.behavior = .transient
@@ -43,6 +33,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusBarItem?.button?.image = BarIcon.idle
         statusBarItem?.button?.imagePosition = .imageLeft
         statusBarItem?.button?.action = #selector(AppDelegate.togglePopover(_:))
+
+        NotificationCenter.requestAuthorization()
     }
 
     @objc func showPopover(_: AnyObject?) {
@@ -60,6 +52,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             closePopover(sender)
         } else {
             showPopover(sender)
+        }
+    }
+}
+
+enum NotificationCenter {
+    static func requestAuthorization() {
+        UNUserNotificationCenter
+            .current()
+            .requestAuthorization(
+                options: [.alert]
+            ) { _, error in
+                if error != nil {
+                    print("Error requesting notification authorization: \(error!)")
+                }
+            }
+    }
+
+    static func send(title: String, body: String) {
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.getNotificationSettings { settings in
+            if settings.authorizationStatus != .authorized ||
+                settings.alertSetting != .enabled
+            {
+                return
+            }
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = body
+            let request = UNNotificationRequest(
+                identifier: UUID().uuidString,
+                content: content,
+                trigger: nil
+            )
+            notificationCenter.add(request) { error in
+                if error != nil {
+                    print("Error adding notification: \(error!)")
+                }
+            }
         }
     }
 }

@@ -168,7 +168,7 @@ public class TomatoBarTimer: ObservableObject {
             image = BarIcon.longRest
             consecutiveWorkIntervals = 0
         }
-        sendNotification(
+        NotificationCenter.send(
             title: "Time's up",
             body: "It's time for a \(kind) break!"
         )
@@ -177,7 +177,7 @@ public class TomatoBarTimer: ObservableObject {
     }
 
     private func onRestFinish(context _: TomatoBarContext) {
-        sendNotification(title: "Break is over", body: "Keep up the good work!")
+        NotificationCenter.send(title: "Break is over", body: "Keep up the good work!")
     }
 
     private func onIdleStart(context _: TomatoBarContext) {
@@ -188,30 +188,6 @@ public class TomatoBarTimer: ObservableObject {
         if timer != nil {
             timer?.cancel()
             timer = nil
-        }
-    }
-
-    private func sendNotification(title: String, body: String) {
-        let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.getNotificationSettings { settings in
-            if settings.authorizationStatus != .authorized ||
-                settings.alertSetting != .enabled
-            {
-                return
-            }
-            let content = UNMutableNotificationContent()
-            content.title = title
-            content.body = body
-            let request = UNNotificationRequest(
-                identifier: UUID().uuidString,
-                content: content,
-                trigger: nil
-            )
-            notificationCenter.add(request) { error in
-                if error != nil {
-                    print("Error adding notification: \(error!)")
-                }
-            }
         }
     }
 }
