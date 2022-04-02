@@ -14,7 +14,8 @@ public struct TomatoBarView: View {
                 timer.startStopAction()
                 AppDelegate.shared.closePopover(nil)
             } label: {
-                Text(showButtonTimer ? timer.timeLeftString : timer.startStopString)
+                Text(showButtonTimer ? timer.timeLeftString :
+                    timer.isActive() ? "Stop" : "Start")
                     .font(.system(.body).monospacedDigit())
                     .frame(maxWidth: .infinity)
             }

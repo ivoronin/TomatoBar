@@ -24,7 +24,6 @@ public class TomatoBarTimer: ObservableObject {
     @AppStorage("longRestIntervalLength") public var longRestIntervalLength = 15
     @AppStorage("workIntervalsInSet") public var workIntervalsInSet = 4
 
-    @Published var startStopString: String = "Start"
     @Published var timeLeftString: String = ""
 
     var stateMachine = TomatoBarStateMachine(state: .ready)
@@ -97,8 +96,6 @@ public class TomatoBarTimer: ObservableObject {
     }
 
     private func startTimer(seconds: Int) {
-        startStopString = "Stop"
-
         timeLeftSeconds = seconds
 
         let queue = DispatchQueue(label: "Timer")
@@ -184,7 +181,6 @@ public class TomatoBarTimer: ObservableObject {
     }
 
     private func onIdleStart(context _: TomatoBarContext) {
-        startStopString = "Start"
         statusBarItem?.button?.title = ""
         statusBarItem?.button?.image = BarIcon.idle
         consecutiveWorkIntervals = 0
