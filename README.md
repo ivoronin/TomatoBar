@@ -14,6 +14,7 @@
   align="right"
 />
 
+## Overview
 Have you ever heard of Pomodoro? It’s a great technique to help you keep track of time and stay on task during your studies or work. Read more about it on <a href="https://en.wikipedia.org/wiki/Pomodoro_Technique">Wikipedia</a>.
 
 TomatoBar is world's neatest Pomodoro timer for the macOS menu bar. All the essential features are here - configurable work and rest intervals, optional sounds, discreet notifications.
@@ -22,7 +23,6 @@ Download the latest release <a href="https://github.com/ivoronin/TomatoBar/relea
 
 ## Older versions
 Touch bar integration and older macOS versions (earlier than Big Sur) are supported by TomatoBar versions prior to 3.0
-
 
 ## Licenses
  - Timer sounds are licensed from buddhabeats
