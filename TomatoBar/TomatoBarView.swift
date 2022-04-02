@@ -54,7 +54,7 @@ public struct TomatoBarView: View {
                 }
                 .help("Duration of the lengthy break, taken after finishing work interval set")
                 Stepper(value: $timer.workIntervalsInSet, in: 1 ... 10) {
-                    Text("Work intervals in set:")
+                    Text("Work intervals in a set:")
                         .frame(maxWidth: .infinity, alignment: .leading)
                     Text("\(timer.workIntervalsInSet)")
                 }

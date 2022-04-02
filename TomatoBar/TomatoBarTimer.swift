@@ -170,7 +170,7 @@ public class TomatoBarTimer: ObservableObject {
         }
         sendNotification(
             title: "Time's up",
-            body: "It's time for \(kind) a break!"
+            body: "It's time for a \(kind) break!"
         )
         statusBarItem?.button?.image = image
         startTimer(seconds: length * 60)
