@@ -1,6 +1,5 @@
 import AppKit
 import AVFoundation
-import Foundation
 
 public class TomatoBarPlayer {
     private var windupSound: AVAudioPlayer

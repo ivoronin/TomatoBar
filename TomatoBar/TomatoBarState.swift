@@ -1,4 +1,3 @@
-import Foundation
 import SwiftState
 
 public typealias TomatoBarStateMachine = StateMachine<TomatoBarState, TomatoBarEvent>

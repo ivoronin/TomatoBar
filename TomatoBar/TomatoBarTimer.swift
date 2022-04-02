@@ -1,8 +1,5 @@
-import AppKit
-import Foundation
 import SwiftState
 import SwiftUI
-import UserNotifications
 
 let digitFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
 
