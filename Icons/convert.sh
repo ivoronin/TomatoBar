@@ -11,7 +11,7 @@ BARICON_FONT_NAME=SF-Compact-Rounded-Black
 BARICON_FONT_SIZE_BASE=8
 BARICON_TEXT_OFFSET_BASE=3
 
-CONVERT="convert -verbose -background none -trim +repage"
+CONVERT="convert -verbose -background none +repage"
 
 if [ "$1" == "appicon" ]; then
     ${CONVERT} -resize '!16x16' ${APPICON_SRC} ${APPICON_ICONSET}/icon_16x16.png
