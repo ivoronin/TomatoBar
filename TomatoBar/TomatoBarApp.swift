@@ -40,7 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.contentViewController?.view = NSHostingView(rootView: view)
 
         statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusBarItem?.button?.image = #imageLiteral(resourceName: "BarIcon")
+        statusBarItem?.button?.image = BarIcon.idle
         statusBarItem?.button?.imagePosition = .imageLeft
         statusBarItem?.button?.action = #selector(AppDelegate.togglePopover(_:))
     }

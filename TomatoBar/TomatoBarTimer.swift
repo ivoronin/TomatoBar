@@ -6,6 +6,13 @@ import UserNotifications
 
 let digitFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
 
+enum BarIcon {
+    static var idle = #imageLiteral(resourceName: "BarIconIdle")
+    static var work = #imageLiteral(resourceName: "BarIconWork")
+    static var shortRest = #imageLiteral(resourceName: "BarIconShortRest")
+    static var longRest = #imageLiteral(resourceName: "BarIconShortRest")
+}
+
 public class TomatoBarTimer: ObservableObject {
     @AppStorage("isWindupEnabled") public var isWindupEnabled = true
     @AppStorage("isDingEnabled") public var isDingEnabled = true
@@ -99,7 +106,6 @@ public class TomatoBarTimer: ObservableObject {
     }
 
     public func isActive() -> Bool {
-        print("isActive")
         return [.work, .rest].contains(stateMachine.state)
     }
 
@@ -131,6 +137,7 @@ public class TomatoBarTimer: ObservableObject {
     }
 
     private func onWorkStart(context _: TomatoBarContext) {
+        statusBarItem?.button?.image = BarIcon.work
         if isWindupEnabled {
             player.playWindup()
         }
@@ -152,6 +159,7 @@ public class TomatoBarTimer: ObservableObject {
     }
 
     private func onRestStart(context _: TomatoBarContext) {
+        statusBarItem?.button?.image = BarIcon.shortRest
         startTimer(seconds: restIntervalLength * 60)
     }
 
@@ -162,6 +170,7 @@ public class TomatoBarTimer: ObservableObject {
     private func onIdleStart(context _: TomatoBarContext) {
         startStopString = "Start"
         statusBarItem?.button?.title = ""
+        statusBarItem?.button?.image = BarIcon.idle
 
         if timer != nil {
             timer?.cancel()
