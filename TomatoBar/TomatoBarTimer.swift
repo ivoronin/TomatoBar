@@ -31,7 +31,7 @@ public class TomatoBarTimer: ObservableObject {
     private let player = TomatoBarPlayer()
     private var timeLeftSeconds: Int = 0
     private var consecutiveWorkIntervals: Int = 0
-    private var timer: DispatchSourceTimer?
+    @Published var timer: DispatchSourceTimer?
 
     init() {
         /*
@@ -102,10 +102,6 @@ public class TomatoBarTimer: ObservableObject {
         timer?.resume()
     }
 
-    public func isActive() -> Bool {
-        return [.work, .rest].contains(stateMachine.state)
-    }
-
     public func renderTimeLeft() {
         var buttonTitle = NSAttributedString()
         timeLeftString = String(
@@ -113,7 +109,7 @@ public class TomatoBarTimer: ObservableObject {
             timeLeftSeconds / 60,
             timeLeftSeconds % 60
         )
-        if showTimerInMenuBar, isActive() {
+        if showTimerInMenuBar, timer != nil {
             buttonTitle = NSAttributedString(
                 string: " \(timeLeftString)",
                 attributes: [NSAttributedString.Key.font: digitFont]

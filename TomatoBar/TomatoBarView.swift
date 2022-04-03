@@ -1,12 +1,97 @@
 import SwiftUI
 
+public struct IntervalsView: View {
+    @EnvironmentObject var timer: TomatoBarTimer
+
+    public var body: some View {
+        VStack {
+            Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
+                Text("Work interval:")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("\(timer.workIntervalLength) min")
+            }
+            Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
+                Text("Short rest interval:")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("\(timer.shortRestIntervalLength) min")
+            }
+            Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
+                Text("Long rest interval:")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("\(timer.longRestIntervalLength) min")
+            }
+            .help("Duration of the lengthy break, taken after finishing work interval set")
+            Stepper(value: $timer.workIntervalsInSet, in: 1 ... 10) {
+                Text("Work intervals in a set:")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text("\(timer.workIntervalsInSet)")
+            }
+            .help("Number of working intervals in the set, after which a lengthy break taken")
+            Spacer().frame(minHeight: 0)
+        }
+        .padding(4)
+    }
+}
+
+public struct SettingsView: View {
+    @EnvironmentObject var timer: TomatoBarTimer
+
+    public var body: some View {
+        VStack {
+            Toggle(isOn: $timer.stopAfterBreak) {
+                Text("Stop after break")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }.toggleStyle(.switch)
+            Toggle(isOn: $timer.showTimerInMenuBar) {
+                Text("Show timer in menu bar")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }.toggleStyle(.switch)
+                .onChange(of: timer.showTimerInMenuBar) { _ in
+                    timer.renderTimeLeft()
+                }
+            Spacer().frame(minHeight: 0)
+        }
+        .padding(4)
+    }
+}
+
+public struct SoundsView: View {
+    @EnvironmentObject var timer: TomatoBarTimer
+
+    public var body: some View {
+        VStack {
+            Toggle(isOn: $timer.isWindupEnabled) {
+                Text("Windup")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .toggleStyle(.switch)
+            Toggle(isOn: $timer.isDingEnabled) {
+                Text("Ding")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .toggleStyle(.switch)
+            Toggle(isOn: $timer.isTickingEnabled) {
+                Text("Ticking")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .toggleStyle(.switch)
+            .onChange(of: timer.isTickingEnabled) { _ in
+                timer.toggleTickingAction()
+            }
+            Spacer().frame(minHeight: 0)
+        }
+        .padding(4)
+    }
+}
+
+private enum ChildView {
+    case intervals, settings, sounds
+}
+
 public struct TomatoBarView: View {
     @ObservedObject var timer = TomatoBarTimer()
     @State private var buttonHovered = false
-
-    private var showButtonTimer: Bool {
-        timer.isActive() && !buttonHovered
-    }
+    @State private var activeChildView = ChildView.intervals
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -14,8 +99,7 @@ public struct TomatoBarView: View {
                 timer.startStopAction()
                 AppDelegate.shared.closePopover(nil)
             } label: {
-                Text(showButtonTimer ? timer.timeLeftString :
-                    timer.isActive() ? "Stop" : "Start")
+                Text(timer.timer != nil ? (buttonHovered ? "Stop" : timer.timeLeftString) : "Start")
                     .font(.system(.body).monospacedDigit())
                     .frame(maxWidth: .infinity)
             }
@@ -24,57 +108,27 @@ public struct TomatoBarView: View {
             }
             .controlSize(.large)
             .keyboardShortcut(.defaultAction)
-            Divider()
-            Group {
-                Toggle(isOn: $timer.stopAfterBreak) {
-                    Text("Stop after break")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }.toggleStyle(.switch)
-                Toggle(isOn: $timer.showTimerInMenuBar) {
-                    Text("Show timer in menu bar")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }.toggleStyle(.switch)
-                    .onChange(of: timer.showTimerInMenuBar) { _ in
-                        timer.renderTimeLeft()
-                    }
-                Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
-                    Text("Work interval:")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("\(timer.workIntervalLength) min")
-                }
-                Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
-                    Text("Short rest interval:")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("\(timer.shortRestIntervalLength) min")
-                }
-                Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
-                    Text("Long rest interval:")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("\(timer.longRestIntervalLength) min")
-                }
-                .help("Duration of the lengthy break, taken after finishing work interval set")
-                Stepper(value: $timer.workIntervalsInSet, in: 1 ... 10) {
-                    Text("Work intervals in a set:")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("\(timer.workIntervalsInSet)")
-                }
-                .help("Number of working intervals in the set, after which a lengthy break taken")
+
+            Picker("", selection: $activeChildView) {
+                Text("Intervals").tag(ChildView.intervals)
+                Text("Settings").tag(ChildView.settings)
+                Text("Sounds").tag(ChildView.sounds)
             }
-            Divider()
-            Group {
-                Text("Sounds:")
-                HStack {
-                    Toggle("Windup", isOn: $timer.isWindupEnabled)
-                    Spacer()
-                    Toggle("Ding", isOn: $timer.isDingEnabled)
-                    Spacer()
-                    Toggle("Ticking", isOn: $timer.isTickingEnabled)
-                        .onChange(of: timer.isTickingEnabled) { _ in
-                            timer.toggleTickingAction()
-                        }
+            .labelsHidden()
+            .frame(maxWidth: .infinity)
+            .pickerStyle(.segmented)
+
+            GroupBox {
+                switch activeChildView {
+                case .intervals:
+                    IntervalsView().environmentObject(timer)
+                case .settings:
+                    SettingsView().environmentObject(timer)
+                case .sounds:
+                    SoundsView().environmentObject(timer)
                 }
             }
-            Divider()
+
             Group {
                 Button {
                     NSApp.activate(ignoringOtherApps: true)
@@ -112,7 +166,7 @@ public struct TomatoBarView: View {
             )
         #endif
             /* Use values from GeometryReader */
-            .frame(width: 226, height: 323)
+            .frame(width: 240, height: 236)
             .padding(12)
     }
 }

@@ -40,6 +40,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func showPopover(_: AnyObject?) {
         if let button = statusBarItem?.button {
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
+            popover.contentViewController?.view.window?.makeKey()
         }
     }
 
