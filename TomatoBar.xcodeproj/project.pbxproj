@@ -10,6 +10,7 @@
 		8A21B78C27EE31A20009E5DB /* TomatoBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78B27EE31A20009E5DB /* TomatoBarApp.swift */; };
 		8A21B78E27EE31A20009E5DB /* TomatoBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78D27EE31A20009E5DB /* TomatoBarView.swift */; };
 		8A21B79027EE31A30009E5DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A21B78F27EE31A30009E5DB /* Assets.xcassets */; };
+		8A7403A027FA19BB00E7F90B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 8A74039F27FA19BB00E7F90B /* LaunchAtLogin */; };
 		8A9F700927EE396E0012A1EC /* TomatoBarState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F700827EE396E0012A1EC /* TomatoBarState.swift */; };
 		8A9F700F27EE3AED0012A1EC /* SwiftState in Frameworks */ = {isa = PBXBuildFile; productRef = 8A9F700E27EE3AED0012A1EC /* SwiftState */; };
 		8A9F701927EE3DAF0012A1EC /* TomatoBarTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F701827EE3DAF0012A1EC /* TomatoBarTimer.swift */; };
@@ -32,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A7403A027FA19BB00E7F90B /* LaunchAtLogin in Frameworks */,
 				8A9F700F27EE3AED0012A1EC /* SwiftState in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -87,6 +89,7 @@
 				8A21B78427EE31A20009E5DB /* Sources */,
 				8A21B78527EE31A20009E5DB /* Frameworks */,
 				8A21B78627EE31A20009E5DB /* Resources */,
+				8A7403A127FA1A4E00E7F90B /* Copy “Launch at Login Helper” */,
 			);
 			buildRules = (
 			);
@@ -95,6 +98,7 @@
 			name = TomatoBar;
 			packageProductDependencies = (
 				8A9F700E27EE3AED0012A1EC /* SwiftState */,
+				8A74039F27FA19BB00E7F90B /* LaunchAtLogin */,
 			);
 			productName = TomatoBar;
 			productReference = 8A21B78827EE31A20009E5DB /* TomatoBar.app */;
@@ -126,6 +130,7 @@
 			mainGroup = 8A21B77F27EE31A20009E5DB;
 			packageReferences = (
 				8A9F700C27EE3AA70012A1EC /* XCRemoteSwiftPackageReference "SwiftState" */,
+				8A74039E27FA19BB00E7F90B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 			);
 			productRefGroup = 8A21B78927EE31A20009E5DB /* Products */;
 			projectDirPath = "";
@@ -146,6 +151,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8A7403A127FA1A4E00E7F90B /* Copy “Launch at Login Helper” */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy “Launch at Login Helper”";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8A21B78427EE31A20009E5DB /* Sources */ = {
@@ -364,6 +390,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8A74039E27FA19BB00E7F90B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
+			requirement = {
+				kind = exactVersion;
+				version = 4.2.0;
+			};
+		};
 		8A9F700C27EE3AA70012A1EC /* XCRemoteSwiftPackageReference "SwiftState" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ivoronin/SwiftState";
@@ -375,6 +409,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8A74039F27FA19BB00E7F90B /* LaunchAtLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8A74039E27FA19BB00E7F90B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
+			productName = LaunchAtLogin;
+		};
 		8A9F700E27EE3AED0012A1EC /* SwiftState */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8A9F700C27EE3AA70012A1EC /* XCRemoteSwiftPackageReference "SwiftState" */;

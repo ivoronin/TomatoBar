@@ -1,4 +1,5 @@
 import SwiftUI
+import LaunchAtLogin
 
 public struct IntervalsView: View {
     @EnvironmentObject var timer: TomatoBarTimer
@@ -35,6 +36,7 @@ public struct IntervalsView: View {
 
 public struct SettingsView: View {
     @EnvironmentObject var timer: TomatoBarTimer
+    @ObservedObject private var launchAtLogin = LaunchAtLogin.observable
 
     public var body: some View {
         VStack {
@@ -49,6 +51,10 @@ public struct SettingsView: View {
                 .onChange(of: timer.showTimerInMenuBar) { _ in
                     timer.renderTimeLeft()
                 }
+            Toggle(isOn: $launchAtLogin.isEnabled) {
+                Text("Launch at login")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }.toggleStyle(.switch)
             Spacer().frame(minHeight: 0)
         }
         .padding(4)
