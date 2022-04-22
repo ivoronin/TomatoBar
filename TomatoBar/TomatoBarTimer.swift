@@ -1,5 +1,6 @@
 import SwiftState
 import SwiftUI
+import KeyboardShortcuts
 
 let digitFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
 
@@ -80,6 +81,10 @@ public class TomatoBarTimer: ObservableObject {
         stateMachine.addErrorHandler { ctx in fatalError("state machine context: <\(ctx)>") }
 
         stateMachine <- .idle
+
+        KeyboardShortcuts.onKeyUp(for: .startStopTimer) { [self] in
+            self.startStopAction()
+        }
     }
 
     public func startStopAction() {

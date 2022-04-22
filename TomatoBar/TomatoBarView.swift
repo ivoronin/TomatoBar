@@ -1,5 +1,10 @@
 import SwiftUI
 import LaunchAtLogin
+import KeyboardShortcuts
+
+extension KeyboardShortcuts.Name {
+    static let startStopTimer = Self("startStopTimer")
+}
 
 public struct IntervalsView: View {
     @EnvironmentObject var timer: TomatoBarTimer
@@ -40,6 +45,10 @@ public struct SettingsView: View {
 
     public var body: some View {
         VStack {
+            KeyboardShortcuts.Recorder(for: .startStopTimer) {
+                Text("Shortcut")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
             Toggle(isOn: $timer.stopAfterBreak) {
                 Text("Stop after break")
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -172,7 +181,7 @@ public struct TomatoBarView: View {
             )
         #endif
             /* Use values from GeometryReader */
-            .frame(width: 240, height: 236)
+            .frame(width: 240, height: 247)
             .padding(12)
     }
 }
