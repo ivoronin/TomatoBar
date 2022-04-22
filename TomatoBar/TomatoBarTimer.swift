@@ -92,8 +92,8 @@ public class TomatoBarTimer: ObservableObject {
         notificationCenter.setActionHandler(handler: onNotificationAction)
     }
 
-    private func onNotificationAction(action: String) {
-        if action == TomatoBarNotification.Action.skipRest {
+    private func onNotificationAction(action: TomatoBarNotification.Action) {
+        if action == .skipRest {
             if stateMachine.state == .rest {
                 skipRestAction()
             }

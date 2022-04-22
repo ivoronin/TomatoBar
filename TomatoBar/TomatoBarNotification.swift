@@ -1,17 +1,16 @@
 import UserNotifications
 
 public enum TomatoBarNotification {
-    public enum Category {
-        static let restStarted = "restStarted"
-        static let restFinished = "restFinished"
+    public enum Category: String {
+        case restStarted, restFinished
     }
 
-    enum Action {
-        static let skipRest = "skipRest"
+    public enum Action: String {
+        case skipRest
     }
 }
 
-public typealias NotificationHandler = (String) -> Void
+public typealias NotificationHandler = (TomatoBarNotification.Action) -> Void
 
 class NotificationDispatcher: NSObject, UNUserNotificationCenterDelegate {
     private var handler: NotificationHandler!
@@ -25,7 +24,9 @@ class NotificationDispatcher: NSObject, UNUserNotificationCenterDelegate {
                                 withCompletionHandler _: @escaping () -> Void)
     {
         if handler != nil {
-            handler(response.actionIdentifier)
+            if let action = TomatoBarNotification.Action(rawValue: response.actionIdentifier) {
+                handler(action)
+            }
         }
     }
 }
@@ -48,17 +49,17 @@ public class NotificationCenter {
         center.delegate = dispatcher
 
         let actionSkipRest = UNNotificationAction(
-            identifier: TomatoBarNotification.Action.skipRest,
+            identifier: TomatoBarNotification.Action.skipRest.rawValue,
             title: "Skip",
             options: []
         )
         let restStartedCategory = UNNotificationCategory(
-            identifier: TomatoBarNotification.Category.restStarted,
+            identifier: TomatoBarNotification.Category.restStarted.rawValue,
             actions: [actionSkipRest],
             intentIdentifiers: []
         )
         let restFinishedCategory = UNNotificationCategory(
-            identifier: TomatoBarNotification.Category.restFinished,
+            identifier: TomatoBarNotification.Category.restFinished.rawValue,
             actions: [],
             intentIdentifiers: []
         )
@@ -73,14 +74,14 @@ public class NotificationCenter {
         dispatcher.setActionHandler(handler: handler)
     }
 
-    public func send(title: String, body: String, category: String) {
+    public func send(title: String, body: String, category: TomatoBarNotification.Category) {
         if disabled {
             return
         }
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
-        content.categoryIdentifier = category
+        content.categoryIdentifier = category.rawValue
         let request = UNNotificationRequest(
             identifier: UUID().uuidString,
             content: content,
