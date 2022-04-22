@@ -86,10 +86,8 @@ class TBTimer: ObservableObject {
     }
 
     private func onNotificationAction(action: TBNotification.Action) {
-        if action == .skipRest {
-            if stateMachine.state == .rest {
-                skipRestAction()
-            }
+        if action == .skipRest, stateMachine.state == .rest {
+            skipRestAction()
         }
     }
 
