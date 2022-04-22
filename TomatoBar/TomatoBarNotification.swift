@@ -7,7 +7,7 @@ public enum TomatoBarNotification {
     }
 
     enum Action {
-        static let skipRest = "skipBreak"
+        static let skipRest = "skipRest"
     }
 }
 
@@ -16,7 +16,7 @@ public typealias NotificationHandler = (String) -> Void
 class NotificationDispatcher: NSObject, UNUserNotificationCenterDelegate {
     private var handler: NotificationHandler!
 
-    func registerActionHandler(handler: @escaping NotificationHandler) {
+    func setActionHandler(handler: @escaping NotificationHandler) {
         self.handler = handler
     }
 
@@ -69,8 +69,8 @@ public class NotificationCenter {
         ])
     }
 
-    public func registerActionHandler(handler: @escaping NotificationHandler) {
-        dispatcher.registerActionHandler(handler: handler)
+    public func setActionHandler(handler: @escaping NotificationHandler) {
+        dispatcher.setActionHandler(handler: handler)
     }
 
     public func send(title: String, body: String, category: String) {
