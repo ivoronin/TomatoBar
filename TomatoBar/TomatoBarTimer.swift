@@ -1,6 +1,6 @@
+import KeyboardShortcuts
 import SwiftState
 import SwiftUI
-import KeyboardShortcuts
 
 let digitFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
 
@@ -32,6 +32,7 @@ public class TomatoBarTimer: ObservableObject {
     private let player = TomatoBarPlayer()
     private var timeLeftSeconds: Int = 0
     private var consecutiveWorkIntervals: Int = 0
+    private var notificationCenter = NotificationCenter()
     @Published var timer: DispatchSourceTimer?
 
     init() {
@@ -66,6 +67,7 @@ public class TomatoBarTimer: ObservableObject {
         stateMachine.addRoutes(event: .timerFired, transitions: [.rest => .work]) { _ in
             !self.stopAfterBreak
         }
+        stateMachine.addRoutes(event: .skipRest, transitions: [.rest => .work])
 
         /*
          * "Finish" handlers are called when time interval ended
@@ -84,6 +86,16 @@ public class TomatoBarTimer: ObservableObject {
 
         KeyboardShortcuts.onKeyUp(for: .startStopTimer) { [self] in
             self.startStopAction()
+        }
+
+        notificationCenter.registerActionHandler(handler: notificationActionHandler)
+    }
+
+    private func notificationActionHandler(action: String) {
+        if action == TomatoBarNotification.Action.skipRest {
+            if stateMachine.state == .rest {
+                stateMachine <-! .skipRest
+            }
         }
     }
 
@@ -166,16 +178,24 @@ public class TomatoBarTimer: ObservableObject {
             image = BarIcon.longRest
             consecutiveWorkIntervals = 0
         }
-        NotificationCenter.send(
+        notificationCenter.send(
             title: "Time's up",
-            body: "It's time for a \(kind) break!"
+            body: "It's time for a \(kind) break!",
+            category: TomatoBarNotification.Category.restStarted
         )
         statusBarItem?.button?.image = image
         startTimer(seconds: length * 60)
     }
 
-    private func onRestFinish(context _: TomatoBarContext) {
-        NotificationCenter.send(title: "Break is over", body: "Keep up the good work!")
+    private func onRestFinish(context ctx: TomatoBarContext) {
+        if ctx.event == .skipRest {
+            return
+        }
+        notificationCenter.send(
+            title: "Break is over",
+            body: "Keep up the good work!",
+            category: TomatoBarNotification.Category.restFinished
+        )
     }
 
     private func onIdleStart(context _: TomatoBarContext) {

@@ -4,7 +4,7 @@ public typealias TomatoBarStateMachine = StateMachine<TomatoBarState, TomatoBarE
 public typealias TomatoBarContext = TomatoBarStateMachine.Context
 
 public enum TomatoBarEvent: EventType {
-    case startStop, timerFired
+    case startStop, timerFired, skipRest
 }
 
 public enum TomatoBarState: StateType {

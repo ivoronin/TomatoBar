@@ -16,6 +16,7 @@
 		8A9F701927EE3DAF0012A1EC /* TomatoBarTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F701827EE3DAF0012A1EC /* TomatoBarTimer.swift */; };
 		8A9F701F27EE536D0012A1EC /* TomatoBarPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F701E27EE536D0012A1EC /* TomatoBarPlayer.swift */; };
 		8AA5B3EB281295DB00BE1A6C /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 8AA5B3EA281295DB00BE1A6C /* KeyboardShortcuts */; };
+		8AA5B3F22812A74600BE1A6C /* TomatoBarNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA5B3F12812A74600BE1A6C /* TomatoBarNotification.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		8A9F700827EE396E0012A1EC /* TomatoBarState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarState.swift; sourceTree = "<group>"; };
 		8A9F701827EE3DAF0012A1EC /* TomatoBarTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarTimer.swift; sourceTree = "<group>"; };
 		8A9F701E27EE536D0012A1EC /* TomatoBarPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarPlayer.swift; sourceTree = "<group>"; };
+		8AA5B3F12812A74600BE1A6C /* TomatoBarNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TomatoBarNotification.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				8A9F700827EE396E0012A1EC /* TomatoBarState.swift */,
 				8A9F701827EE3DAF0012A1EC /* TomatoBarTimer.swift */,
 				8A9F701E27EE536D0012A1EC /* TomatoBarPlayer.swift */,
+				8AA5B3F12812A74600BE1A6C /* TomatoBarNotification.swift */,
 				8A21B78F27EE31A30009E5DB /* Assets.xcassets */,
 				8A21B79427EE31A30009E5DB /* TomatoBar.entitlements */,
 			);
@@ -186,6 +189,7 @@
 				8A21B78E27EE31A20009E5DB /* TomatoBarView.swift in Sources */,
 				8A9F701927EE3DAF0012A1EC /* TomatoBarTimer.swift in Sources */,
 				8A21B78C27EE31A20009E5DB /* TomatoBarApp.swift in Sources */,
+				8AA5B3F22812A74600BE1A6C /* TomatoBarNotification.swift in Sources */,
 				8A9F700927EE396E0012A1EC /* TomatoBarState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

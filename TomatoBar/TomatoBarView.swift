@@ -1,6 +1,6 @@
-import SwiftUI
-import LaunchAtLogin
 import KeyboardShortcuts
+import LaunchAtLogin
+import SwiftUI
 
 extension KeyboardShortcuts.Name {
     static let startStopTimer = Self("startStopTimer")
