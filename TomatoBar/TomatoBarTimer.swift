@@ -51,6 +51,7 @@ public class TomatoBarTimer: ObservableObject {
          *                 |                  |        |    |
          *                 |                  +--------+    |
          *                 |  timerFired (!stopAfterBreak)  |
+         *                 |             skipRest           |
          *                 |                                |
          *                 +--------------------------------+
          *                    timerFired (stopAfterBreak)
@@ -123,6 +124,13 @@ public class TomatoBarTimer: ObservableObject {
         timer?.resume()
     }
 
+    /**
+      Formats timeLeftString and updates menubar item label if it is enabled
+
+      Called when:
+      - Timer ticks
+      - "Display timer" toggled in settings
+     */
     public func renderTimeLeft() {
         var buttonTitle = NSAttributedString()
         timeLeftString = String(
