@@ -1,7 +1,7 @@
 import AppKit
 import AVFoundation
 
-public class TomatoBarPlayer {
+class TBPlayer {
     private var windupSound: AVAudioPlayer
     private var dingSound: AVAudioPlayer
     private var tickingSound: AVAudioPlayer

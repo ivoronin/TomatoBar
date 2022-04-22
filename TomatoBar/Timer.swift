@@ -4,35 +4,28 @@ import SwiftUI
 
 let digitFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
 
-enum BarIcon {
-    static var idle = #imageLiteral(resourceName: "BarIconIdle")
-    static var work = #imageLiteral(resourceName: "BarIconWork")
-    static var shortRest = #imageLiteral(resourceName: "BarIconShortRest")
-    static var longRest = #imageLiteral(resourceName: "BarIconLongRest")
-}
-
-public class TomatoBarTimer: ObservableObject {
-    @AppStorage("isWindupEnabled") public var isWindupEnabled = true
-    @AppStorage("isDingEnabled") public var isDingEnabled = true
-    @AppStorage("isTickingEnabled") public var isTickingEnabled = true
-    @AppStorage("stopAfterBreak") public var stopAfterBreak = false
-    @AppStorage("showTimerInMenuBar") public var showTimerInMenuBar = true
-    @AppStorage("workIntervalLength") public var workIntervalLength = 25
-    @AppStorage("shortRestIntervalLength") public var shortRestIntervalLength = 5
-    @AppStorage("longRestIntervalLength") public var longRestIntervalLength = 15
-    @AppStorage("workIntervalsInSet") public var workIntervalsInSet = 4
+class TBTimer: ObservableObject {
+    @AppStorage("isWindupEnabled") var isWindupEnabled = true
+    @AppStorage("isDingEnabled") var isDingEnabled = true
+    @AppStorage("isTickingEnabled") var isTickingEnabled = true
+    @AppStorage("stopAfterBreak") var stopAfterBreak = false
+    @AppStorage("showTimerInMenuBar") var showTimerInMenuBar = true
+    @AppStorage("workIntervalLength") var workIntervalLength = 25
+    @AppStorage("shortRestIntervalLength") var shortRestIntervalLength = 5
+    @AppStorage("longRestIntervalLength") var longRestIntervalLength = 15
+    @AppStorage("workIntervalsInSet") var workIntervalsInSet = 4
 
     @Published var timeLeftString: String = ""
 
-    var stateMachine = TomatoBarStateMachine(state: .ready)
+    private var stateMachine = TBStateMachine(state: .ready)
     private var statusBarItem: NSStatusItem? {
         return AppDelegate.shared.statusBarItem
     }
 
-    private let player = TomatoBarPlayer()
+    private let player = TBPlayer()
     private var timeLeftSeconds: Int = 0
     private var consecutiveWorkIntervals: Int = 0
-    private var notificationCenter = NotificationCenter()
+    private var notificationCenter = TBNotificationCenter()
     @Published var timer: DispatchSourceTimer?
 
     init() {
@@ -92,7 +85,7 @@ public class TomatoBarTimer: ObservableObject {
         notificationCenter.setActionHandler(handler: onNotificationAction)
     }
 
-    private func onNotificationAction(action: TomatoBarNotification.Action) {
+    private func onNotificationAction(action: TBNotification.Action) {
         if action == .skipRest {
             if stateMachine.state == .rest {
                 skipRestAction()
@@ -158,8 +151,8 @@ public class TomatoBarTimer: ObservableObject {
         }
     }
 
-    private func onWorkStart(context _: TomatoBarContext) {
-        statusBarItem?.button?.image = BarIcon.work
+    private func onWorkStart(context _: TBStateMachine.Context) {
+        statusBarItem?.button?.image = TBIcon.work
         if isWindupEnabled {
             player.playWindup()
         }
@@ -169,50 +162,50 @@ public class TomatoBarTimer: ObservableObject {
         startTimer(seconds: workIntervalLength * 60)
     }
 
-    private func onWorkFinish(context _: TomatoBarContext) {
+    private func onWorkFinish(context _: TBStateMachine.Context) {
         consecutiveWorkIntervals += 1
         if isDingEnabled {
             player.playDing()
         }
     }
 
-    private func onWorkEnd(context _: TomatoBarContext) {
+    private func onWorkEnd(context _: TBStateMachine.Context) {
         player.stopTicking()
     }
 
-    private func onRestStart(context _: TomatoBarContext) {
+    private func onRestStart(context _: TBStateMachine.Context) {
         var kind = "short"
         var length = shortRestIntervalLength
-        var image = BarIcon.shortRest
+        var image = TBIcon.shortRest
         if consecutiveWorkIntervals >= workIntervalsInSet {
             kind = "long"
             length = longRestIntervalLength
-            image = BarIcon.longRest
+            image = TBIcon.longRest
             consecutiveWorkIntervals = 0
         }
         notificationCenter.send(
             title: "Time's up",
             body: "It's time for a \(kind) break!",
-            category: TomatoBarNotification.Category.restStarted
+            category: TBNotification.Category.restStarted
         )
         statusBarItem?.button?.image = image
         startTimer(seconds: length * 60)
     }
 
-    private func onRestFinish(context ctx: TomatoBarContext) {
+    private func onRestFinish(context ctx: TBStateMachine.Context) {
         if ctx.event == .skipRest {
             return
         }
         notificationCenter.send(
             title: "Break is over",
             body: "Keep up the good work!",
-            category: TomatoBarNotification.Category.restFinished
+            category: TBNotification.Category.restFinished
         )
     }
 
-    private func onIdleStart(context _: TomatoBarContext) {
+    private func onIdleStart(context _: TBStateMachine.Context) {
         statusBarItem?.button?.title = ""
-        statusBarItem?.button?.image = BarIcon.idle
+        statusBarItem?.button?.image = TBIcon.idle
         consecutiveWorkIntervals = 0
 
         if timer != nil {

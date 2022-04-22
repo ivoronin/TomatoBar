@@ -6,8 +6,8 @@ extension KeyboardShortcuts.Name {
     static let startStopTimer = Self("startStopTimer")
 }
 
-public struct IntervalsView: View {
-    @EnvironmentObject var timer: TomatoBarTimer
+private struct IntervalsView: View {
+    @EnvironmentObject var timer: TBTimer
 
     public var body: some View {
         VStack {
@@ -39,8 +39,8 @@ public struct IntervalsView: View {
     }
 }
 
-public struct SettingsView: View {
-    @EnvironmentObject var timer: TomatoBarTimer
+private struct SettingsView: View {
+    @EnvironmentObject var timer: TBTimer
     @ObservedObject private var launchAtLogin = LaunchAtLogin.observable
 
     public var body: some View {
@@ -70,8 +70,8 @@ public struct SettingsView: View {
     }
 }
 
-public struct SoundsView: View {
-    @EnvironmentObject var timer: TomatoBarTimer
+private struct SoundsView: View {
+    @EnvironmentObject var timer: TBTimer
 
     public var body: some View {
         VStack {
@@ -103,8 +103,8 @@ private enum ChildView {
     case intervals, settings, sounds
 }
 
-public struct TomatoBarView: View {
-    @ObservedObject var timer = TomatoBarTimer()
+struct TBPopoverView: View {
+    @ObservedObject var timer = TBTimer()
     @State private var buttonHovered = false
     @State private var activeChildView = ChildView.intervals
 

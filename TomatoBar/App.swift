@@ -1,7 +1,14 @@
 import SwiftUI
 
+enum TBIcon {
+    static var idle = #imageLiteral(resourceName: "BarIconIdle")
+    static var work = #imageLiteral(resourceName: "BarIconWork")
+    static var shortRest = #imageLiteral(resourceName: "BarIconShortRest")
+    static var longRest = #imageLiteral(resourceName: "BarIconLongRest")
+}
+
 @main
-struct TomatoBarApp: App {
+struct TBApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     init() {
@@ -17,19 +24,19 @@ struct TomatoBarApp: App {
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var popover = NSPopover()
-    public var statusBarItem: NSStatusItem?
+    private var popover = NSPopover()
+    var statusBarItem: NSStatusItem?
     static var shared: AppDelegate!
 
     func applicationDidFinishLaunching(_: Notification) {
-        let view = TomatoBarView()
+        let view = TBPopoverView()
 
         popover.behavior = .transient
         popover.contentViewController = NSViewController()
         popover.contentViewController?.view = NSHostingView(rootView: view)
 
         statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusBarItem?.button?.image = BarIcon.idle
+        statusBarItem?.button?.image = TBIcon.idle
         statusBarItem?.button?.imagePosition = .imageLeft
         statusBarItem?.button?.action = #selector(AppDelegate.togglePopover(_:))
     }
