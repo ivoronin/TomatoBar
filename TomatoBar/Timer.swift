@@ -107,6 +107,15 @@ class TBTimer: ObservableObject {
         timer?.resume()
     }
 
+    private func stopTimer() {
+        if timer != nil {
+            timer?.cancel()
+            timer = nil
+        }
+
+        updateStatusItemLabel()
+    }
+
     private func onNotificationAction(action: TBNotification.Action) {
         if action == .skipRest, stateMachine.state == .rest {
             skipRest()
@@ -182,12 +191,7 @@ class TBTimer: ObservableObject {
     }
 
     private func onIdleStart(context _: TBStateMachine.Context) {
-        if timer != nil {
-            timer?.cancel()
-            timer = nil
-        }
-
-        updateStatusItemLabel()
+        stopTimer()
         TBStatusItem.shared.setIcon(name: .idle)
         consecutiveWorkIntervals = 0
     }
