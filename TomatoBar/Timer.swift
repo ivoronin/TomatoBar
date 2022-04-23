@@ -13,7 +13,7 @@ class TBTimer: ObservableObject {
     @AppStorage("longRestIntervalLength") var longRestIntervalLength = 15
     @AppStorage("workIntervalsInSet") var workIntervalsInSet = 4
 
-    private var stateMachine = TBStateMachine(state: .ready)
+    private var stateMachine = TBStateMachine(state: .idle)
     private let player = TBPlayer()
     private var timeLeftSeconds: Int = 0
     private var consecutiveWorkIntervals: Int = 0
@@ -25,25 +25,24 @@ class TBTimer: ObservableObject {
         /*
          * State diagram
          *
-         *                               start/stop
-         *                     +--------------+-------------+
-         *                     |              |             |
-         *       viewDidLoad   |  start/stop  |  timerFired |
-         *            |        V    |         |    |        |
-         * +--------+ |  +--------+ |  +--------+  | +--------+
-         * | ready  |--->| idle   |--->| work   |--->| rest   |
-         * +--------+    +--------+    +--------+    +--------+
-         *                 A                  A        |    |
-         *                 |                  |        |    |
-         *                 |                  +--------+    |
-         *                 |  timerFired (!stopAfterBreak)  |
-         *                 |             skipRest           |
-         *                 |                                |
-         *                 +--------------------------------+
-         *                    timerFired (stopAfterBreak)
+         *                 start/stop
+         *       +--------------+-------------+
+         *       |              |             |
+         *       |  start/stop  |  timerFired |
+         *       V    |         |    |        |
+         * +--------+ |  +--------+  | +--------+
+         * | idle   |--->| work   |--->| rest   |
+         * +--------+    +--------+    +--------+
+         *   A                  A        |    |
+         *   |                  |        |    |
+         *   |                  +--------+    |
+         *   |  timerFired (!stopAfterBreak)  |
+         *   |             skipRest           |
+         *   |                                |
+         *   +--------------------------------+
+         *      timerFired (stopAfterBreak)
          *
          */
-        stateMachine.addRoute(.ready => .idle)
         stateMachine.addRoutes(event: .startStop, transitions: [
             .idle => .work, .work => .idle, .rest => .idle,
         ])
@@ -69,8 +68,6 @@ class TBTimer: ObservableObject {
 
         stateMachine.addErrorHandler { ctx in fatalError("state machine context: <\(ctx)>") }
 
-        stateMachine <- .idle
-
         KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: startStop)
         notificationCenter.setActionHandler(handler: onNotificationAction)
     }
@@ -89,7 +86,12 @@ class TBTimer: ObservableObject {
         }
     }
 
-    func updateStatusItemLabel() {
+    func updateTimeLeft() {
+        timeLeftString = String(
+            format: "%.2i:%.2i",
+            timeLeftSeconds / 60,
+            timeLeftSeconds % 60
+        )
         if timer != nil, showTimerInMenuBar {
             TBStatusItem.shared.setTitle(title: timeLeftString)
         } else {
@@ -102,39 +104,38 @@ class TBTimer: ObservableObject {
 
         let queue = DispatchQueue(label: "Timer")
         timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
-        timer?.schedule(deadline: .now(), repeating: .seconds(1), leeway: .never)
-        timer?.setEventHandler(handler: onTimerTick)
-        timer?.resume()
+        timer!.schedule(deadline: .now(), repeating: .seconds(1), leeway: .never)
+        timer!.setEventHandler(handler: onTimerTick)
+        timer!.setCancelHandler(handler: onTimerCancel)
+        timer!.resume()
     }
 
     private func stopTimer() {
-        if timer != nil {
-            timer?.cancel()
-            timer = nil
-        }
-
-        updateStatusItemLabel()
-    }
-
-    private func onNotificationAction(action: TBNotification.Action) {
-        if action == .skipRest, stateMachine.state == .rest {
-            skipRest()
-        }
+        timer!.cancel()
+        timer = nil
     }
 
     private func onTimerTick() {
         timeLeftSeconds -= 1
         /* Cannot publish updates from background thread */
         DispatchQueue.main.async { [self] in
-            timeLeftString = String(
-                format: "%.2i:%.2i",
-                timeLeftSeconds / 60,
-                timeLeftSeconds % 60
-            )
-            updateStatusItemLabel()
+            updateTimeLeft()
             if timeLeftSeconds == 0 {
                 stateMachine <-! .timerFired
             }
+        }
+    }
+
+    private func onTimerCancel() {
+        timeLeftSeconds = 0
+        DispatchQueue.main.async { [self] in
+            updateTimeLeft()
+        }
+    }
+
+    private func onNotificationAction(action: TBNotification.Action) {
+        if action == .skipRest, stateMachine.state == .rest {
+            skipRest()
         }
     }
 

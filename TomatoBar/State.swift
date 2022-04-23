@@ -7,5 +7,5 @@ enum TBStateMachineEvents: EventType {
 }
 
 enum TBStateMachineStates: StateType {
-    case ready, idle, work, rest
+    case idle, work, rest
 }
