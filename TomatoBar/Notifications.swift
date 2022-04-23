@@ -15,7 +15,6 @@ typealias TBNotificationHandler = (TBNotification.Action) -> Void
 class TBNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private var center = UNUserNotificationCenter.current()
     private var handler: TBNotificationHandler?
-    private var disabled = false
 
     override init() {
         super.init()
@@ -24,7 +23,6 @@ class TBNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
             options: [.alert]
         ) { _, error in
             if error != nil {
-                self.disabled = true
                 print("Error requesting notification authorization: \(error!)")
             }
         }
@@ -69,9 +67,6 @@ class TBNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     }
 
     public func send(title: String, body: String, category: TBNotification.Category) {
-        if disabled {
-            return
-        }
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
