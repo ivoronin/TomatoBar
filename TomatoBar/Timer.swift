@@ -168,13 +168,13 @@ class TBTimer: ObservableObject {
         if consecutiveWorkIntervals >= workIntervalsInSet {
             kind = "long"
             length = longRestIntervalLength
-            imgName = NSImage.Name.longRest
+            imgName = .longRest
             consecutiveWorkIntervals = 0
         }
         notificationCenter.send(
             title: "Time's up",
             body: "It's time for a \(kind) break!",
-            category: TBNotification.Category.restStarted
+            category: .restStarted
         )
         TBStatusItem.shared.setIcon(name: imgName)
         startTimer(seconds: length * 60)
@@ -187,7 +187,7 @@ class TBTimer: ObservableObject {
         notificationCenter.send(
             title: "Break is over",
             body: "Keep up the good work!",
-            category: TBNotification.Category.restFinished
+            category: .restFinished
         )
     }
 
