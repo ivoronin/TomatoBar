@@ -12,31 +12,14 @@ enum TBNotification {
 
 typealias TBNotificationHandler = (TBNotification.Action) -> Void
 
-private class TBNotificationDispatcher: NSObject, UNUserNotificationCenterDelegate {
-    private var handler: TBNotificationHandler!
-
-    func setActionHandler(handler: @escaping TBNotificationHandler) {
-        self.handler = handler
-    }
-
-    func userNotificationCenter(_: UNUserNotificationCenter,
-                                didReceive response: UNNotificationResponse,
-                                withCompletionHandler _: @escaping () -> Void)
-    {
-        if handler != nil {
-            if let action = TBNotification.Action(rawValue: response.actionIdentifier) {
-                handler(action)
-            }
-        }
-    }
-}
-
-class TBNotificationCenter {
+class TBNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
     private var center = UNUserNotificationCenter.current()
-    private var dispatcher = TBNotificationDispatcher()
+    private var handler: TBNotificationHandler?
     private var disabled = false
 
-    init() {
+    override init() {
+        super.init()
+
         center.requestAuthorization(
             options: [.alert]
         ) { _, error in
@@ -46,7 +29,7 @@ class TBNotificationCenter {
             }
         }
 
-        center.delegate = dispatcher
+        center.delegate = self
 
         let actionSkipRest = UNNotificationAction(
             identifier: TBNotification.Action.skipRest.rawValue,
@@ -71,7 +54,18 @@ class TBNotificationCenter {
     }
 
     public func setActionHandler(handler: @escaping TBNotificationHandler) {
-        dispatcher.setActionHandler(handler: handler)
+        self.handler = handler
+    }
+
+    func userNotificationCenter(_: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler _: @escaping () -> Void)
+    {
+        if handler != nil {
+            if let action = TBNotification.Action(rawValue: response.actionIdentifier) {
+                handler!(action)
+            }
+        }
     }
 
     public func send(title: String, body: String, category: TBNotification.Category) {
