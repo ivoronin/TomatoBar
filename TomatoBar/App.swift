@@ -45,9 +45,9 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
         statusBarItem?.button?.action = #selector(TBStatusItem.togglePopover(_:))
     }
 
-    func setTitle(title: String) {
+    func setTitle(title: String?) {
         let attributedTitle = NSAttributedString(
-            string: title,
+            string: title != nil ? " \(title!)" : "",
             attributes: [NSAttributedString.Key.font: digitFont]
         )
         statusBarItem?.button?.attributedTitle = attributedTitle

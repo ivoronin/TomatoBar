@@ -58,7 +58,7 @@ private struct SettingsView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
                 .onChange(of: timer.showTimerInMenuBar) { _ in
-                    timer.renderTimeLeft()
+                    timer.updateStatusItemLabel()
                 }
             Toggle(isOn: $launchAtLogin.isEnabled) {
                 Text("Launch at login")

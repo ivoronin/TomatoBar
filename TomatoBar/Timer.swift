@@ -105,33 +105,26 @@ class TBTimer: ObservableObject {
         timer?.resume()
     }
 
-    /**
-      Formats timeLeftString and updates menubar item label if it is enabled
-
-      Called when:
-      - Timer ticks
-      - "Display timer" toggled in settings
-     */
-    func renderTimeLeft() {
-        var statusItemTitle = ""
-        timeLeftString = String(
-            format: "%.2i:%.2i",
-            timeLeftSeconds / 60,
-            timeLeftSeconds % 60
-        )
-        if showTimerInMenuBar, timer != nil {
-            statusItemTitle = " \(timeLeftString)"
+    func updateStatusItemLabel() {
+        if timer != nil, showTimerInMenuBar {
+            TBStatusItem.shared.setTitle(title: timeLeftString)
+        } else {
+            TBStatusItem.shared.setTitle(title: nil)
         }
-        TBStatusItem.shared.setTitle(title: statusItemTitle)
     }
 
     private func onTimerTick() {
         timeLeftSeconds -= 1
-        DispatchQueue.main.async {
-            if self.timeLeftSeconds >= 0 {
-                self.renderTimeLeft()
-            } else {
-                self.stateMachine <-! .timerFired
+        /* Cannot publish updates from background thread */
+        DispatchQueue.main.async { [self] in
+            timeLeftString = String(
+                format: "%.2i:%.2i",
+                timeLeftSeconds / 60,
+                timeLeftSeconds % 60
+            )
+            updateStatusItemLabel()
+            if timeLeftSeconds == 0 {
+                stateMachine <-! .timerFired
             }
         }
     }
@@ -189,13 +182,13 @@ class TBTimer: ObservableObject {
     }
 
     private func onIdleStart(context _: TBStateMachine.Context) {
-        TBStatusItem.shared.setTitle(title: "")
-        TBStatusItem.shared.setIcon(name: .idle)
-        consecutiveWorkIntervals = 0
-
         if timer != nil {
             timer?.cancel()
             timer = nil
         }
+
+        updateStatusItemLabel()
+        TBStatusItem.shared.setIcon(name: .idle)
+        consecutiveWorkIntervals = 0
     }
 }
