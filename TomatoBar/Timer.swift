@@ -71,7 +71,7 @@ class TBTimer: ObservableObject {
 
         stateMachine <- .idle
 
-        KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: self.startStopAction)
+        KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: startStopAction)
         notificationCenter.setActionHandler(handler: onNotificationAction)
     }
 
