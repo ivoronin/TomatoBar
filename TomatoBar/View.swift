@@ -112,7 +112,7 @@ struct TBPopoverView: View {
         VStack(alignment: .leading, spacing: 8) {
             Button {
                 timer.startStopAction()
-                AppDelegate.shared.closePopover(nil)
+                TBStatusItem.shared.closePopover(nil)
             } label: {
                 Text(timer.timer != nil ? (buttonHovered ? "Stop" : timer.timeLeftString) : "Start")
                     .font(.system(.body).monospacedDigit())

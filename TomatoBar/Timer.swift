@@ -2,8 +2,6 @@ import KeyboardShortcuts
 import SwiftState
 import SwiftUI
 
-let digitFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
-
 class TBTimer: ObservableObject {
     @AppStorage("isWindupEnabled") var isWindupEnabled = true
     @AppStorage("isDingEnabled") var isDingEnabled = true
@@ -15,17 +13,12 @@ class TBTimer: ObservableObject {
     @AppStorage("longRestIntervalLength") var longRestIntervalLength = 15
     @AppStorage("workIntervalsInSet") var workIntervalsInSet = 4
 
-    @Published var timeLeftString: String = ""
-
     private var stateMachine = TBStateMachine(state: .ready)
-    private var statusBarItem: NSStatusItem? {
-        return AppDelegate.shared.statusBarItem
-    }
-
     private let player = TBPlayer()
     private var timeLeftSeconds: Int = 0
     private var consecutiveWorkIntervals: Int = 0
     private var notificationCenter = TBNotificationCenter()
+    @Published var timeLeftString: String = ""
     @Published var timer: DispatchSourceTimer?
 
     init() {
@@ -78,10 +71,7 @@ class TBTimer: ObservableObject {
 
         stateMachine <- .idle
 
-        KeyboardShortcuts.onKeyUp(for: .startStopTimer) { [self] in
-            self.startStopAction()
-        }
-
+        KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: self.startStopAction)
         notificationCenter.setActionHandler(handler: onNotificationAction)
     }
 
@@ -123,19 +113,16 @@ class TBTimer: ObservableObject {
       - "Display timer" toggled in settings
      */
     public func renderTimeLeft() {
-        var buttonTitle = NSAttributedString()
+        var statusItemTitle = ""
         timeLeftString = String(
             format: "%.2i:%.2i",
             timeLeftSeconds / 60,
             timeLeftSeconds % 60
         )
         if showTimerInMenuBar, timer != nil {
-            buttonTitle = NSAttributedString(
-                string: " \(timeLeftString)",
-                attributes: [NSAttributedString.Key.font: digitFont]
-            )
+            statusItemTitle = " \(timeLeftString)"
         }
-        statusBarItem?.button?.attributedTitle = buttonTitle
+        TBStatusItem.shared.setTitle(title: statusItemTitle)
     }
 
     private func onTimerTick() {
@@ -150,7 +137,7 @@ class TBTimer: ObservableObject {
     }
 
     private func onWorkStart(context _: TBStateMachine.Context) {
-        statusBarItem?.button?.image = TBIcon.work
+        TBStatusItem.shared.setIcon(name: .work)
         if isWindupEnabled {
             player.playWindup()
         }
@@ -174,11 +161,11 @@ class TBTimer: ObservableObject {
     private func onRestStart(context _: TBStateMachine.Context) {
         var kind = "short"
         var length = shortRestIntervalLength
-        var image = TBIcon.shortRest
+        var imgName = NSImage.Name.shortRest
         if consecutiveWorkIntervals >= workIntervalsInSet {
             kind = "long"
             length = longRestIntervalLength
-            image = TBIcon.longRest
+            imgName = NSImage.Name.longRest
             consecutiveWorkIntervals = 0
         }
         notificationCenter.send(
@@ -186,7 +173,7 @@ class TBTimer: ObservableObject {
             body: "It's time for a \(kind) break!",
             category: TBNotification.Category.restStarted
         )
-        statusBarItem?.button?.image = image
+        TBStatusItem.shared.setIcon(name: imgName)
         startTimer(seconds: length * 60)
     }
 
@@ -202,8 +189,8 @@ class TBTimer: ObservableObject {
     }
 
     private func onIdleStart(context _: TBStateMachine.Context) {
-        statusBarItem?.button?.title = ""
-        statusBarItem?.button?.image = TBIcon.idle
+        TBStatusItem.shared.setTitle(title: "")
+        TBStatusItem.shared.setIcon(name: .idle)
         consecutiveWorkIntervals = 0
 
         if timer != nil {

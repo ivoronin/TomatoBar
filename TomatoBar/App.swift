@@ -1,18 +1,20 @@
 import SwiftUI
 
-enum TBIcon {
-    static var idle = #imageLiteral(resourceName: "BarIconIdle")
-    static var work = #imageLiteral(resourceName: "BarIconWork")
-    static var shortRest = #imageLiteral(resourceName: "BarIconShortRest")
-    static var longRest = #imageLiteral(resourceName: "BarIconLongRest")
+extension NSImage.Name {
+    static let idle = Self("BarIconIdle")
+    static let work = Self("BarIconWork")
+    static let shortRest = Self("BarIconShortRest")
+    static let longRest = Self("BarIconLongRest")
 }
+
+let digitFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
 
 @main
 struct TBApp: App {
-    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @NSApplicationDelegateAdaptor(TBStatusItem.self) var appDelegate
 
     init() {
-        AppDelegate.shared = appDelegate
+        TBStatusItem.shared = appDelegate
     }
 
     var body: some Scene {
@@ -23,10 +25,10 @@ struct TBApp: App {
     }
 }
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+class TBStatusItem: NSObject, NSApplicationDelegate {
     private var popover = NSPopover()
     var statusBarItem: NSStatusItem?
-    static var shared: AppDelegate!
+    static var shared: TBStatusItem!
 
     func applicationDidFinishLaunching(_: Notification) {
         let view = TBPopoverView()
@@ -35,20 +37,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.contentViewController = NSViewController()
         popover.contentViewController?.view = NSHostingView(rootView: view)
 
-        statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusBarItem?.button?.image = TBIcon.idle
+        statusBarItem = NSStatusBar.system.statusItem(
+            withLength: NSStatusItem.variableLength
+        )
         statusBarItem?.button?.imagePosition = .imageLeft
-        statusBarItem?.button?.action = #selector(AppDelegate.togglePopover(_:))
+        setIcon(name: .idle)
+        statusBarItem?.button?.action = #selector(TBStatusItem.togglePopover(_:))
     }
 
-    @objc func showPopover(_: AnyObject?) {
+    func setTitle(title: String) {
+        let attributedTitle = NSAttributedString(
+            string: title,
+            attributes: [NSAttributedString.Key.font: digitFont]
+        )
+        statusBarItem?.button?.attributedTitle = attributedTitle
+    }
+
+    func setIcon(name: NSImage.Name) {
+        statusBarItem?.button?.image = NSImage(named: name)
+    }
+
+    func showPopover(_: AnyObject?) {
         if let button = statusBarItem?.button {
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
             popover.contentViewController?.view.window?.makeKey()
         }
     }
 
-    @objc func closePopover(_ sender: AnyObject?) {
+    func closePopover(_ sender: AnyObject?) {
         popover.performClose(sender)
     }
 
