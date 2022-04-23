@@ -45,9 +45,10 @@ private struct SettingsView: View {
 
     var body: some View {
         VStack {
-            KeyboardShortcuts.Recorder(for: .startStopTimer) {
+            HStack {
                 Text("Shortcut")
                     .frame(maxWidth: .infinity, alignment: .leading)
+                KeyboardShortcuts.Recorder(for: .startStopTimer)
             }
             Toggle(isOn: $timer.stopAfterBreak) {
                 Text("Stop after break")
