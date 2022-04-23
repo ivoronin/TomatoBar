@@ -81,15 +81,15 @@ class TBTimer: ObservableObject {
         }
     }
 
-    public func startStopAction() {
+    func startStopAction() {
         stateMachine <-! .startStop
     }
 
-    public func skipRestAction() {
+    func skipRestAction() {
         stateMachine <-! .skipRest
     }
 
-    public func toggleTickingAction() {
+    func toggleTickingAction() {
         if stateMachine.state == .work {
             player.toggleTicking()
         }
@@ -112,7 +112,7 @@ class TBTimer: ObservableObject {
       - Timer ticks
       - "Display timer" toggled in settings
      */
-    public func renderTimeLeft() {
+    func renderTimeLeft() {
         var statusItemTitle = ""
         timeLeftString = String(
             format: "%.2i:%.2i",

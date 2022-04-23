@@ -9,7 +9,7 @@ extension KeyboardShortcuts.Name {
 private struct IntervalsView: View {
     @EnvironmentObject var timer: TBTimer
 
-    public var body: some View {
+    var body: some View {
         VStack {
             Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
                 Text("Work interval:")
@@ -43,7 +43,7 @@ private struct SettingsView: View {
     @EnvironmentObject var timer: TBTimer
     @ObservedObject private var launchAtLogin = LaunchAtLogin.observable
 
-    public var body: some View {
+    var body: some View {
         VStack {
             KeyboardShortcuts.Recorder(for: .startStopTimer) {
                 Text("Shortcut")
@@ -73,7 +73,7 @@ private struct SettingsView: View {
 private struct SoundsView: View {
     @EnvironmentObject var timer: TBTimer
 
-    public var body: some View {
+    var body: some View {
         VStack {
             Toggle(isOn: $timer.isWindupEnabled) {
                 Text("Windup")
@@ -108,7 +108,7 @@ struct TBPopoverView: View {
     @State private var buttonHovered = false
     @State private var activeChildView = ChildView.intervals
 
-    public var body: some View {
+    var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Button {
                 timer.startStopAction()

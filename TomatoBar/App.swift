@@ -7,7 +7,7 @@ extension NSImage.Name {
     static let longRest = Self("BarIconLongRest")
 }
 
-let digitFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
+private let digitFont = NSFont.monospacedDigitSystemFont(ofSize: 0, weight: .regular)
 
 @main
 struct TBApp: App {
@@ -27,7 +27,7 @@ struct TBApp: App {
 
 class TBStatusItem: NSObject, NSApplicationDelegate {
     private var popover = NSPopover()
-    var statusBarItem: NSStatusItem?
+    private var statusBarItem: NSStatusItem?
     static var shared: TBStatusItem!
 
     func applicationDidFinishLaunching(_: Notification) {

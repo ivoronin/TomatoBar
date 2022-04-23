@@ -51,7 +51,7 @@ class TBNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         ])
     }
 
-    public func setActionHandler(handler: @escaping TBNotificationHandler) {
+    func setActionHandler(handler: @escaping TBNotificationHandler) {
         self.handler = handler
     }
 
@@ -66,7 +66,7 @@ class TBNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
         }
     }
 
-    public func send(title: String, body: String, category: TBNotification.Category) {
+    func send(title: String, body: String, category: TBNotification.Category) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body

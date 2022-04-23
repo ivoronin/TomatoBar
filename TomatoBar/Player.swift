@@ -26,23 +26,23 @@ class TBPlayer {
         tickingSound.prepareToPlay()
     }
 
-    public func playWindup() {
+    func playWindup() {
         windupSound.play()
     }
 
-    public func playDing() {
+    func playDing() {
         dingSound.play()
     }
 
-    public func startTicking() {
+    func startTicking() {
         tickingSound.play()
     }
 
-    public func stopTicking() {
+    func stopTicking() {
         tickingSound.stop()
     }
 
-    public func toggleTicking() {
+    func toggleTicking() {
         if tickingSound.isPlaying {
             stopTicking()
         } else {
