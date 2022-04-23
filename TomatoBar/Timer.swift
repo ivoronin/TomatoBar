@@ -71,27 +71,29 @@ class TBTimer: ObservableObject {
 
         stateMachine <- .idle
 
-        KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: startStopAction)
+        KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: startStop)
         notificationCenter.setActionHandler(handler: onNotificationAction)
     }
 
-    private func onNotificationAction(action: TBNotification.Action) {
-        if action == .skipRest, stateMachine.state == .rest {
-            skipRestAction()
-        }
-    }
-
-    func startStopAction() {
+    func startStop() {
         stateMachine <-! .startStop
     }
 
-    func skipRestAction() {
+    func skipRest() {
         stateMachine <-! .skipRest
     }
 
-    func toggleTickingAction() {
+    func toggleTicking() {
         if stateMachine.state == .work {
             player.toggleTicking()
+        }
+    }
+
+    func updateStatusItemLabel() {
+        if timer != nil, showTimerInMenuBar {
+            TBStatusItem.shared.setTitle(title: timeLeftString)
+        } else {
+            TBStatusItem.shared.setTitle(title: nil)
         }
     }
 
@@ -105,11 +107,9 @@ class TBTimer: ObservableObject {
         timer?.resume()
     }
 
-    func updateStatusItemLabel() {
-        if timer != nil, showTimerInMenuBar {
-            TBStatusItem.shared.setTitle(title: timeLeftString)
-        } else {
-            TBStatusItem.shared.setTitle(title: nil)
+    private func onNotificationAction(action: TBNotification.Action) {
+        if action == .skipRest, stateMachine.state == .rest {
+            skipRest()
         }
     }
 

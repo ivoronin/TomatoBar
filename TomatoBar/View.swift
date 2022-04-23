@@ -91,7 +91,7 @@ private struct SoundsView: View {
             }
             .toggleStyle(.switch)
             .onChange(of: timer.isTickingEnabled) { _ in
-                timer.toggleTickingAction()
+                timer.toggleTicking()
             }
             Spacer().frame(minHeight: 0)
         }
@@ -111,7 +111,7 @@ struct TBPopoverView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Button {
-                timer.startStopAction()
+                timer.startStop()
                 TBStatusItem.shared.closePopover(nil)
             } label: {
                 Text(timer.timer != nil ? (buttonHovered ? "Stop" : timer.timeLeftString) : "Start")
