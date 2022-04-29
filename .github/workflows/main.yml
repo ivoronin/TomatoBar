@@ -2,12 +2,12 @@ name: main
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - '*'
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: macos-12
 
     steps:
       - name: Create slug
@@ -27,6 +27,7 @@ jobs:
           stat -x "TomatoBar-${COMMIT_SLUG}.zip"
 
       - name: Create Release
+        if: ${{ github.event_name == 'create' && github.event.ref_type == 'tag' }}
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -38,6 +39,7 @@ jobs:
           prerelease: false
 
       - name: Upload Release Asset
+        if: ${{ github.event_name == 'create' && github.event.ref_type == 'tag' }}
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
