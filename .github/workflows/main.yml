@@ -14,7 +14,7 @@ jobs:
         id: crate_slug
         run: echo "COMMIT_SLUG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build
         id: build
