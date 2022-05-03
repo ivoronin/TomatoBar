@@ -21,10 +21,10 @@
     {
       "identity" : "swiftstate",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ivoronin/SwiftState",
+      "location" : "https://github.com/ReactKit/SwiftState",
       "state" : {
         "branch" : "swift/5.0",
-        "revision" : "f2d1aad4a88491b012369c782e3303301dab5fe7"
+        "revision" : "887e75b96da6be36a062e1b0ef832c32a803348b"
       }
     }
   ],

@@ -11,8 +11,8 @@
 		8A21B78E27EE31A20009E5DB /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78D27EE31A20009E5DB /* View.swift */; };
 		8A21B79027EE31A30009E5DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A21B78F27EE31A30009E5DB /* Assets.xcassets */; };
 		8A7403A027FA19BB00E7F90B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 8A74039F27FA19BB00E7F90B /* LaunchAtLogin */; };
+		8A8CFE402821D8C300F9F303 /* SwiftState in Frameworks */ = {isa = PBXBuildFile; productRef = 8A8CFE3F2821D8C300F9F303 /* SwiftState */; };
 		8A9F700927EE396E0012A1EC /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F700827EE396E0012A1EC /* State.swift */; };
-		8A9F700F27EE3AED0012A1EC /* SwiftState in Frameworks */ = {isa = PBXBuildFile; productRef = 8A9F700E27EE3AED0012A1EC /* SwiftState */; };
 		8A9F701927EE3DAF0012A1EC /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F701827EE3DAF0012A1EC /* Timer.swift */; };
 		8A9F701F27EE536D0012A1EC /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F701E27EE536D0012A1EC /* Player.swift */; };
 		8AA5B3EB281295DB00BE1A6C /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 8AA5B3EA281295DB00BE1A6C /* KeyboardShortcuts */; };
@@ -37,8 +37,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A7403A027FA19BB00E7F90B /* LaunchAtLogin in Frameworks */,
-				8A9F700F27EE3AED0012A1EC /* SwiftState in Frameworks */,
 				8AA5B3EB281295DB00BE1A6C /* KeyboardShortcuts in Frameworks */,
+				8A8CFE402821D8C300F9F303 /* SwiftState in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,9 +102,9 @@
 			);
 			name = TomatoBar;
 			packageProductDependencies = (
-				8A9F700E27EE3AED0012A1EC /* SwiftState */,
 				8A74039F27FA19BB00E7F90B /* LaunchAtLogin */,
 				8AA5B3EA281295DB00BE1A6C /* KeyboardShortcuts */,
+				8A8CFE3F2821D8C300F9F303 /* SwiftState */,
 			);
 			productName = TomatoBar;
 			productReference = 8A21B78827EE31A20009E5DB /* TomatoBar.app */;
@@ -135,9 +135,9 @@
 			);
 			mainGroup = 8A21B77F27EE31A20009E5DB;
 			packageReferences = (
-				8A9F700C27EE3AA70012A1EC /* XCRemoteSwiftPackageReference "SwiftState" */,
 				8A74039E27FA19BB00E7F90B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 				8AA5B3E9281295DB00BE1A6C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+				8A8CFE3E2821D8C300F9F303 /* XCRemoteSwiftPackageReference "SwiftState" */,
 			);
 			productRefGroup = 8A21B78927EE31A20009E5DB /* Products */;
 			projectDirPath = "";
@@ -406,9 +406,9 @@
 				version = 4.2.0;
 			};
 		};
-		8A9F700C27EE3AA70012A1EC /* XCRemoteSwiftPackageReference "SwiftState" */ = {
+		8A8CFE3E2821D8C300F9F303 /* XCRemoteSwiftPackageReference "SwiftState" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ivoronin/SwiftState";
+			repositoryURL = "https://github.com/ReactKit/SwiftState";
 			requirement = {
 				branch = swift/5.0;
 				kind = branch;
@@ -430,9 +430,9 @@
 			package = 8A74039E27FA19BB00E7F90B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
 			productName = LaunchAtLogin;
 		};
-		8A9F700E27EE3AED0012A1EC /* SwiftState */ = {
+		8A8CFE3F2821D8C300F9F303 /* SwiftState */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8A9F700C27EE3AA70012A1EC /* XCRemoteSwiftPackageReference "SwiftState" */;
+			package = 8A8CFE3E2821D8C300F9F303 /* XCRemoteSwiftPackageReference "SwiftState" */;
 			productName = SwiftState;
 		};
 		8AA5B3EA281295DB00BE1A6C /* KeyboardShortcuts */ = {
