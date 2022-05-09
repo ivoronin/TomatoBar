@@ -115,6 +115,12 @@ struct TBPopoverView: View {
                 TBStatusItem.shared.closePopover(nil)
             } label: {
                 Text(timer.timer != nil ? (buttonHovered ? "Stop" : timer.timeLeftString) : "Start")
+                    /*
+                      When appearance is set to "Dark" and accent color is set to "Graphite"
+                      "defaultAction" button label's color is set to the same color as the
+                      button, making the button look blank. #24
+                     */
+                    .foregroundColor(Color.white)
                     .font(.system(.body).monospacedDigit())
                     .frame(maxWidth: .infinity)
             }
