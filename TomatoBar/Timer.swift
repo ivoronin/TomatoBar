@@ -2,6 +2,10 @@ import KeyboardShortcuts
 import SwiftState
 import SwiftUI
 
+private func secondsUntil(date: Date) -> Int {
+    return Int(date.timeIntervalSince(Date()))
+}
+
 class TBTimer: ObservableObject {
     @AppStorage("isWindupEnabled") var isWindupEnabled = true
     @AppStorage("isDingEnabled") var isDingEnabled = true
@@ -12,12 +16,14 @@ class TBTimer: ObservableObject {
     @AppStorage("shortRestIntervalLength") var shortRestIntervalLength = 5
     @AppStorage("longRestIntervalLength") var longRestIntervalLength = 15
     @AppStorage("workIntervalsInSet") var workIntervalsInSet = 4
+    // This preference is "hidden"
+    @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60
 
     private var stateMachine = TBStateMachine(state: .idle)
     private let player = TBPlayer()
-    private var timeLeftSeconds: Int = 0
     private var consecutiveWorkIntervals: Int = 0
     private var notificationCenter = TBNotificationCenter()
+    private var finishTime: Date!
     @Published var timeLeftString: String = ""
     @Published var timer: DispatchSourceTimer?
 
@@ -87,10 +93,11 @@ class TBTimer: ObservableObject {
     }
 
     func updateTimeLeft() {
+        let seconds = secondsUntil(date: finishTime)
         timeLeftString = String(
             format: "%.2i:%.2i",
-            timeLeftSeconds / 60,
-            timeLeftSeconds % 60
+            seconds / 60,
+            seconds % 60
         )
         if timer != nil, showTimerInMenuBar {
             TBStatusItem.shared.setTitle(title: timeLeftString)
@@ -100,7 +107,7 @@ class TBTimer: ObservableObject {
     }
 
     private func startTimer(seconds: Int) {
-        timeLeftSeconds = seconds
+        finishTime = Date().addingTimeInterval(TimeInterval(seconds))
 
         let queue = DispatchQueue(label: "Timer")
         timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
@@ -116,18 +123,25 @@ class TBTimer: ObservableObject {
     }
 
     private func onTimerTick() {
-        timeLeftSeconds -= 1
         /* Cannot publish updates from background thread */
         DispatchQueue.main.async { [self] in
             updateTimeLeft()
-            if timeLeftSeconds == 0 {
-                stateMachine <-! .timerFired
+            let seconds = secondsUntil(date: finishTime)
+            if seconds <= 0 {
+                /*
+                 Ticks can be missed during the machine sleep.
+                 Stop the timer if it goes beyond an overrun time limit.
+                 */
+                if seconds < overrunTimeLimit {
+                    stateMachine <-! .startStop
+                } else {
+                    stateMachine <-! .timerFired
+                }
             }
         }
     }
 
     private func onTimerCancel() {
-        timeLeftSeconds = 0
         DispatchQueue.main.async { [self] in
             updateTimeLeft()
         }
