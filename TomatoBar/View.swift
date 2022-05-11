@@ -1,3 +1,4 @@
+import Defaults
 import KeyboardShortcuts
 import LaunchAtLogin
 import SwiftUI
@@ -7,41 +8,56 @@ extension KeyboardShortcuts.Name {
 }
 
 private struct IntervalsView: View {
-    @EnvironmentObject var timer: TBTimer
+    @EnvironmentObject var viewModel: TBViewModel
+    @Default(.currentPresetId) var currentPresetId
 
     var body: some View {
-        VStack {
-            Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
-                Text("Work interval:")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text("\(timer.workIntervalLength) min")
-            }
-            Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
-                Text("Short rest interval:")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text("\(timer.shortRestIntervalLength) min")
-            }
-            Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
-                Text("Long rest interval:")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text("\(timer.longRestIntervalLength) min")
-            }
-            .help("Duration of the lengthy break, taken after finishing work interval set")
-            Stepper(value: $timer.workIntervalsInSet, in: 1 ... 10) {
-                Text("Work intervals in a set:")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text("\(timer.workIntervalsInSet)")
-            }
-            .help("Number of working intervals in the set, after which a lengthy break taken")
-            Spacer().frame(minHeight: 0)
-        }
-        .padding(4)
+        VStack {}
+        /*
+         VStack {
+             Picker("Preset", selection: currentPresetId) {
+                 ForEach(viewModel.presets, id: \.id) {
+                     Text($0.name)
+                 }
+             }.onChange(of: currentPresetId) { id in
+                 timer.preset = presetStore.getById(id: id)!
+             }
+             Stepper(value: $timer.preset.work, in: 1 ... 60) {
+                 Text("Work interval:")
+                     .frame(maxWidth: .infinity, alignment: .leading)
+                 // TextField("Value", value: $timer.preset.work, formatter: NumberFormatter())
+                 //    .frame(minWidth: 15, maxWidth: 40)
+                 Text("\(timer.preset.work) min")
+             }
+             Stepper(value: $timer.preset.shortRest, in: 1 ... 60) {
+                 Text("Short rest interval:")
+                     .frame(maxWidth: .infinity, alignment: .leading)
+                 Text("\(timer.preset.shortRest) min")
+             }
+             Stepper(value: $timer.preset.longRest, in: 1 ... 60) {
+                 Text("Long rest interval:")
+                     .frame(maxWidth: .infinity, alignment: .leading)
+                 Text("\(timer.preset.longRest) min")
+             }
+             .help("Duration of the lengthy break, taken after finishing work interval set")
+             Stepper(value: $timer.preset.setSize, in: 1 ... 10) {
+                 Text("Work intervals in a set:")
+                     .frame(maxWidth: .infinity, alignment: .leading)
+                 Text("\(timer.preset.setSize)")
+             }
+             .help("Number of working intervals in the set, after which a lengthy break taken")
+             Spacer().frame(minHeight: 0)
+         }
+         .padding(4)
+          */
     }
 }
 
 private struct SettingsView: View {
-    @EnvironmentObject var timer: TBTimer
+    @EnvironmentObject var viewModel: TBViewModel
     @ObservedObject private var launchAtLogin = LaunchAtLogin.observable
+    @Default(.stopAfterBreak) var stopAfterBreak
+    @Default(.showTimerInMenuBar) var showTimerInMenuBar
 
     var body: some View {
         VStack {
@@ -49,17 +65,14 @@ private struct SettingsView: View {
                 Text("Shortcut")
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            Toggle(isOn: $timer.stopAfterBreak) {
+            Toggle(isOn: $stopAfterBreak) {
                 Text("Stop after break")
                     .frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
-            Toggle(isOn: $timer.showTimerInMenuBar) {
+            Toggle(isOn: $showTimerInMenuBar) {
                 Text("Show timer in menu bar")
                     .frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
-                .onChange(of: timer.showTimerInMenuBar) { _ in
-                    timer.updateTimeLeft()
-                }
             Toggle(isOn: $launchAtLogin.isEnabled) {
                 Text("Launch at login")
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -71,28 +84,28 @@ private struct SettingsView: View {
 }
 
 private struct SoundsView: View {
-    @EnvironmentObject var timer: TBTimer
+    @EnvironmentObject var viewModel: TBViewModel
+    @Default(.isWindupEnabled) var isWindupEnabled
+    @Default(.isDingEnabled) var isDingEnabled
+    @Default(.isTickingEnabled) var isTickingEnabled
 
     var body: some View {
         VStack {
-            Toggle(isOn: $timer.isWindupEnabled) {
+            Toggle(isOn: $isWindupEnabled) {
                 Text("Windup")
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .toggleStyle(.switch)
-            Toggle(isOn: $timer.isDingEnabled) {
+            Toggle(isOn: $isDingEnabled) {
                 Text("Ding")
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .toggleStyle(.switch)
-            Toggle(isOn: $timer.isTickingEnabled) {
+            Toggle(isOn: $isTickingEnabled) {
                 Text("Ticking")
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .toggleStyle(.switch)
-            .onChange(of: timer.isTickingEnabled) { _ in
-                timer.toggleTicking()
-            }
             Spacer().frame(minHeight: 0)
         }
         .padding(4)
@@ -104,17 +117,17 @@ private enum ChildView {
 }
 
 struct TBPopoverView: View {
-    @ObservedObject var timer = TBTimer()
+    @ObservedObject var viewModel = TBViewModel()
     @State private var buttonHovered = false
     @State private var activeChildView = ChildView.intervals
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Button {
-                timer.startStop()
+                viewModel.startStop()
                 TBStatusItem.shared.closePopover(nil)
             } label: {
-                Text(timer.timer != nil ? (buttonHovered ? "Stop" : timer.timeLeftString) : "Start")
+                Text(viewModel.timerActive ? (buttonHovered ? "Stop" : viewModel.timeLeftString) : "Start")
                     /*
                       When appearance is set to "Dark" and accent color is set to "Graphite"
                       "defaultAction" button label's color is set to the same color as the
@@ -142,11 +155,11 @@ struct TBPopoverView: View {
             GroupBox {
                 switch activeChildView {
                 case .intervals:
-                    IntervalsView().environmentObject(timer)
+                    IntervalsView().environmentObject(viewModel)
                 case .settings:
-                    SettingsView().environmentObject(timer)
+                    SettingsView().environmentObject(viewModel)
                 case .sounds:
-                    SoundsView().environmentObject(timer)
+                    SoundsView().environmentObject(viewModel)
                 }
             }
 
@@ -187,7 +200,7 @@ struct TBPopoverView: View {
             )
         #endif
             /* Use values from GeometryReader */
-            .frame(width: 240, height: 247)
+            .frame(width: 240, height: 264)
             .padding(12)
     }
 }

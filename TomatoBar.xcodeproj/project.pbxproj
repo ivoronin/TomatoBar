@@ -10,6 +10,11 @@
 		8A21B78C27EE31A20009E5DB /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78B27EE31A20009E5DB /* App.swift */; };
 		8A21B78E27EE31A20009E5DB /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A21B78D27EE31A20009E5DB /* View.swift */; };
 		8A21B79027EE31A30009E5DB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A21B78F27EE31A30009E5DB /* Assets.xcassets */; };
+		8A569FD2282AA08500E1636B /* Presets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A569FD1282AA08500E1636B /* Presets.swift */; };
+		8A569FD4282AE40100E1636B /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A569FD3282AE40100E1636B /* ViewModel.swift */; };
+		8A569FD7282AE95F00E1636B /* Defaults in Frameworks */ = {isa = PBXBuildFile; productRef = 8A569FD6282AE95F00E1636B /* Defaults */; };
+		8A569FDA282AE96E00E1636B /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A569FD9282AE96E00E1636B /* Defaults.swift */; };
+		8A569FDC282B009D00E1636B /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A569FDB282B009D00E1636B /* Util.swift */; };
 		8A7403A027FA19BB00E7F90B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 8A74039F27FA19BB00E7F90B /* LaunchAtLogin */; };
 		8A8CFE402821D8C300F9F303 /* SwiftState in Frameworks */ = {isa = PBXBuildFile; productRef = 8A8CFE3F2821D8C300F9F303 /* SwiftState */; };
 		8A9F700927EE396E0012A1EC /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F700827EE396E0012A1EC /* State.swift */; };
@@ -25,6 +30,10 @@
 		8A21B78D27EE31A20009E5DB /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		8A21B78F27EE31A30009E5DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8A21B79427EE31A30009E5DB /* TomatoBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TomatoBar.entitlements; sourceTree = "<group>"; };
+		8A569FD1282AA08500E1636B /* Presets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presets.swift; sourceTree = "<group>"; };
+		8A569FD3282AE40100E1636B /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		8A569FD9282AE96E00E1636B /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		8A569FDB282B009D00E1636B /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		8A9F700827EE396E0012A1EC /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		8A9F701827EE3DAF0012A1EC /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		8A9F701E27EE536D0012A1EC /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -36,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A569FD7282AE95F00E1636B /* Defaults in Frameworks */,
 				8A7403A027FA19BB00E7F90B /* LaunchAtLogin in Frameworks */,
 				8AA5B3EB281295DB00BE1A6C /* KeyboardShortcuts in Frameworks */,
 				8A8CFE402821D8C300F9F303 /* SwiftState in Frameworks */,
@@ -67,10 +77,14 @@
 			children = (
 				8A21B78B27EE31A20009E5DB /* App.swift */,
 				8A21B78D27EE31A20009E5DB /* View.swift */,
+				8A569FD9282AE96E00E1636B /* Defaults.swift */,
 				8A9F700827EE396E0012A1EC /* State.swift */,
 				8A9F701827EE3DAF0012A1EC /* Timer.swift */,
+				8A569FDB282B009D00E1636B /* Util.swift */,
 				8A9F701E27EE536D0012A1EC /* Player.swift */,
+				8A569FD1282AA08500E1636B /* Presets.swift */,
 				8AA5B3F12812A74600BE1A6C /* Notifications.swift */,
+				8A569FD3282AE40100E1636B /* ViewModel.swift */,
 				8A21B78F27EE31A30009E5DB /* Assets.xcassets */,
 				8A21B79427EE31A30009E5DB /* TomatoBar.entitlements */,
 			);
@@ -105,6 +119,7 @@
 				8A74039F27FA19BB00E7F90B /* LaunchAtLogin */,
 				8AA5B3EA281295DB00BE1A6C /* KeyboardShortcuts */,
 				8A8CFE3F2821D8C300F9F303 /* SwiftState */,
+				8A569FD6282AE95F00E1636B /* Defaults */,
 			);
 			productName = TomatoBar;
 			productReference = 8A21B78827EE31A20009E5DB /* TomatoBar.app */;
@@ -138,6 +153,7 @@
 				8A74039E27FA19BB00E7F90B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
 				8AA5B3E9281295DB00BE1A6C /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				8A8CFE3E2821D8C300F9F303 /* XCRemoteSwiftPackageReference "SwiftState" */,
+				8A569FD5282AE95F00E1636B /* XCRemoteSwiftPackageReference "Defaults" */,
 			);
 			productRefGroup = 8A21B78927EE31A20009E5DB /* Products */;
 			projectDirPath = "";
@@ -185,11 +201,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A569FDA282AE96E00E1636B /* Defaults.swift in Sources */,
 				8A9F701F27EE536D0012A1EC /* Player.swift in Sources */,
 				8A21B78E27EE31A20009E5DB /* View.swift in Sources */,
 				8A9F701927EE3DAF0012A1EC /* Timer.swift in Sources */,
+				8A569FD2282AA08500E1636B /* Presets.swift in Sources */,
 				8A21B78C27EE31A20009E5DB /* App.swift in Sources */,
 				8AA5B3F22812A74600BE1A6C /* Notifications.swift in Sources */,
+				8A569FDC282B009D00E1636B /* Util.swift in Sources */,
+				8A569FD4282AE40100E1636B /* ViewModel.swift in Sources */,
 				8A9F700927EE396E0012A1EC /* State.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -398,6 +418,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8A569FD5282AE95F00E1636B /* XCRemoteSwiftPackageReference "Defaults" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/Defaults";
+			requirement = {
+				kind = exactVersion;
+				version = 6.2.1;
+			};
+		};
 		8A74039E27FA19BB00E7F90B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
@@ -425,6 +453,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8A569FD6282AE95F00E1636B /* Defaults */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8A569FD5282AE95F00E1636B /* XCRemoteSwiftPackageReference "Defaults" */;
+			productName = Defaults;
+		};
 		8A74039F27FA19BB00E7F90B /* LaunchAtLogin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8A74039E27FA19BB00E7F90B /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
