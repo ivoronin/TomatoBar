@@ -15,14 +15,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Set version
+        run: echo "version=$(git describe --tags)" >> $GITHUB_ENV
+
       - name: Build
         run: |
           xcodebuild archive -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release -archivePath TomatoBar.xcarchive MARKETING_VERSION=${{github.ref_name}}
           xcodebuild archive -archivePath TomatoBar.xcarchive -exportArchive -exportOptionsPlist export_options.plist -exportPath .
-          zip -r "TomatoBar-${{github.ref_name}}.zip" "TomatoBar.app"
+          zip -r "TomatoBar-${{env.version}}.zip" "TomatoBar.app"
 
       - name: Release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v1
         with:
-          files: TomatoBar-${{github.ref_name}}.zip
+          files: TomatoBar-${{env.version}}.zip
+
+      - name: Prerelease
+        if: github.ref_type == 'branch'
+        uses: softprops/action-gh-release@v1
+        name: prerelease
+        prerelease: true
+        with:
+          files: TomatoBar-${{env.version}}.zip
