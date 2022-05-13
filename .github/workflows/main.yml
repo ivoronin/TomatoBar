@@ -31,6 +31,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: TomatoBar-${{env.version}}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Remove after https://github.com/softprops/action-gh-release/pull/188 is merged
       - name: Delete old prerelease
