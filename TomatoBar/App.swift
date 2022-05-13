@@ -18,9 +18,8 @@ struct TBApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
+        Settings {
             EmptyView()
-                .frame(width: .zero)
         }
     }
 }

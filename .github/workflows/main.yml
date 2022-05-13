@@ -12,17 +12,39 @@ jobs:
     runs-on: macos-12
 
     steps:
+      - name: Delete old prerelease
+        if: github.ref_type == 'branch'
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: prerelease
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set version
+        run: echo "version=$(git describe --tags)" >> $GITHUB_ENV
 
       - name: Build
         run: |
           xcodebuild archive -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release -archivePath TomatoBar.xcarchive MARKETING_VERSION=${{github.ref_name}}
           xcodebuild archive -archivePath TomatoBar.xcarchive -exportArchive -exportOptionsPlist export_options.plist -exportPath .
-          zip -r "TomatoBar-${{github.ref_name}}.zip" "TomatoBar.app"
+          zip -r "TomatoBar-${{env.version}}.zip" "TomatoBar.app"
 
       - name: Release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: github.ref_type == 'tag'
         uses: softprops/action-gh-release@v1
         with:
-          files: TomatoBar-${{github.ref_name}}.zip
+          files: TomatoBar-${{env.version}}.zip
+
+      - name: Prerelease
+        if: github.ref_type == 'branch'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: prerelease
+          prerelease: true
+          files: TomatoBar-${{env.version}}.zip
