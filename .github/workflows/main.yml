@@ -33,7 +33,7 @@ jobs:
       - name: Prerelease
         if: github.ref_type == 'branch'
         uses: softprops/action-gh-release@v1
-        name: prerelease
-        prerelease: true
         with:
+          name: prerelease
+          prerelease: true
           files: TomatoBar-${{env.version}}.zip
