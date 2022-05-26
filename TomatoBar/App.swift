@@ -25,23 +25,20 @@ struct TBApp: App {
 }
 
 class TBStatusItem: NSObject, NSApplicationDelegate {
-    private var popover = NSPopover()
     private var statusBarItem: NSStatusItem?
     static var shared: TBStatusItem!
 
     func applicationDidFinishLaunching(_: Notification) {
-        let view = TBPopoverView()
-
-        popover.behavior = .transient
-        popover.contentViewController = NSViewController()
-        popover.contentViewController?.view = NSHostingView(rootView: view)
-
+        let tbPopoverView = TBPopoverView()
+        let tbPopoverNSView = NSHostingView(rootView: tbPopoverView)
+        
         statusBarItem = NSStatusBar.system.statusItem(
             withLength: NSStatusItem.variableLength
         )
         statusBarItem?.button?.imagePosition = .imageLeft
         setIcon(name: .idle)
-        statusBarItem?.button?.action = #selector(TBStatusItem.togglePopover(_:))
+        statusBarItem?.menu = createMenu(from: tbPopoverNSView)
+        statusBarItem?.menu?.delegate = self
     }
 
     func setTitle(title: String?) {
@@ -55,23 +52,41 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
     func setIcon(name: NSImage.Name) {
         statusBarItem?.button?.image = NSImage(named: name)
     }
+}
 
-    func showPopover(_: AnyObject?) {
-        if let button = statusBarItem?.button {
-            popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
-            popover.contentViewController?.view.window?.makeKey()
-        }
+// MARK: - View Actions
+extension TBStatusItem: NSMenuDelegate {
+    
+    func menuWillOpen(_ menu: NSMenu) {
+        // TODO: Need to figure out a way to make view of NSStatusItem key
+        // guard let item = menu.item(at: 0) else { return }
+        // item.view?.window?.makeKey()
+        // item.view?.becomeFirstResponder()
     }
 
-    func closePopover(_ sender: AnyObject?) {
-        popover.performClose(sender)
-    }
+}
 
-    @objc func togglePopover(_ sender: AnyObject?) {
-        if popover.isShown {
-            closePopover(sender)
-        } else {
-            showPopover(sender)
-        }
+// MARK: - Helpers
+extension TBStatusItem {
+    
+    private func createMenu(from view: NSView) -> NSMenu {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        let contentView = NSView(frame: .init(x: 0, y: 0, width: 250, height: 250))
+        contentView.addSubview(view)
+        
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -8),
+            view.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: -8),
+        ])
+        
+        view.wantsLayer = true
+        let menuItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+        menuItem.view = contentView
+        
+        let menu = NSMenu()
+        menu.addItem(menuItem)
+        
+        return menu
     }
+    
 }
