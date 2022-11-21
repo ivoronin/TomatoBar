@@ -403,7 +403,7 @@
 			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
 			requirement = {
 				kind = exactVersion;
-				version = 4.2.0;
+				version = 5.0.0;
 			};
 		};
 		8A8CFE3E2821D8C300F9F303 /* XCRemoteSwiftPackageReference "SwiftState" */ = {
