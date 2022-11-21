@@ -30,6 +30,8 @@ jobs:
         run: echo "version=$(git describe --tags)" >> $GITHUB_ENV
 
       - name: Build
+        env:
+          DEVELOPER_DIR: /Applications/Xcode_14.1.app/Contents/Developer
         run: |
           xcodebuild archive -project TomatoBar.xcodeproj -scheme TomatoBar -configuration Release -archivePath TomatoBar.xcarchive MARKETING_VERSION=${{github.ref_name}}
           xcodebuild archive -archivePath TomatoBar.xcarchive -exportArchive -exportOptionsPlist export_options.plist -exportPath .
