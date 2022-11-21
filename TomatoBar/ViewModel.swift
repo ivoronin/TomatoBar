@@ -5,13 +5,18 @@ import SwiftUI
 class TBViewModel: ObservableObject {
     @Published var timeLeftString: String = ""
     @Published var timerActive: Bool = false
+    @Published var presets = TBPresetStore.load()
+    @Published var curPresetIdx = 0
 
-    private var timer: TBTimer
-    private var presets = TBPresets()
+    private var curPreset: TBPreset {
+        presets[curPresetIdx]
+    }
+
+    private var timer: TBTimer!
     private var notificationCenter = TBNotificationCenter()
 
     init() {
-        timer = TBTimer(presets: presets)
+        timer = TBTimer(preset: presets[curPresetIdx])
         timer.addChangeHandler(handler: onTimerChange)
         timer.addTickHandler(handler: updateTimeLeft)
         KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: startStop)

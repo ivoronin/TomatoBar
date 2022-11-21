@@ -15,12 +15,12 @@ class TBTimer {
     private var stateMachine = TBStateMachine(state: .idle)
     private let player = TBPlayer()
     private var consecutiveWorkIntervals: Int = 0
-    private var presets: TBPresets
     private var timer: DispatchSourceTimer?
     private var tickHandler: TimerTickHandler!
+    private var preset: TBPreset
 
-    init(presets: TBPresets) {
-        self.presets = presets
+    init(preset: TBPreset) {
+        self.preset = preset
 
         /*
          * State diagram
@@ -47,10 +47,10 @@ class TBTimer {
             .idle => .work, .work => .idle, .shortRest => .idle, .longRest => .idle,
         ])
         stateMachine.addRoutes(event: .timerFired, transitions: [.work => .shortRest]) { _ in
-            self.consecutiveWorkIntervals < presets.current.setSize
+            self.consecutiveWorkIntervals < preset.setSize
         }
         stateMachine.addRoutes(event: .timerFired, transitions: [.work => .longRest]) { _ in
-            self.consecutiveWorkIntervals >= presets.current.setSize
+            self.consecutiveWorkIntervals >= preset.setSize
         }
         stateMachine.addRoutes(event: .timerFired, transitions: [.shortRest => .idle]) { _ in
             Defaults[.stopAfterBreak]
@@ -149,7 +149,7 @@ class TBTimer {
         if Defaults[.isTickingEnabled] {
             player.startTicking()
         }
-        startTimer(seconds: presets.current.work * 60)
+        startTimer(seconds: preset.work * 60)
     }
 
     private func onWorkFinish(context _: TBStateMachine.Context) {
@@ -164,11 +164,11 @@ class TBTimer {
     }
 
     private func onShortRestStart(context _: TBStateMachine.Context) {
-        startTimer(seconds: presets.current.shortRest * 60)
+        startTimer(seconds: preset.shortRest * 60)
     }
 
     private func onLongRestStart(context _: TBStateMachine.Context) {
-        startTimer(seconds: presets.current.longRest * 60)
+        startTimer(seconds: preset.longRest * 60)
     }
 
     private func onIdleStart(context _: TBStateMachine.Context) {

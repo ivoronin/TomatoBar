@@ -11,9 +11,9 @@ struct TBPreset {
     var builtin: Bool
 }
 
-let standardPomodoroPreset = TBPreset(
+let standardPreset = TBPreset(
     id: "0FFAAA6E-649C-443C-8D25-F0A92EFD17B3",
-    name: "Standard Pomodoro",
+    name: "Standard",
     work: 25,
     shortRest: 5,
     longRest: 15,
@@ -31,31 +31,17 @@ let rule5217Preset = TBPreset(
     builtin: true
 )
 
-class TBPresets: ObservableObject {
-    private let builtinPresets: [TBPreset] = [
-        standardPomodoroPreset,
+class TBPresetStore {
+    private static let builtinPresets: [TBPreset] = [
+        standardPreset,
         rule5217Preset,
     ]
 
-    var current: TBPreset {
-        // FIXME: force_unwrap
-        return getById(id: Defaults[.currentPresetId])!
-    }
-
-    @Published var presets: [TBPreset] = []
-
-    init() {
+    static func load() -> [TBPreset] {
+        var presets: [TBPreset] = []
         presets.append(contentsOf: builtinPresets)
+        return presets
     }
 
-    func save() {}
-
-    public func getById(id: String) -> TBPreset? {
-        for preset in presets {
-            if preset.id == id {
-                return preset
-            }
-        }
-        return nil
-    }
+    func save(presets _: [TBPreset]) {}
 }

@@ -116,8 +116,28 @@ private enum ChildView {
     case intervals, settings, sounds
 }
 
+private struct MenuView: View {
+    var body: some View {
+        Menu {
+            Button("Preferences") {}
+                .keyboardShortcut("p")
+            Button("About") {}
+                .keyboardShortcut("a")
+            Button("Quit") {}
+                .keyboardShortcut("q")
+        } label: {
+            Image(systemName: "gearshape")
+        }
+        .controlSize(.large)
+        .fixedSize()
+        .menuStyle(BorderedButtonMenuStyle())
+        // .menuStyle(BorderlessButtonMenuStyle(showsMenuIndicator: false))
+    }
+}
+
 struct TBPopoverView: View {
     @ObservedObject var viewModel = TBViewModel()
+    @Default(.currentPresetId) var currentPresetId
     @State private var buttonHovered = false
     @State private var activeChildView = ChildView.intervals
 
@@ -134,7 +154,7 @@ struct TBPopoverView: View {
                       button, making the button look blank. #24
                      */
                     .foregroundColor(Color.white)
-                    .font(.system(.body).monospacedDigit())
+                    .font(.body.monospacedDigit())
                     .frame(maxWidth: .infinity)
             }
             .onHover { over in
@@ -143,47 +163,86 @@ struct TBPopoverView: View {
             .controlSize(.large)
             .keyboardShortcut(.defaultAction)
 
-            Picker("", selection: $activeChildView) {
-                Text("Intervals").tag(ChildView.intervals)
-                Text("Settings").tag(ChildView.settings)
-                Text("Sounds").tag(ChildView.sounds)
+            HStack {
+                Picker("Preset", selection: $currentPresetId) {
+                    ForEach(viewModel.presets, id: \.id) {
+                        Text($0.name)
+                    }
+                }
+                .labelsHidden()
+                .controlSize(.large)
+                Button {} label: {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 16))
+                }
+                .controlSize(.large)
+                // .buttonStyle(.borderless)
+                .keyboardShortcut(",")
+                Spacer()
+                Button {} label: {
+                    Image(systemName: "power")
+                        .font(.system(size: 16))
+                }
+                .controlSize(.large)
+                // .buttonStyle(.borderless)
+                .keyboardShortcut(",")
             }
-            .labelsHidden()
-            .frame(maxWidth: .infinity)
-            .pickerStyle(.segmented)
 
-            GroupBox {
-                switch activeChildView {
-                case .intervals:
-                    IntervalsView().environmentObject(viewModel)
-                case .settings:
-                    SettingsView().environmentObject(viewModel)
-                case .sounds:
-                    SoundsView().environmentObject(viewModel)
-                }
-            }
+            Text("3 × (25 work + 5 rest) → 15 rest")
+                .frame(maxWidth: .infinity)
+                .padding(6)
+                /*.background(
+                    Color.gray.clipShape(
+                        RoundedRectangle(cornerRadius: 6)
+                    )
+                )*/
 
-            Group {
-                Button {
-                    NSApp.activate(ignoringOtherApps: true)
-                    NSApp.orderFrontStandardAboutPanel()
-                } label: {
-                    Text("About")
-                    Spacer()
-                    Text("⌘ A").foregroundColor(Color.gray)
-                }
-                .buttonStyle(.plain)
-                .keyboardShortcut("a")
-                Button {
-                    NSApplication.shared.terminate(self)
-                } label: {
-                    Text("Quit")
-                    Spacer()
-                    Text("⌘ Q").foregroundColor(Color.gray)
-                }
-                .buttonStyle(.plain)
-                .keyboardShortcut("q")
-            }
+            /*
+
+              Picker("", selection: $activeChildView) {
+                  Text("Intervals").tag(ChildView.intervals)
+                  Text("Settings").tag(ChildView.settings)
+                  Text("Sounds").tag(ChildView.sounds)
+              }
+              .labelsHidden()
+              .frame(maxWidth: .infinity)
+              .pickerStyle(.segmented)
+
+              GroupBox {
+                  switch activeChildView {
+                  case .intervals:
+                      IntervalsView().environmentObject(viewModel)
+                  case .settings:
+                      SettingsView().environmentObject(viewModel)
+                  case .sounds:
+                      SoundsView().environmentObject(viewModel)
+                  }
+              }
+
+             Divider()
+
+             VStack(spacing: 6) {
+                  Button {
+                      NSApp.activate(ignoringOtherApps: true)
+                      NSApp.orderFrontStandardAboutPanel()
+                  } label: {
+                      Text("About")
+                      Spacer()
+                      Text("⌘ A").foregroundColor(Color.gray)
+                  }
+                  .buttonStyle(.plain)
+                  .keyboardShortcut("a")
+                  Button {
+                      NSApplication.shared.terminate(self)
+                  } label: {
+                      Text("Quit")
+                      Spacer()
+                      Text("⌘ Q").foregroundColor(Color.gray)
+                  }
+                  .buttonStyle(.plain)
+                  .keyboardShortcut("q")
+              }
+             */
         }
         #if DEBUG
             /*
@@ -200,8 +259,8 @@ struct TBPopoverView: View {
             )
         #endif
             /* Use values from GeometryReader */
-            .frame(width: 240, height: 264)
-            .padding(12)
+            .frame(width: 220, height: 100)
+            .padding(10)
     }
 }
 
