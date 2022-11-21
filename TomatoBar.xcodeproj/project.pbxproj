@@ -162,6 +162,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		8A7403A127FA1A4E00E7F90B /* Copy “Launch at Login Helper” */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
