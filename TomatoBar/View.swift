@@ -187,7 +187,7 @@ struct TBPopoverView: View {
             )
         #endif
             /* Use values from GeometryReader */
-            .frame(width: 240, height: 247)
+//            .frame(width: 240, height: 276)
             .padding(12)
     }
 }
