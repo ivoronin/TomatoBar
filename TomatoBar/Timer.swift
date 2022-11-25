@@ -176,18 +176,18 @@ class TBTimer: ObservableObject {
     }
 
     private func onRestStart(context _: TBStateMachine.Context) {
-        var kind = "short"
+        var body = NSLocalizedString("TBTimer.onRestStart.short.body", comment: "Short break body")
         var length = shortRestIntervalLength
         var imgName = NSImage.Name.shortRest
         if consecutiveWorkIntervals >= workIntervalsInSet {
-            kind = "long"
+            body = NSLocalizedString("TBTimer.onRestStart.long.body", comment: "Long break body")
             length = longRestIntervalLength
             imgName = .longRest
             consecutiveWorkIntervals = 0
         }
         notificationCenter.send(
-            title: "Time's up",
-            body: "It's time for a \(kind) break!",
+            title: NSLocalizedString("TBTimer.onRestStart.title", comment: "Time's up title"),
+            body: body,
             category: .restStarted
         )
         TBStatusItem.shared.setIcon(name: imgName)
@@ -199,8 +199,8 @@ class TBTimer: ObservableObject {
             return
         }
         notificationCenter.send(
-            title: "Break is over",
-            body: "Keep up the good work!",
+            title: NSLocalizedString("TBTimer.onRestFinish.title", comment: "Break is over title"),
+            body: NSLocalizedString("TBTimer.onRestFinish.body", comment: "Break is over body"),
             category: .restFinished
         )
     }

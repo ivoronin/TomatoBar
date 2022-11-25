@@ -8,31 +8,38 @@ extension KeyboardShortcuts.Name {
 
 private struct IntervalsView: View {
     @EnvironmentObject var timer: TBTimer
+    private var minStr = NSLocalizedString("IntervalsView.min", comment: "min")
 
     var body: some View {
         VStack {
             Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
-                Text("Work interval:")
+                Text(NSLocalizedString("IntervalsView.workIntervalLength.label",
+                                       comment: "Work interval label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("\(timer.workIntervalLength) min")
+                Text(String.localizedStringWithFormat(minStr, timer.workIntervalLength))
             }
             Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
-                Text("Short rest interval:")
+                Text(NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
+                                       comment: "Short rest interval label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("\(timer.shortRestIntervalLength) min")
+                Text(String.localizedStringWithFormat(minStr, timer.shortRestIntervalLength))
             }
             Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
-                Text("Long rest interval:")
+                Text(NSLocalizedString("IntervalsView.longRestIntervalLength.label",
+                                       comment: "Long rest interval label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                Text("\(timer.longRestIntervalLength) min")
+                Text(String.localizedStringWithFormat(minStr, timer.longRestIntervalLength))
             }
-            .help("Duration of the lengthy break, taken after finishing work interval set")
+            .help(NSLocalizedString("IntervalsView.longRestIntervalLength.help",
+                                    comment: "Long rest interval hint"))
             Stepper(value: $timer.workIntervalsInSet, in: 1 ... 10) {
-                Text("Work intervals in a set:")
+                Text(NSLocalizedString("IntervalsView.workIntervalsInSet.label",
+                                       comment: "Work intervals in a set label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text("\(timer.workIntervalsInSet)")
             }
-            .help("Number of working intervals in the set, after which a lengthy break taken")
+            .help(NSLocalizedString("IntervalsView.workIntervalsInSet.help",
+                                    comment: "Work intervals in set hint"))
             Spacer().frame(minHeight: 0)
         }
         .padding(4)
@@ -46,22 +53,26 @@ private struct SettingsView: View {
     var body: some View {
         VStack {
             KeyboardShortcuts.Recorder(for: .startStopTimer) {
-                Text("Shortcut")
+                Text(NSLocalizedString("SettingsView.shortcut.label",
+                                       comment: "Shortcut label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             Toggle(isOn: $timer.stopAfterBreak) {
-                Text("Stop after break")
+                Text(NSLocalizedString("SettingsView.stopAfterBreak.label",
+                                       comment: "Stop after break label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
             Toggle(isOn: $timer.showTimerInMenuBar) {
-                Text("Show timer in menu bar")
+                Text(NSLocalizedString("SettingsView.showTimerInMenuBar.label",
+                                       comment: "Show timer in menu bar label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
                 .onChange(of: timer.showTimerInMenuBar) { _ in
                     timer.updateTimeLeft()
                 }
             Toggle(isOn: $launchAtLogin.isEnabled) {
-                Text("Launch at login")
+                Text(NSLocalizedString("SettingsView.launchAtLogin.label",
+                                       comment: "Launch at login label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
             Spacer().frame(minHeight: 0)
@@ -76,17 +87,20 @@ private struct SoundsView: View {
     var body: some View {
         VStack {
             Toggle(isOn: $timer.isWindupEnabled) {
-                Text("Windup")
+                Text(NSLocalizedString("SoundsView.isWindupEnabled.label",
+                                       comment: "Windup label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .toggleStyle(.switch)
             Toggle(isOn: $timer.isDingEnabled) {
-                Text("Ding")
+                Text(NSLocalizedString("SoundsView.isDingEnabled.label",
+                                       comment: "Ding label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .toggleStyle(.switch)
             Toggle(isOn: $timer.isTickingEnabled) {
-                Text("Ticking")
+                Text(NSLocalizedString("SoundsView.isTickingEnabled.label",
+                                       comment: "Ticking label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .toggleStyle(.switch)
@@ -108,13 +122,18 @@ struct TBPopoverView: View {
     @State private var buttonHovered = false
     @State private var activeChildView = ChildView.intervals
 
+    private var startLabel = NSLocalizedString("TBPopoverView.start.label", comment: "Start label")
+    private var stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Button {
                 timer.startStop()
                 TBStatusItem.shared.closePopover(nil)
             } label: {
-                Text(timer.timer != nil ? (buttonHovered ? "Stop" : timer.timeLeftString) : "Start")
+                Text(timer.timer != nil ?
+                     (buttonHovered ? stopLabel : timer.timeLeftString) :
+                        startLabel)
                     /*
                       When appearance is set to "Dark" and accent color is set to "Graphite"
                       "defaultAction" button label's color is set to the same color as the
@@ -131,9 +150,12 @@ struct TBPopoverView: View {
             .keyboardShortcut(.defaultAction)
 
             Picker("", selection: $activeChildView) {
-                Text("Intervals").tag(ChildView.intervals)
-                Text("Settings").tag(ChildView.settings)
-                Text("Sounds").tag(ChildView.sounds)
+                Text(NSLocalizedString("TBPopoverView.intervals.label",
+                                       comment: "Intervals label")).tag(ChildView.intervals)
+                Text(NSLocalizedString("TBPopoverView.settings.label",
+                                       comment: "Settings label")).tag(ChildView.settings)
+                Text(NSLocalizedString("TBPopoverView.sounds.label",
+                                       comment: "Sounds label")).tag(ChildView.sounds)
             }
             .labelsHidden()
             .frame(maxWidth: .infinity)
@@ -155,7 +177,8 @@ struct TBPopoverView: View {
                     NSApp.activate(ignoringOtherApps: true)
                     NSApp.orderFrontStandardAboutPanel()
                 } label: {
-                    Text("About")
+                    Text(NSLocalizedString("TBPopoverView.about.label",
+                                           comment: "About label"))
                     Spacer()
                     Text("⌘ A").foregroundColor(Color.gray)
                 }
@@ -164,7 +187,8 @@ struct TBPopoverView: View {
                 Button {
                     NSApplication.shared.terminate(self)
                 } label: {
-                    Text("Quit")
+                    Text(NSLocalizedString("TBPopoverView.quit.label",
+                                           comment: "Quit label"))
                     Spacer()
                     Text("⌘ Q").foregroundColor(Color.gray)
                 }
