@@ -20,7 +20,7 @@
 "TBPopoverView.about.label" = "关于";
 "TBPopoverView.quit.label" = "退出";
 "TBTimer.onRestStart.title" = "时间到";
-"TBTimer.onRestStart.short.body" = "小憩时间到！";
-"TBTimer.onRestStart.long.body" = "长休息时间到！";
+"TBTimer.onRestStart.short.body" = "小憩时间到!";
+"TBTimer.onRestStart.long.body" = "长休息时间到!";
 "TBTimer.onRestFinish.title" = "休息结束";
-"TBTimer.onRestFinish.body" = "继续努力！";
+"TBTimer.onRestFinish.body" = "继续努力!";
