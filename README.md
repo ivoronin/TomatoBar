@@ -27,6 +27,11 @@ Download the latest release <a href="https://github.com/ivoronin/TomatoBar/relea
 $ brew install --cask tomatobar
 ```
 
+If the app doesn't start, install using the `--no-quarantine` flag:
+```
+$ brew install --cask --no-quarantine tomatobar
+```
+
 ## Older versions
 Touch bar integration and older macOS versions (earlier than Big Sur) are supported by TomatoBar versions prior to 3.0
 
