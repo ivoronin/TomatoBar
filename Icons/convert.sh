@@ -7,6 +7,7 @@ BARICON_ICONSET_IDLE=${ASSETS_PATH}/BarIconIdle.imageset
 BARICON_ICONSET_WORK=${ASSETS_PATH}/BarIconWork.imageset
 BARICON_ICONSET_SHORT_REST=${ASSETS_PATH}/BarIconShortRest.imageset
 BARICON_ICONSET_LONG_REST=${ASSETS_PATH}/BarIconLongRest.imageset
+BARICON_ICONSET_PAUSE=${ASSETS_PATH}/BarIconPause.imageset
 BARICON_FONT_NAME=SF-Compact-Rounded-Black
 BARICON_FONT_SIZE_BASE=8
 BARICON_TEXT_OFFSET_BASE=3
@@ -57,4 +58,5 @@ if [ "$1" == "baricon" ]; then
     convert_baricon ${BARICON_ICONSET_WORK} 'W'
     convert_baricon ${BARICON_ICONSET_SHORT_REST} 'R'
     convert_baricon ${BARICON_ICONSET_LONG_REST} 'L'
+    convert_baricon ${BARICON_ICONSET_PAUSE} 'P'
 fi
