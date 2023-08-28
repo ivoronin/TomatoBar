@@ -51,9 +51,15 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
     }
 
     func setTitle(title: String?) {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 0.9
+        
         let attributedTitle = NSAttributedString(
             string: title != nil ? " \(title!)" : "",
-            attributes: [NSAttributedString.Key.font: digitFont]
+            attributes: [
+                NSAttributedString.Key.font: digitFont,
+                NSAttributedString.Key.paragraphStyle: paragraphStyle
+            ]
         )
         statusBarItem?.button?.attributedTitle = attributedTitle
     }
