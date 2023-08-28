@@ -53,6 +53,7 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
     func setTitle(title: String?) {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 0.9
+        paragraphStyle.alignment = NSTextAlignment.center
         
         let attributedTitle = NSAttributedString(
             string: title != nil ? " \(title!)" : "",
