@@ -2,10 +2,6 @@ import KeyboardShortcuts
 import SwiftState
 import SwiftUI
 
-private func secondsUntil(date: Date) -> Int {
-    return Int(date.timeIntervalSince(Date()))
-}
-
 class TBTimer: ObservableObject {
     @AppStorage("isWindupEnabled") var isWindupEnabled = true
     @AppStorage("isDingEnabled") var isDingEnabled = true
@@ -17,13 +13,14 @@ class TBTimer: ObservableObject {
     @AppStorage("longRestIntervalLength") var longRestIntervalLength = 15
     @AppStorage("workIntervalsInSet") var workIntervalsInSet = 4
     // This preference is "hidden"
-    @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60
+    @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60.0
 
     private var stateMachine = TBStateMachine(state: .idle)
     private let player = TBPlayer()
     private var consecutiveWorkIntervals: Int = 0
     private var notificationCenter = TBNotificationCenter()
     private var finishTime: Date!
+    private var timerFormatter = DateComponentsFormatter()
     @Published var timeLeftString: String = ""
     @Published var timer: DispatchSourceTimer?
 
@@ -77,6 +74,10 @@ class TBTimer: ObservableObject {
 
         stateMachine.addErrorHandler { ctx in fatalError("state machine context: <\(ctx)>") }
 
+        timerFormatter.unitsStyle = .positional
+        timerFormatter.allowedUnits = [.minute, .second]
+        timerFormatter.zeroFormattingBehavior = .pad
+
         KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: startStop)
         notificationCenter.setActionHandler(handler: onNotificationAction)
 
@@ -128,12 +129,7 @@ class TBTimer: ObservableObject {
     }
 
     func updateTimeLeft() {
-        let seconds = secondsUntil(date: finishTime)
-        timeLeftString = String(
-            format: "%.2i:%.2i",
-            seconds / 60,
-            seconds % 60
-        )
+        timeLeftString = timerFormatter.string(from: Date(), to: finishTime)!
         if timer != nil, showTimerInMenuBar {
             TBStatusItem.shared.setTitle(title: timeLeftString)
         } else {
@@ -161,13 +157,13 @@ class TBTimer: ObservableObject {
         /* Cannot publish updates from background thread */
         DispatchQueue.main.async { [self] in
             updateTimeLeft()
-            let seconds = secondsUntil(date: finishTime)
-            if seconds <= 0 {
+            let timeLeft = finishTime.timeIntervalSince(Date())
+            if timeLeft <= 0 {
                 /*
                  Ticks can be missed during the machine sleep.
                  Stop the timer if it goes beyond an overrun time limit.
                  */
-                if seconds < overrunTimeLimit {
+                if timeLeft < overrunTimeLimit {
                     stateMachine <-! .startStop
                 } else {
                     stateMachine <-! .timerFired
