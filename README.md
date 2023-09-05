@@ -32,6 +32,9 @@ If the app doesn't start, install using the `--no-quarantine` flag:
 $ brew install --cask --no-quarantine tomatobar
 ```
 
+## Integration with other tools
+TomatoBar logs state transitions in JSON format to `~/Library/Containers/com.github.ivoronin.TomatoBar/Data/Library/Caches/TomatoBar.log`. Use this data to analyze your productivity and enrich other data sources.
+
 ## Older versions
 Touch bar integration and older macOS versions (earlier than Big Sur) are supported by TomatoBar versions prior to 3.0
 
