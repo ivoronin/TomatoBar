@@ -13,30 +13,38 @@ private struct IntervalsView: View {
     var body: some View {
         VStack {
             Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
-                Text(NSLocalizedString("IntervalsView.workIntervalLength.label",
-                                       comment: "Work interval label"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text(String.localizedStringWithFormat(minStr, timer.workIntervalLength))
+                HStack {
+                    Text(NSLocalizedString("IntervalsView.workIntervalLength.label",
+                                           comment: "Work interval label"))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(String.localizedStringWithFormat(minStr, timer.workIntervalLength))
+                }
             }
             Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
-                Text(NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
-                                       comment: "Short rest interval label"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text(String.localizedStringWithFormat(minStr, timer.shortRestIntervalLength))
+                HStack {
+                    Text(NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
+                                           comment: "Short rest interval label"))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(String.localizedStringWithFormat(minStr, timer.shortRestIntervalLength))
+                }
             }
             Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
-                Text(NSLocalizedString("IntervalsView.longRestIntervalLength.label",
-                                       comment: "Long rest interval label"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text(String.localizedStringWithFormat(minStr, timer.longRestIntervalLength))
+                HStack {
+                    Text(NSLocalizedString("IntervalsView.longRestIntervalLength.label",
+                                           comment: "Long rest interval label"))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(String.localizedStringWithFormat(minStr, timer.longRestIntervalLength))
+                }
             }
             .help(NSLocalizedString("IntervalsView.longRestIntervalLength.help",
                                     comment: "Long rest interval hint"))
             Stepper(value: $timer.workIntervalsInSet, in: 1 ... 10) {
-                Text(NSLocalizedString("IntervalsView.workIntervalsInSet.label",
-                                       comment: "Work intervals in a set label"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Text("\(timer.workIntervalsInSet)")
+                HStack {
+                    Text(NSLocalizedString("IntervalsView.workIntervalsInSet.label",
+                                           comment: "Work intervals in a set label"))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text("\(timer.workIntervalsInSet)")
+                }
             }
             .help(NSLocalizedString("IntervalsView.workIntervalsInSet.help",
                                     comment: "Work intervals in set hint"))
