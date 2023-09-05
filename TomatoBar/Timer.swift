@@ -79,6 +79,38 @@ class TBTimer: ObservableObject {
 
         KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: startStop)
         notificationCenter.setActionHandler(handler: onNotificationAction)
+
+        let aem: NSAppleEventManager = NSAppleEventManager.shared()
+        aem.setEventHandler(self,
+                            andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)),
+                            forEventClass: AEEventClass(kInternetEventClass),
+                            andEventID: AEEventID(kAEGetURL))
+    }
+
+    @objc func handleGetURLEvent(_ event: NSAppleEventDescriptor,
+                                 withReplyEvent: NSAppleEventDescriptor) {
+        guard let urlString = event.forKeyword(AEKeyword(keyDirectObject))?.stringValue else {
+            print("url handling error: cannot get url")
+            return
+        }
+        let url = URL(string: urlString)
+        guard url != nil,
+              let scheme = url!.scheme,
+              let host = url!.host else {
+            print("url handling error: cannot parse url")
+            return
+        }
+        guard scheme.caseInsensitiveCompare("tomatobar") == .orderedSame else {
+            print("url handling error: unknown scheme \(scheme)")
+            return
+        }
+        switch host.lowercased() {
+        case "startstop":
+            startStop()
+        default:
+            print("url handling error: unknown command \(host)")
+            return
+        }
     }
 
     func startStop() {
