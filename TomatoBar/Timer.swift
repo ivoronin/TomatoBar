@@ -66,7 +66,7 @@ class TBTimer: ObservableObject {
         stateMachine.addAnyHandler(.rest => .work, handler: onRestFinish)
         stateMachine.addAnyHandler(.any => .idle, handler: onIdleStart)
         stateMachine.addAnyHandler(.any => .any, handler: { ctx in
-            logger.append(event: LogEventTransition(fromContext: ctx))
+            logger.append(event: TBLogEventTransition(fromContext: ctx))
         })
 
         stateMachine.addErrorHandler { ctx in fatalError("state machine context: <\(ctx)>") }

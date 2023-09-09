@@ -1,17 +1,17 @@
 import Foundation
 import SwiftUI
 
-protocol LogEvent: Encodable {
+protocol TBLogEvent: Encodable {
     var type: String { get }
     var timestamp: Date { get }
 }
 
-class LogEventAppStart: LogEvent {
+class TBLogEventAppStart: TBLogEvent {
     internal let type = "appstart"
     internal let timestamp: Date = Date()
 }
 
-class LogEventTransition: LogEvent {
+class TBLogEventTransition: TBLogEvent {
     internal let type = "transition"
     internal let timestamp: Date = Date()
 
@@ -29,9 +29,9 @@ class LogEventTransition: LogEvent {
 private let logFileName = "TomatoBar.log"
 private let lineEnd = "\n".data(using: .utf8)!
 
-internal let logger = Logger()
+internal let logger = TBLogger()
 
-class Logger {
+class TBLogger {
     private let logHandle: FileHandle?
     private let encoder = JSONEncoder()
 
@@ -61,7 +61,7 @@ class Logger {
         }
     }
 
-    func append(event: LogEvent) {
+    func append(event: TBLogEvent) {
         guard let logHandle = logHandle else {
             return
         }

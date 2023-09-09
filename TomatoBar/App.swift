@@ -17,7 +17,7 @@ struct TBApp: App {
     init() {
         TBStatusItem.shared = appDelegate
         LaunchAtLogin.migrateIfNeeded()
-        logger.append(event: LogEventAppStart())
+        logger.append(event: TBLogEventAppStart())
     }
 
     var body: some Scene {
