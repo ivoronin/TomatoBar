@@ -1,10 +1,30 @@
-import AppKit
 import AVFoundation
+import SwiftUI
 
-class TBPlayer {
+class TBPlayer: ObservableObject {
     private var windupSound: AVAudioPlayer
     private var dingSound: AVAudioPlayer
     private var tickingSound: AVAudioPlayer
+
+    @AppStorage("windupVolume") var windupVolume: Double = 1.0 {
+        didSet {
+            setVolume(windupSound, windupVolume)
+        }
+    }
+    @AppStorage("dingVolume") var dingVolume: Double = 1.0 {
+        didSet {
+            setVolume(dingSound, dingVolume)
+        }
+    }
+    @AppStorage("tickingVolume") var tickingVolume: Double = 1.0 {
+        didSet {
+            setVolume(tickingSound, tickingVolume)
+        }
+    }
+
+    private func setVolume(_ sound: AVAudioPlayer, _ volume: Double) {
+        sound.setVolume(Float(volume), fadeDuration: 0)
+    }
 
     init() {
         let windupSoundAsset = NSDataAsset(name: "windup")
@@ -40,13 +60,5 @@ class TBPlayer {
 
     func stopTicking() {
         tickingSound.stop()
-    }
-
-    func toggleTicking() {
-        if tickingSound.isPlaying {
-            stopTicking()
-        } else {
-            startTicking()
-        }
     }
 }

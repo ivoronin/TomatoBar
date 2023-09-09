@@ -3,9 +3,6 @@ import SwiftState
 import SwiftUI
 
 class TBTimer: ObservableObject {
-    @AppStorage("isWindupEnabled") var isWindupEnabled = true
-    @AppStorage("isDingEnabled") var isDingEnabled = true
-    @AppStorage("isTickingEnabled") var isTickingEnabled = true
     @AppStorage("stopAfterBreak") var stopAfterBreak = false
     @AppStorage("showTimerInMenuBar") var showTimerInMenuBar = true
     @AppStorage("workIntervalLength") var workIntervalLength = 25
@@ -16,7 +13,7 @@ class TBTimer: ObservableObject {
     @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60.0
 
     private var stateMachine = TBStateMachine(state: .idle)
-    private let player = TBPlayer()
+    public let player = TBPlayer()
     private var consecutiveWorkIntervals: Int = 0
     private var notificationCenter = TBNotificationCenter()
     private var finishTime: Date!
@@ -122,12 +119,6 @@ class TBTimer: ObservableObject {
         stateMachine <-! .skipRest
     }
 
-    func toggleTicking() {
-        if stateMachine.state == .work {
-            player.toggleTicking()
-        }
-    }
-
     func updateTimeLeft() {
         timeLeftString = timerFormatter.string(from: Date(), to: finishTime)!
         if timer != nil, showTimerInMenuBar {
@@ -186,20 +177,14 @@ class TBTimer: ObservableObject {
 
     private func onWorkStart(context _: TBStateMachine.Context) {
         TBStatusItem.shared.setIcon(name: .work)
-        if isWindupEnabled {
-            player.playWindup()
-        }
-        if isTickingEnabled {
-            player.startTicking()
-        }
+        player.playWindup()
+        player.startTicking()
         startTimer(seconds: workIntervalLength * 60)
     }
 
     private func onWorkFinish(context _: TBStateMachine.Context) {
         consecutiveWorkIntervals += 1
-        if isDingEnabled {
-            player.playDing()
-        }
+        player.playDing()
     }
 
     private func onWorkEnd(context _: TBStateMachine.Context) {

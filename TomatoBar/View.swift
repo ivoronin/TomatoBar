@@ -89,35 +89,39 @@ private struct SettingsView: View {
     }
 }
 
-private struct SoundsView: View {
-    @EnvironmentObject var timer: TBTimer
+private struct VolumeSlider: View {
+    @Binding var volume: Double
 
     var body: some View {
-        VStack {
-            Toggle(isOn: $timer.isWindupEnabled) {
-                Text(NSLocalizedString("SoundsView.isWindupEnabled.label",
-                                       comment: "Windup label"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .toggleStyle(.switch)
-            Toggle(isOn: $timer.isDingEnabled) {
-                Text(NSLocalizedString("SoundsView.isDingEnabled.label",
-                                       comment: "Ding label"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .toggleStyle(.switch)
-            Toggle(isOn: $timer.isTickingEnabled) {
-                Text(NSLocalizedString("SoundsView.isTickingEnabled.label",
-                                       comment: "Ticking label"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .toggleStyle(.switch)
-            .onChange(of: timer.isTickingEnabled) { _ in
-                timer.toggleTicking()
-            }
-            Spacer().frame(minHeight: 0)
-        }
-        .padding(4)
+        Slider(value: $volume, in: 0...2) {
+            Text(String(format: "%.1f", volume))
+        }.gesture(TapGesture(count: 2).onEnded({
+            volume = 1.0
+        }))
+    }
+}
+
+private struct SoundsView: View {
+    @EnvironmentObject var player: TBPlayer
+
+    private var columns = [
+        GridItem(.flexible()),
+        GridItem(.fixed(110))
+    ]
+
+    var body: some View {
+        LazyVGrid(columns: columns, alignment: .leading, spacing: 4) {
+            Text(NSLocalizedString("SoundsView.isWindupEnabled.label",
+                                   comment: "Windup label"))
+            VolumeSlider(volume: $player.windupVolume)
+            Text(NSLocalizedString("SoundsView.isDingEnabled.label",
+                                   comment: "Ding label"))
+            VolumeSlider(volume: $player.dingVolume)
+            Text(NSLocalizedString("SoundsView.isTickingEnabled.label",
+                                   comment: "Ticking label"))
+            VolumeSlider(volume: $player.tickingVolume)
+        }.padding(4)
+        Spacer().frame(minHeight: 0)
     }
 }
 
@@ -176,7 +180,7 @@ struct TBPopoverView: View {
                 case .settings:
                     SettingsView().environmentObject(timer)
                 case .sounds:
-                    SoundsView().environmentObject(timer)
+                    SoundsView().environmentObject(timer.player)
                 }
             }
 
