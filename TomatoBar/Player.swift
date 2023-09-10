@@ -44,6 +44,10 @@ class TBPlayer: ObservableObject {
         dingSound.prepareToPlay()
         tickingSound.numberOfLoops = -1
         tickingSound.prepareToPlay()
+
+        setVolume(windupSound, windupVolume)
+        setVolume(dingSound, dingVolume)
+        setVolume(tickingSound, tickingVolume)
     }
 
     func playWindup() {
