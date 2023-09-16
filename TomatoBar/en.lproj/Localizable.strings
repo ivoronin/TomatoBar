@@ -22,5 +22,6 @@
 "TBTimer.onRestStart.title" = "Time's up";
 "TBTimer.onRestStart.short.body" = "It's time for a short break!";
 "TBTimer.onRestStart.long.body" = "It's time for a long break!";
+"TBTimer.onRestStart.skip.title" = "Skip";
 "TBTimer.onRestFinish.title" = "Break is over";
 "TBTimer.onRestFinish.body" = "Keep up the good work!";

@@ -31,7 +31,7 @@ class TBNotificationCenter: NSObject, UNUserNotificationCenterDelegate {
 
         let actionSkipRest = UNNotificationAction(
             identifier: TBNotification.Action.skipRest.rawValue,
-            title: "Skip",
+            title: NSLocalizedString("TBTimer.onRestStart.skip.title", comment: "Skip"),
             options: []
         )
         let restStartedCategory = UNNotificationCategory(
