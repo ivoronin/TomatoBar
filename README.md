@@ -33,7 +33,10 @@ $ brew install --cask --no-quarantine tomatobar
 ```
 
 ## Integration with other tools
+### Event log
 TomatoBar logs state transitions in JSON format to `~/Library/Containers/com.github.ivoronin.TomatoBar/Data/Library/Caches/TomatoBar.log`. Use this data to analyze your productivity and enrich other data sources.
+### Starting and stopping the timer
+TomatoBar can be controlled using `tomatobar://` URLs. To start or stop the timer from the command line, use `open tomatobar://startStop`.
 
 ## Older versions
 Touch bar integration and older macOS versions (earlier than Big Sur) are supported by TomatoBar versions prior to 3.0
