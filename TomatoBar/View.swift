@@ -9,15 +9,28 @@ extension KeyboardShortcuts.Name {
 private struct IntervalsView: View {
     @EnvironmentObject var timer: TBTimer
     private var minStr = NSLocalizedString("IntervalsView.min", comment: "min")
-
+    enum IntervalField: Hashable {
+        case workIntervalLength
+        case shortRestIntervalLength
+        case longRestIntervalLength
+        case workIntervalsInSet
+    }
+    
+    @FocusState private var focusedField: IntervalField?
+    
     var body: some View {
         VStack {
-            Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
+            // Allow up to a day.
+            Stepper(value: $timer.workIntervalLength, in: 1 ... 1410) {
                 HStack {
                     Text(NSLocalizedString("IntervalsView.workIntervalLength.label",
                                            comment: "Work interval label"))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.workIntervalLength))
+                    TextField("", value: $timer.workIntervalLength, formatter: NumberFormatter())
+                        .frame(width: 40, alignment: .trailing)
+                        .multilineTextAlignment(.trailing)
+                        .focused($focusedField, equals: .workIntervalLength)
+                        .onSubmit({ focusedField = .shortRestIntervalLength})
                 }
             }
             Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
@@ -25,7 +38,11 @@ private struct IntervalsView: View {
                     Text(NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
                                            comment: "Short rest interval label"))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.shortRestIntervalLength))
+                    TextField("", value: $timer.shortRestIntervalLength, formatter: NumberFormatter())
+                        .frame(width: 40, alignment: .trailing)
+                        .multilineTextAlignment(.trailing)
+                        .focused($focusedField, equals: .shortRestIntervalLength)
+                        .onSubmit({ focusedField = .longRestIntervalLength})
                 }
             }
             Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
@@ -33,7 +50,11 @@ private struct IntervalsView: View {
                     Text(NSLocalizedString("IntervalsView.longRestIntervalLength.label",
                                            comment: "Long rest interval label"))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.longRestIntervalLength))
+                    TextField("", value: $timer.longRestIntervalLength, formatter: NumberFormatter())
+                        .frame(width: 40, alignment: .trailing)
+                        .multilineTextAlignment(.trailing)
+                        .focused($focusedField, equals: .longRestIntervalLength)
+                        .onSubmit({ focusedField = .workIntervalsInSet})
                 }
             }
             .help(NSLocalizedString("IntervalsView.longRestIntervalLength.help",
@@ -43,7 +64,11 @@ private struct IntervalsView: View {
                     Text(NSLocalizedString("IntervalsView.workIntervalsInSet.label",
                                            comment: "Work intervals in a set label"))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("\(timer.workIntervalsInSet)")
+                    TextField("", value: $timer.workIntervalsInSet, formatter: NumberFormatter())
+                        .frame(width: 30, alignment: .trailing)
+                        .multilineTextAlignment(.trailing)
+                        .focused($focusedField, equals: .workIntervalsInSet)
+                        .onSubmit({ focusedField = .workIntervalLength})
                 }
             }
             .help(NSLocalizedString("IntervalsView.workIntervalsInSet.help",
