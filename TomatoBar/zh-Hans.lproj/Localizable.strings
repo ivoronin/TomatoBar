@@ -8,6 +8,8 @@
 "SettingsView.shortcut.label" = "快捷键";
 "SettingsView.stopAfterBreak.label" = "在休息后停止";
 "SettingsView.showTimerInMenuBar.label" = "在菜单栏中显示计时器";
+"SettingsView.showFullScreenMask.label" = "使用全屏遮罩";
+"SettingsView.showFullScreenMask.help" = "在休息时, 使用全屏遮罩, 而不是通知";
 "SettingsView.launchAtLogin.label" = "登录时启动";
 "SoundsView.isWindupEnabled.label" = "发条声";
 "SoundsView.isDingEnabled.label" = "叮";
@@ -25,3 +27,4 @@
 "TBTimer.onRestStart.skip.title" = "跳过";
 "TBTimer.onRestFinish.title" = "休息结束";
 "TBTimer.onRestFinish.body" = "继续努力!";
+"TBMask.skip.label" = "双击任意区域跳过";
