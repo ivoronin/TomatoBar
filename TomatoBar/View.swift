@@ -78,6 +78,14 @@ private struct SettingsView: View {
                 .onChange(of: timer.showTimerInMenuBar) { _ in
                     timer.updateTimeLeft()
                 }
+            Toggle(isOn: $timer.showFullScreenMask) {
+                Text(NSLocalizedString("SettingsView.showFullScreenMask.label",
+                                       comment: "show full screen mask on rest"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .toggleStyle(.switch)
+            .help(NSLocalizedString("SettingsView.showFullScreenMask.help",
+                                    comment: "show full screen mask hint"))
             Toggle(isOn: $launchAtLogin.isEnabled) {
                 Text(NSLocalizedString("SettingsView.launchAtLogin.label",
                                        comment: "Launch at login label"))
@@ -93,11 +101,11 @@ private struct VolumeSlider: View {
     @Binding var volume: Double
 
     var body: some View {
-        Slider(value: $volume, in: 0...2) {
+        Slider(value: $volume, in: 0 ... 2) {
             Text(String(format: "%.1f", volume))
-        }.gesture(TapGesture(count: 2).onEnded({
+        }.gesture(TapGesture(count: 2).onEnded {
             volume = 1.0
-        }))
+        })
     }
 }
 
@@ -144,8 +152,8 @@ struct TBPopoverView: View {
                 TBStatusItem.shared.closePopover(nil)
             } label: {
                 Text(timer.timer != nil ?
-                     (buttonHovered ? stopLabel : timer.timeLeftString) :
-                        startLabel)
+                    (buttonHovered ? stopLabel : timer.timeLeftString) :
+                    startLabel)
                     /*
                       When appearance is set to "Dark" and accent color is set to "Graphite"
                       "defaultAction" button label's color is set to the same color as the
