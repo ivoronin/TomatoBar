@@ -19,6 +19,8 @@
 		8AA5B3EB281295DB00BE1A6C /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 8AA5B3EA281295DB00BE1A6C /* KeyboardShortcuts */; };
 		8AA5B3F22812A74600BE1A6C /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA5B3F12812A74600BE1A6C /* Notifications.swift */; };
 		8AEE49AF2AA75A5E00243D2F /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEE49AE2AA75A5E00243D2F /* Log.swift */; };
+		D05258232C76B6B7005093E3 /* DND.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05258222C76B6B7005093E3 /* DND.swift */; };
+		D05258252C76C7E0005093E3 /* macos-focus-mode.shortcut in Resources */ = {isa = PBXBuildFile; fileRef = D05258242C76C7D4005093E3 /* macos-focus-mode.shortcut */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		8AA5B3F12812A74600BE1A6C /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		8AEE49AE2AA75A5E00243D2F /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		C4C8DE0E2930DBB4003B1110 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		D05258222C76B6B7005093E3 /* DND.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DND.swift; sourceTree = "<group>"; };
+		D05258242C76C7D4005093E3 /* macos-focus-mode.shortcut */ = {isa = PBXFileReference; lastKnownFileType = file; path = "macos-focus-mode.shortcut"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,9 +74,11 @@
 		8A21B78A27EE31A20009E5DB /* TomatoBar */ = {
 			isa = PBXGroup;
 			children = (
+				D05258242C76C7D4005093E3 /* macos-focus-mode.shortcut */,
 				8A21B78B27EE31A20009E5DB /* App.swift */,
 				8AEE49AE2AA75A5E00243D2F /* Log.swift */,
 				8A21B78D27EE31A20009E5DB /* View.swift */,
+				D05258222C76B6B7005093E3 /* DND.swift */,
 				8A9F700827EE396E0012A1EC /* State.swift */,
 				8A9F701827EE3DAF0012A1EC /* Timer.swift */,
 				8A9F701E27EE536D0012A1EC /* Player.swift */,
@@ -161,6 +167,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D05258252C76C7E0005093E3 /* macos-focus-mode.shortcut in Resources */,
 				8A21B79027EE31A30009E5DB /* Assets.xcassets in Resources */,
 				8AA5434A2930F008002A47FC /* Localizable.strings in Resources */,
 			);
@@ -197,6 +204,7 @@
 			files = (
 				8A9F701F27EE536D0012A1EC /* Player.swift in Sources */,
 				8AEE49AF2AA75A5E00243D2F /* Log.swift in Sources */,
+				D05258232C76B6B7005093E3 /* DND.swift in Sources */,
 				8A21B78E27EE31A20009E5DB /* View.swift in Sources */,
 				8A9F701927EE3DAF0012A1EC /* Timer.swift in Sources */,
 				8A21B78C27EE31A20009E5DB /* App.swift in Sources */,
@@ -354,6 +362,7 @@
 				INFOPLIST_FILE = TomatoBar/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Allow changing the state of Do Not Disturb";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2023 Ilya Voronin. All rights reserved. https://github.com/ivoronin/TomatoBar";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -389,6 +398,7 @@
 				INFOPLIST_FILE = TomatoBar/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "Allow changing the state of Do Not Disturb";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2023 Ilya Voronin. All rights reserved. https://github.com/ivoronin/TomatoBar";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -8,6 +8,8 @@
 "SettingsView.shortcut.label" = "Shortcut";
 "SettingsView.stopAfterBreak.label" = "Stop after break";
 "SettingsView.showTimerInMenuBar.label" = "Show timer in menu bar";
+"SettingsView.toggleDoNotDisturb.label" = "Toggle Do Not Disturb";
+"SettingsView.toggleDoNotDisturb.help" = "Runs a shortcut to enable/disable Do Not Disturb on work/rest transitions";
 "SettingsView.launchAtLogin.label" = "Launch at login";
 "SoundsView.isWindupEnabled.label" = "Windup";
 "SoundsView.isDingEnabled.label" = "Ding";

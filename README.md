@@ -20,7 +20,7 @@ Have you ever heard of Pomodoro? It’s a great technique to help you keep track
 TomatoBar is world's neatest Pomodoro timer for the macOS menu bar. All the essential features are here - configurable
 work and rest intervals, optional sounds, discreet actionable notifications, global hotkey.
 
-TomatoBar is fully sandboxed with no entitlements.
+TomatoBar is fully sandboxed with no entitlements (except for the Apple Events entitlement, used to run the Do Not Disturb toggle shortcut).
 
 Download the latest release <a href="https://github.com/ivoronin/TomatoBar/releases/latest/">here</a> or install using Homebrew:
 ```
@@ -43,3 +43,4 @@ Touch bar integration and older macOS versions (earlier than Big Sur) are suppor
 
 ## Licenses
  - Timer sounds are licensed from buddhabeats
+ - "macos-focus-mode.shortcut" is taken from the <a href="https://github.com/arodik/macos-focus-mode">macos-focus-mode</a> project under the MIT license.
