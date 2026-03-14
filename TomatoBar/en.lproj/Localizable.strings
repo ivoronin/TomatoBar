@@ -17,8 +17,11 @@
 "TBPopoverView.intervals.label" = "Intervals";
 "TBPopoverView.settings.label" = "Settings";
 "TBPopoverView.sounds.label" = "Sounds";
+"TBPopoverView.totalWorkToday.label" = "Total work today:";
 "TBPopoverView.about.label" = "About";
 "TBPopoverView.quit.label" = "Quit";
+"TBTimer.todayWorkTime.hoursMinutes" = "%d h %d m";
+"TBTimer.todayWorkTime.minutes" = "%d m";
 "TBTimer.onRestStart.title" = "Time's up";
 "TBTimer.onRestStart.short.body" = "It's time for a short break!";
 "TBTimer.onRestStart.long.body" = "It's time for a long break!";

@@ -17,8 +17,11 @@
 "TBPopoverView.intervals.label" = "간격";
 "TBPopoverView.settings.label" = "설정";
 "TBPopoverView.sounds.label" = "사운드";
+"TBPopoverView.totalWorkToday.label" = "오늘 총 작업 시간:";
 "TBPopoverView.about.label" = "앱 정보";
 "TBPopoverView.quit.label" = "종료";
+"TBTimer.todayWorkTime.hoursMinutes" = "%d시간 %d분";
+"TBTimer.todayWorkTime.minutes" = "%d분";
 "TBTimer.onRestStart.title" = "시간 종료";
 "TBTimer.onRestStart.short.body" = "짧은 휴식을 취할 시간입니다!";
 "TBTimer.onRestStart.long.body" = "긴 휴식을 취할 시간입니다!";

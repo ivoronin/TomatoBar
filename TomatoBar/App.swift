@@ -28,10 +28,11 @@ struct TBApp: App {
 class TBStatusItem: NSObject, NSApplicationDelegate {
     private var popover = NSPopover()
     private var statusBarItem: NSStatusItem?
+    private let timer = TBTimer()
     static var shared: TBStatusItem!
 
     func applicationDidFinishLaunching(_: Notification) {
-        let view = TBPopoverView()
+        let view = TBPopoverView(timer: timer)
 
         popover.behavior = .transient
         popover.contentViewController = NSViewController()
@@ -65,10 +66,23 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
     }
 
     func setIcon(name: NSImage.Name) {
-        statusBarItem?.button?.image = NSImage(named: name)
+        if let image = NSImage(named: name) {
+            /*
+             Menu bar icons should be template images to stay visible
+             in both light and dark appearances.
+             */
+            image.isTemplate = true
+            statusBarItem?.button?.image = image
+        } else {
+            statusBarItem?.button?.image = NSImage(
+                systemSymbolName: "timer",
+                accessibilityDescription: "TomatoBar"
+            )
+        }
     }
 
     func showPopover(_: AnyObject?) {
+        timer.updateTodayWorkTime()
         if let button = statusBarItem?.button {
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
             popover.contentViewController?.view.window?.makeKey()

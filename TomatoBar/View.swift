@@ -130,12 +130,16 @@ private enum ChildView {
 }
 
 struct TBPopoverView: View {
-    @ObservedObject var timer = TBTimer()
+    @ObservedObject var timer: TBTimer
     @State private var buttonHovered = false
     @State private var activeChildView = ChildView.intervals
 
     private var startLabel = NSLocalizedString("TBPopoverView.start.label", comment: "Start label")
     private var stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
+
+    init(timer: TBTimer) {
+        self.timer = timer
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -184,6 +188,18 @@ struct TBPopoverView: View {
                 }
             }
 
+            GroupBox {
+                HStack {
+                    Text(NSLocalizedString("TBPopoverView.totalWorkToday.label",
+                                           comment: "Total work today label"))
+                    Spacer()
+                    Text(timer.todayWorkTimeString)
+                        .font(.system(.body).monospacedDigit())
+                        .bold()
+                }
+                .padding(4)
+            }
+
             Group {
                 Button {
                     NSApp.activate(ignoringOtherApps: true)
@@ -225,6 +241,9 @@ struct TBPopoverView: View {
             /* Use values from GeometryReader */
 //            .frame(width: 240, height: 276)
             .padding(12)
+            .onAppear {
+                timer.updateTodayWorkTime()
+            }
     }
 }
 

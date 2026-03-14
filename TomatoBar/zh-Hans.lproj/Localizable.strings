@@ -17,8 +17,11 @@
 "TBPopoverView.intervals.label" = "时长";
 "TBPopoverView.settings.label" = "设置";
 "TBPopoverView.sounds.label" = "声音";
+"TBPopoverView.totalWorkToday.label" = "今日总工作时间：";
 "TBPopoverView.about.label" = "关于";
 "TBPopoverView.quit.label" = "退出";
+"TBTimer.todayWorkTime.hoursMinutes" = "%d小时 %d分";
+"TBTimer.todayWorkTime.minutes" = "%d分";
 "TBTimer.onRestStart.title" = "时间到";
 "TBTimer.onRestStart.short.body" = "小憩时间到!";
 "TBTimer.onRestStart.long.body" = "长休息时间到!";

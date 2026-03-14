@@ -18,6 +18,10 @@ class TBTimer: ObservableObject {
     private var notificationCenter = TBNotificationCenter()
     private var finishTime: Date!
     private var timerFormatter = DateComponentsFormatter()
+    @AppStorage("todayWorkSeconds") private var todayWorkSeconds: Double = 0
+    @AppStorage("todayWorkDate") private var todayWorkDate: String = ""
+    private var workStartTime: Date?
+    @Published var todayWorkTimeString: String = ""
     @Published var timeLeftString: String = ""
     @Published var timer: DispatchSourceTimer?
 
@@ -77,6 +81,13 @@ class TBTimer: ObservableObject {
 
         KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: startStop)
         notificationCenter.setActionHandler(handler: onNotificationAction)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAppWillTerminate),
+            name: NSApplication.willTerminateNotification,
+            object: nil
+        )
+        updateTodayWorkTime()
 
         let aem: NSAppleEventManager = NSAppleEventManager.shared()
         aem.setEventHandler(self,
@@ -109,6 +120,10 @@ class TBTimer: ObservableObject {
             print("url handling error: unknown command \(host)")
             return
         }
+    }
+
+    @objc private func handleAppWillTerminate() {
+        persistActiveWorkSession()
     }
 
     func startStop() {
@@ -148,6 +163,7 @@ class TBTimer: ObservableObject {
         /* Cannot publish updates from background thread */
         DispatchQueue.main.async { [self] in
             updateTimeLeft()
+            updateTodayWorkTime()
             let timeLeft = finishTime.timeIntervalSince(Date())
             if timeLeft <= 0 {
                 /*
@@ -176,6 +192,8 @@ class TBTimer: ObservableObject {
     }
 
     private func onWorkStart(context _: TBStateMachine.Context) {
+        checkDayReset()
+        workStartTime = Date()
         TBStatusItem.shared.setIcon(name: .work)
         player.playWindup()
         player.startTicking()
@@ -189,6 +207,8 @@ class TBTimer: ObservableObject {
 
     private func onWorkEnd(context _: TBStateMachine.Context) {
         player.stopTicking()
+        persistActiveWorkSession()
+        updateTodayWorkTime()
     }
 
     private func onRestStart(context _: TBStateMachine.Context) {
@@ -225,5 +245,55 @@ class TBTimer: ObservableObject {
         stopTimer()
         TBStatusItem.shared.setIcon(name: .idle)
         consecutiveWorkIntervals = 0
+    }
+
+    private func todayDateString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: Date())
+    }
+
+    private func checkDayReset() {
+        let today = todayDateString()
+        if todayWorkDate != today {
+            todayWorkSeconds = 0
+            todayWorkDate = today
+        }
+    }
+
+    private func persistActiveWorkSession() {
+        guard let start = workStartTime else {
+            return
+        }
+        let startOfToday = Calendar.current.startOfDay(for: Date())
+        let effectiveStart = max(start, startOfToday)
+        todayWorkSeconds += Date().timeIntervalSince(effectiveStart)
+        workStartTime = nil
+    }
+
+    func updateTodayWorkTime() {
+        checkDayReset()
+        var totalSeconds = todayWorkSeconds
+        if let start = workStartTime {
+            let startOfToday = Calendar.current.startOfDay(for: Date())
+            let effectiveStart = max(start, startOfToday)
+            totalSeconds += Date().timeIntervalSince(effectiveStart)
+        }
+        let hours = Int(totalSeconds) / 3600
+        let minutes = (Int(totalSeconds) % 3600) / 60
+        if hours > 0 {
+            todayWorkTimeString = String.localizedStringWithFormat(
+                NSLocalizedString("TBTimer.todayWorkTime.hoursMinutes",
+                                  comment: "Today work time in hours and minutes"),
+                hours,
+                minutes
+            )
+        } else {
+            todayWorkTimeString = String.localizedStringWithFormat(
+                NSLocalizedString("TBTimer.todayWorkTime.minutes",
+                                  comment: "Today work time in minutes"),
+                minutes
+            )
+        }
     }
 }
