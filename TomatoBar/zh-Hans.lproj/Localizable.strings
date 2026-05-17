@@ -25,3 +25,12 @@
 "TBTimer.onRestStart.skip.title" = "跳过";
 "TBTimer.onRestFinish.title" = "休息结束";
 "TBTimer.onRestFinish.body" = "继续努力!";
+"TBPopoverView.stats.label" = "统计";
+"StatsView.worked.label" = "已工作";
+"StatsView.recent.label" = "最近几天";
+"StatsView.empty.label" = "暂无记录的会话";
+"StatsView.error.label" = "无法读取历史记录";
+"StatsView.noData.label" = "无活动";
+"StatsView.work.label" = "工作";
+"StatsView.shortRest.label" = "小憩";
+"StatsView.longRest.label" = "长休息";
