@@ -238,6 +238,7 @@ private struct GlassTabBar: View {
 
                 Text(title)
                     .font(.system(size: 12, weight: selection == childView ? .semibold : .regular))
+                    .foregroundColor(selection == childView ? .primary : .primary.opacity(0.82))
                     .lineLimit(1)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 6)
@@ -249,7 +250,12 @@ private struct GlassTabBar: View {
 
     private var selectedTabBackground: some View {
         RoundedRectangle(cornerRadius: 12, style: .continuous)
-            .fill(Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.38))
+            .fill(Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.2))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(Color(red: 0.75, green: 0.32, blue: 0.28).opacity(0.28), lineWidth: 1)
+            )
+            .padding(2)
     }
 }
 
