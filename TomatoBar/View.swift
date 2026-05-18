@@ -114,9 +114,9 @@ private struct IntervalsView: View {
                               value: $timer.workIntervalsInSet)
             .help(NSLocalizedString("IntervalsView.workIntervalsInSet.help",
                                     comment: "Work intervals in set hint"))
-            Spacer().frame(minHeight: 0)
         }
-        .padding(EdgeInsets(top: 14, leading: 10, bottom: 10, trailing: 10))
+        .padding(EdgeInsets(top: 18, leading: 10, bottom: 10, trailing: 10))
+        .frame(maxHeight: .infinity, alignment: .center)
     }
 }
 
@@ -149,9 +149,9 @@ private struct SettingsView: View {
                                        comment: "Launch at login label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
-            Spacer().frame(minHeight: 0)
         }
         .padding(10)
+        .frame(maxHeight: .infinity, alignment: .center)
     }
 }
 
@@ -189,6 +189,7 @@ private struct SoundsView: View {
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 18)
+        .frame(maxHeight: .infinity, alignment: .center)
     }
 }
 
@@ -198,8 +199,19 @@ private enum ChildView {
 
 private struct GlassTabBar: View {
     @Binding var selection: ChildView
+    @Namespace private var selectionNamespace
 
     var body: some View {
+        if #available(macOS 26.0, *) {
+            GlassEffectContainer {
+                tabs
+            }
+        } else {
+            tabs
+        }
+    }
+
+    private var tabs: some View {
         HStack(spacing: 4) {
             tab(.intervals, title: NSLocalizedString("TBPopoverView.intervals.label",
                                                      comment: "Intervals label"))
@@ -220,35 +232,41 @@ private struct GlassTabBar: View {
                 selection = childView
             }
         } label: {
-            Text(title)
-                .font(.system(size: 12, weight: selection == childView ? .semibold : .regular))
-                .foregroundColor(selection == childView ? .primary : .primary.opacity(0.82))
-                .lineLimit(1)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
-                .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            ZStack {
+                if selection == childView {
+                    selectedTabBackground
+                        .matchedGeometryEffect(id: "selectedTab", in: selectionNamespace)
+                }
+
+                Text(title)
+                    .font(.system(size: 12, weight: selection == childView ? .semibold : .regular))
+                    .foregroundColor(selection == childView ? .primary : .primary.opacity(0.82))
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+            }
+            .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(.plain)
-        .modifier(GlassTabButton(isSelected: selection == childView))
+        .modifier(InteractiveTabGlass())
         .animation(.snappy(duration: 0.18), value: selection)
+    }
+
+    private var selectedTabBackground: some View {
+        RoundedRectangle(cornerRadius: 12, style: .continuous)
+            .fill(Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.2))
+            .padding(1)
     }
 }
 
-private struct GlassTabButton: ViewModifier {
-    let isSelected: Bool
-
+private struct InteractiveTabGlass: ViewModifier {
     @ViewBuilder
     func body(content: Content) -> some View {
         if #available(macOS 26.0, *) {
             content
-                .background(isSelected ? Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.2) : Color.clear)
-                .cornerRadius(12)
-                .glassEffect(isSelected ? .regular.interactive() : .identity,
-                             in: .rect(cornerRadius: 12))
+                .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 12))
         } else {
-            content
-                .background(isSelected ? Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.2) : Color.clear)
-                .cornerRadius(12)
+            content.cornerRadius(12)
         }
     }
 }
@@ -292,7 +310,7 @@ struct TBPopoverView: View {
                     SoundsView().environmentObject(timer.player)
                 }
             }
-            .frame(minHeight: 146)
+            .frame(height: 150)
             .liquidGlassPanel()
 
             VStack(spacing: 2) {
