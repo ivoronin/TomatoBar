@@ -116,7 +116,7 @@ private struct IntervalsView: View {
                                     comment: "Work intervals in set hint"))
             Spacer().frame(minHeight: 0)
         }
-        .padding(EdgeInsets(top: 12, leading: 10, bottom: 10, trailing: 10))
+        .padding(EdgeInsets(top: 14, leading: 10, bottom: 10, trailing: 10))
     }
 }
 
@@ -342,7 +342,7 @@ struct TBPopoverView: View {
         #endif
             /* Use values from GeometryReader */
 //            .frame(width: 240, height: 276)
-            .frame(height: 296)
+            .frame(height: 308)
             .padding(12)
     }
 }
