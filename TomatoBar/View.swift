@@ -32,46 +32,86 @@ private extension View {
     }
 }
 
+private extension Binding where Value == Int {
+    func clamped(to range: ClosedRange<Int>) -> Binding<Int> {
+        Binding {
+            wrappedValue
+        } set: { newValue in
+            wrappedValue = Swift.min(Swift.max(newValue, range.lowerBound), range.upperBound)
+        }
+    }
+}
+
+private struct NumericStepperRow: View {
+    let title: String
+    let suffix: String?
+    let range: ClosedRange<Int>
+    @Binding var value: Int
+
+    private var formatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.allowsFloats = false
+        formatter.minimum = NSNumber(value: range.lowerBound)
+        formatter.maximum = NSNumber(value: range.upperBound)
+        formatter.numberStyle = .none
+        return formatter
+    }
+
+    private var validatedValue: Binding<Int> {
+        $value.clamped(to: range)
+    }
+
+    var body: some View {
+        Stepper(value: validatedValue, in: range) {
+            HStack {
+                Text(title)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                HStack(spacing: 3) {
+                    TextField("", value: validatedValue, formatter: formatter)
+                        .multilineTextAlignment(.trailing)
+                        .font(.system(.body).monospacedDigit())
+                        .frame(width: 32)
+                    if let suffix {
+                        Text(suffix)
+                    }
+                }
+                .accessibilityLabel(title)
+            }
+        }
+    }
+}
+
 private struct IntervalsView: View {
     @EnvironmentObject var timer: TBTimer
     private var minStr = NSLocalizedString("IntervalsView.min", comment: "min")
+    private var minSuffix: String {
+        String.localizedStringWithFormat(minStr, 0).replacingOccurrences(of: "0", with: "").trimmingCharacters(in: .whitespaces)
+    }
 
     var body: some View {
         VStack(spacing: 8) {
-            Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.workIntervalLength.label",
-                                           comment: "Work interval label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.workIntervalLength))
-                }
-            }
-            Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
-                                           comment: "Short rest interval label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.shortRestIntervalLength))
-                }
-            }
-            Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.longRestIntervalLength.label",
-                                           comment: "Long rest interval label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.longRestIntervalLength))
-                }
-            }
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.workIntervalLength.label",
+                                                       comment: "Work interval label"),
+                              suffix: minSuffix,
+                              range: 1 ... 60,
+                              value: $timer.workIntervalLength)
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
+                                                       comment: "Short rest interval label"),
+                              suffix: minSuffix,
+                              range: 1 ... 60,
+                              value: $timer.shortRestIntervalLength)
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.longRestIntervalLength.label",
+                                                       comment: "Long rest interval label"),
+                              suffix: minSuffix,
+                              range: 1 ... 60,
+                              value: $timer.longRestIntervalLength)
             .help(NSLocalizedString("IntervalsView.longRestIntervalLength.help",
                                     comment: "Long rest interval hint"))
-            Stepper(value: $timer.workIntervalsInSet, in: 1 ... 10) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.workIntervalsInSet.label",
-                                           comment: "Work intervals in a set label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("\(timer.workIntervalsInSet)")
-                }
-            }
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.workIntervalsInSet.label",
+                                                       comment: "Work intervals in a set label"),
+                              suffix: nil,
+                              range: 1 ... 10,
+                              value: $timer.workIntervalsInSet)
             .help(NSLocalizedString("IntervalsView.workIntervalsInSet.help",
                                     comment: "Work intervals in set hint"))
             Spacer().frame(minHeight: 0)
@@ -156,6 +196,56 @@ private enum ChildView {
     case intervals, settings, sounds
 }
 
+private struct GlassTabBar: View {
+    @Binding var selection: ChildView
+
+    var body: some View {
+        HStack(spacing: 4) {
+            tab(.intervals, title: NSLocalizedString("TBPopoverView.intervals.label",
+                                                     comment: "Intervals label"))
+            tab(.settings, title: NSLocalizedString("TBPopoverView.settings.label",
+                                                    comment: "Settings label"))
+            tab(.sounds, title: NSLocalizedString("TBPopoverView.sounds.label",
+                                                  comment: "Sounds label"))
+        }
+        .padding(4)
+        .frame(maxWidth: .infinity)
+        .liquidGlassPanel(cornerRadius: 16, interactive: true)
+    }
+
+    private func tab(_ childView: ChildView, title: String) -> some View {
+        Button {
+            selection = childView
+        } label: {
+            Text(title)
+                .font(.system(size: 12, weight: selection == childView ? .semibold : .regular))
+                .lineLimit(1)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 6)
+                .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .modifier(GlassTabButton(isSelected: selection == childView))
+    }
+}
+
+private struct GlassTabButton: ViewModifier {
+    let isSelected: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(macOS 26.0, *) {
+            content
+                .glassEffect(isSelected ? .regular.interactive() : .identity,
+                             in: .rect(cornerRadius: 12))
+        } else {
+            content
+                .background(isSelected ? Color.accentColor.opacity(0.16) : Color.clear)
+                .cornerRadius(12)
+        }
+    }
+}
+
 struct TBPopoverView: View {
     @ObservedObject var timer = TBTimer()
     @State private var buttonHovered = false
@@ -183,17 +273,7 @@ struct TBPopoverView: View {
             .modifier(PrimaryActionButton())
             .keyboardShortcut(.defaultAction)
 
-            Picker("", selection: $activeChildView) {
-                Text(NSLocalizedString("TBPopoverView.intervals.label",
-                                       comment: "Intervals label")).tag(ChildView.intervals)
-                Text(NSLocalizedString("TBPopoverView.settings.label",
-                                       comment: "Settings label")).tag(ChildView.settings)
-                Text(NSLocalizedString("TBPopoverView.sounds.label",
-                                       comment: "Sounds label")).tag(ChildView.sounds)
-            }
-            .labelsHidden()
-            .frame(maxWidth: .infinity)
-            .pickerStyle(.segmented)
+            GlassTabBar(selection: $activeChildView)
 
             Group {
                 switch activeChildView {
