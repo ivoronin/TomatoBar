@@ -198,19 +198,8 @@ private enum ChildView {
 
 private struct GlassTabBar: View {
     @Binding var selection: ChildView
-    @Namespace private var selectionNamespace
 
     var body: some View {
-        if #available(macOS 26.0, *) {
-            GlassEffectContainer {
-                tabs
-            }
-        } else {
-            tabs
-        }
-    }
-
-    private var tabs: some View {
         HStack(spacing: 4) {
             tab(.intervals, title: NSLocalizedString("TBPopoverView.intervals.label",
                                                      comment: "Intervals label"))
@@ -230,32 +219,35 @@ private struct GlassTabBar: View {
                 selection = childView
             }
         } label: {
-            ZStack {
-                if selection == childView {
-                    selectedTabBackground
-                        .matchedGeometryEffect(id: "selectedTab", in: selectionNamespace)
-                }
-
-                Text(title)
-                    .font(.system(size: 12, weight: selection == childView ? .semibold : .regular))
-                    .foregroundColor(selection == childView ? .primary : .primary.opacity(0.82))
-                    .lineLimit(1)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 6)
-            }
-            .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            Text(title)
+                .font(.system(size: 12, weight: selection == childView ? .semibold : .regular))
+                .foregroundColor(selection == childView ? .primary : .primary.opacity(0.82))
+                .lineLimit(1)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 6)
+                .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(.plain)
+        .modifier(GlassTabButton(isSelected: selection == childView))
     }
+}
 
-    private var selectedTabBackground: some View {
-        RoundedRectangle(cornerRadius: 12, style: .continuous)
-            .fill(Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.2))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(Color(red: 0.75, green: 0.32, blue: 0.28).opacity(0.28), lineWidth: 1)
-            )
-            .padding(2)
+private struct GlassTabButton: ViewModifier {
+    let isSelected: Bool
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(macOS 26.0, *) {
+            content
+                .background(isSelected ? Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.2) : Color.clear)
+                .cornerRadius(12)
+                .glassEffect(isSelected ? .regular.interactive() : .identity,
+                             in: .rect(cornerRadius: 12))
+        } else {
+            content
+                .background(isSelected ? Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.2) : Color.clear)
+                .cornerRadius(12)
+        }
     }
 }
 
