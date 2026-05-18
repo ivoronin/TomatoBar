@@ -115,7 +115,7 @@ private struct IntervalsView: View {
             .help(NSLocalizedString("IntervalsView.workIntervalsInSet.help",
                                     comment: "Work intervals in set hint"))
         }
-        .padding(EdgeInsets(top: 18, leading: 10, bottom: 10, trailing: 10))
+        .padding(10)
         .frame(maxHeight: .infinity, alignment: .center)
     }
 }
