@@ -211,6 +211,7 @@ private struct GlassTabBar: View {
         .padding(4)
         .frame(maxWidth: .infinity)
         .liquidGlassPanel(cornerRadius: 16, interactive: true)
+        .animation(.snappy(duration: 0.18), value: selection)
     }
 
     private func tab(_ childView: ChildView, title: String) -> some View {
@@ -229,6 +230,7 @@ private struct GlassTabBar: View {
         }
         .buttonStyle(.plain)
         .modifier(GlassTabButton(isSelected: selection == childView))
+        .animation(.snappy(duration: 0.18), value: selection)
     }
 }
 
@@ -340,6 +342,7 @@ struct TBPopoverView: View {
         #endif
             /* Use values from GeometryReader */
 //            .frame(width: 240, height: 276)
+            .frame(height: 280)
             .padding(12)
     }
 }
