@@ -6,12 +6,38 @@ extension KeyboardShortcuts.Name {
     static let startStopTimer = Self("startStopTimer")
 }
 
+private struct LiquidGlassPanel: ViewModifier {
+    var cornerRadius: CGFloat = 14
+    var interactive = false
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(macOS 26.0, *) {
+            if interactive {
+                content.glassEffect(.regular.interactive(), in: .rect(cornerRadius: cornerRadius))
+            } else {
+                content.glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
+            }
+        } else {
+            content
+                .background(Color(NSColor.controlBackgroundColor).opacity(0.86))
+                .cornerRadius(cornerRadius)
+        }
+    }
+}
+
+private extension View {
+    func liquidGlassPanel(cornerRadius: CGFloat = 14, interactive: Bool = false) -> some View {
+        modifier(LiquidGlassPanel(cornerRadius: cornerRadius, interactive: interactive))
+    }
+}
+
 private struct IntervalsView: View {
     @EnvironmentObject var timer: TBTimer
     private var minStr = NSLocalizedString("IntervalsView.min", comment: "min")
 
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
             Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
                 HStack {
                     Text(NSLocalizedString("IntervalsView.workIntervalLength.label",
@@ -50,7 +76,7 @@ private struct IntervalsView: View {
                                     comment: "Work intervals in set hint"))
             Spacer().frame(minHeight: 0)
         }
-        .padding(4)
+        .padding(10)
     }
 }
 
@@ -59,7 +85,7 @@ private struct SettingsView: View {
     @ObservedObject private var launchAtLogin = LaunchAtLogin.observable
 
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
             KeyboardShortcuts.Recorder(for: .startStopTimer) {
                 Text(NSLocalizedString("SettingsView.shortcut.label",
                                        comment: "Shortcut label"))
@@ -85,7 +111,7 @@ private struct SettingsView: View {
             }.toggleStyle(.switch)
             Spacer().frame(minHeight: 0)
         }
-        .padding(4)
+        .padding(10)
     }
 }
 
@@ -110,7 +136,7 @@ private struct SoundsView: View {
     ]
 
     var body: some View {
-        LazyVGrid(columns: columns, alignment: .leading, spacing: 4) {
+        LazyVGrid(columns: columns, alignment: .leading, spacing: 16) {
             Text(NSLocalizedString("SoundsView.isWindupEnabled.label",
                                    comment: "Windup label"))
             VolumeSlider(volume: $player.windupVolume)
@@ -120,8 +146,9 @@ private struct SoundsView: View {
             Text(NSLocalizedString("SoundsView.isTickingEnabled.label",
                                    comment: "Ticking label"))
             VolumeSlider(volume: $player.tickingVolume)
-        }.padding(4)
-        Spacer().frame(minHeight: 0)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 18)
     }
 }
 
@@ -138,7 +165,7 @@ struct TBPopoverView: View {
     private var stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             Button {
                 timer.startStop()
                 TBStatusItem.shared.closePopover(nil)
@@ -146,12 +173,6 @@ struct TBPopoverView: View {
                 Text(timer.timer != nil ?
                      (buttonHovered ? stopLabel : timer.timeLeftString) :
                         startLabel)
-                    /*
-                      When appearance is set to "Dark" and accent color is set to "Graphite"
-                      "defaultAction" button label's color is set to the same color as the
-                      button, making the button look blank. #24
-                     */
-                    .foregroundColor(Color.white)
                     .font(.system(.body).monospacedDigit())
                     .frame(maxWidth: .infinity)
             }
@@ -159,6 +180,7 @@ struct TBPopoverView: View {
                 buttonHovered = over
             }
             .controlSize(.large)
+            .modifier(PrimaryActionButton())
             .keyboardShortcut(.defaultAction)
 
             Picker("", selection: $activeChildView) {
@@ -173,7 +195,7 @@ struct TBPopoverView: View {
             .frame(maxWidth: .infinity)
             .pickerStyle(.segmented)
 
-            GroupBox {
+            Group {
                 switch activeChildView {
                 case .intervals:
                     IntervalsView().environmentObject(timer)
@@ -183,30 +205,39 @@ struct TBPopoverView: View {
                     SoundsView().environmentObject(timer.player)
                 }
             }
+            .frame(minHeight: 146)
+            .liquidGlassPanel()
 
-            Group {
+            VStack(spacing: 2) {
                 Button {
                     NSApp.activate(ignoringOtherApps: true)
                     NSApp.orderFrontStandardAboutPanel()
                 } label: {
-                    Text(NSLocalizedString("TBPopoverView.about.label",
-                                           comment: "About label"))
+                    Label(NSLocalizedString("TBPopoverView.about.label",
+                                            comment: "About label"),
+                          systemImage: "info.circle")
                     Spacer()
-                    Text("⌘ A").foregroundColor(Color.gray)
+                    Text("⌘ A").foregroundColor(.gray)
                 }
                 .buttonStyle(.plain)
                 .keyboardShortcut("a")
+                .padding(.horizontal, 8)
+                .padding(.vertical, 6)
                 Button {
                     NSApplication.shared.terminate(self)
                 } label: {
-                    Text(NSLocalizedString("TBPopoverView.quit.label",
-                                           comment: "Quit label"))
+                    Label(NSLocalizedString("TBPopoverView.quit.label",
+                                            comment: "Quit label"),
+                          systemImage: "power")
                     Spacer()
-                    Text("⌘ Q").foregroundColor(Color.gray)
+                    Text("⌘ Q").foregroundColor(.gray)
                 }
                 .buttonStyle(.plain)
                 .keyboardShortcut("q")
+                .padding(.horizontal, 8)
+                .padding(.vertical, 6)
             }
+            .liquidGlassPanel(cornerRadius: 12, interactive: true)
         }
         #if DEBUG
             /*
@@ -225,6 +256,19 @@ struct TBPopoverView: View {
             /* Use values from GeometryReader */
 //            .frame(width: 240, height: 276)
             .padding(12)
+    }
+}
+
+private struct PrimaryActionButton: ViewModifier {
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(macOS 26.0, *) {
+            content.buttonStyle(.glassProminent)
+        } else if #available(macOS 12.0, *) {
+            content.buttonStyle(.borderedProminent)
+        } else {
+            content.buttonStyle(DefaultButtonStyle())
+        }
     }
 }
 
