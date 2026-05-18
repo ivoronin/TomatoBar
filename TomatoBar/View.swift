@@ -212,7 +212,7 @@ private struct GlassTabBar: View {
     }
 
     private var tabs: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 0) {
             tab(.intervals, title: NSLocalizedString("TBPopoverView.intervals.label",
                                                      comment: "Intervals label"))
             tab(.settings, title: NSLocalizedString("TBPopoverView.settings.label",
@@ -222,7 +222,7 @@ private struct GlassTabBar: View {
         }
         .padding(4)
         .frame(maxWidth: .infinity)
-        .liquidGlassPanel(cornerRadius: 16, interactive: true)
+        .liquidGlassPanel(cornerRadius: 18, interactive: true)
         .animation(.snappy(duration: 0.18), value: selection)
     }
 
@@ -248,25 +248,24 @@ private struct GlassTabBar: View {
             .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
         .buttonStyle(.plain)
-        .modifier(InteractiveTabGlass())
         .animation(.snappy(duration: 0.18), value: selection)
     }
 
     private var selectedTabBackground: some View {
-        RoundedRectangle(cornerRadius: 12, style: .continuous)
-            .fill(Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.2))
-            .padding(1)
+        RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .fill(Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.24))
+            .modifier(ActiveTabGlass())
     }
 }
 
-private struct InteractiveTabGlass: ViewModifier {
+private struct ActiveTabGlass: ViewModifier {
     @ViewBuilder
     func body(content: Content) -> some View {
         if #available(macOS 26.0, *) {
             content
-                .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 12))
+                .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 14))
         } else {
-            content.cornerRadius(12)
+            content.cornerRadius(14)
         }
     }
 }
