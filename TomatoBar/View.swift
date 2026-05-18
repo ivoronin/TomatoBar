@@ -219,9 +219,9 @@ private struct GlassTabBar: View {
             tab(.sounds, title: NSLocalizedString("TBPopoverView.sounds.label",
                                                   comment: "Sounds label"))
         }
-        .padding(2)
+        .padding(4)
         .frame(maxWidth: .infinity)
-        .liquidGlassPanel(cornerRadius: 12, interactive: true)
+        .liquidGlassPanel(cornerRadius: 16, interactive: true)
     }
 
     private func tab(_ childView: ChildView, title: String) -> some View {
@@ -240,7 +240,7 @@ private struct GlassTabBar: View {
                     .font(.system(size: 12, weight: selection == childView ? .semibold : .regular))
                     .lineLimit(1)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 4)
+                    .padding(.vertical, 6)
             }
             .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
@@ -248,22 +248,8 @@ private struct GlassTabBar: View {
     }
 
     private var selectedTabBackground: some View {
-        RoundedRectangle(cornerRadius: 10, style: .continuous)
-            .fill(Color.accentColor.opacity(0.16))
-            .modifier(SelectedTabGlass())
-    }
-}
-
-private struct SelectedTabGlass: ViewModifier {
-    @ViewBuilder
-    func body(content: Content) -> some View {
-        if #available(macOS 26.0, *) {
-            content
-                .foregroundStyle(.clear)
-                .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 10))
-        } else {
-            content
-        }
+        RoundedRectangle(cornerRadius: 12, style: .continuous)
+            .fill(Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.38))
     }
 }
 
