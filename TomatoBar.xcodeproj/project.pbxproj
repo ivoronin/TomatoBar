@@ -28,7 +28,7 @@
 		8A21B78D27EE31A20009E5DB /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		8A21B78F27EE31A30009E5DB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8A21B79427EE31A30009E5DB /* TomatoBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TomatoBar.entitlements; sourceTree = "<group>"; };
-		C0DEC0DE0000000000000001 /* tomatobar.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = tomatobar.icon; sourceTree = "<group>"; };
+		C0DEC0DE0000000000000001 /* tomatobar.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = Icons/tomatobar.icon; sourceTree = "<group>"; };
 		8A9F700827EE396E0012A1EC /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		8A9F701827EE3DAF0012A1EC /* Timer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		8A9F701E27EE536D0012A1EC /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -56,6 +56,7 @@
 		8A21B77F27EE31A20009E5DB = {
 			isa = PBXGroup;
 			children = (
+				C0DEC0DE0000000000000001 /* tomatobar.icon */,
 				8A21B78A27EE31A20009E5DB /* TomatoBar */,
 				8A21B78927EE31A20009E5DB /* Products */,
 				8A9F700D27EE3AED0012A1EC /* Frameworks */,
@@ -81,7 +82,6 @@
 				8A9F701E27EE536D0012A1EC /* Player.swift */,
 				8AA5B3F12812A74600BE1A6C /* Notifications.swift */,
 				8A21B78F27EE31A30009E5DB /* Assets.xcassets */,
-				C0DEC0DE0000000000000001 /* tomatobar.icon */,
 				8A21B79427EE31A30009E5DB /* TomatoBar.entitlements */,
 				8AA54347293094AB002A47FC /* Localizable.strings */,
 			);
