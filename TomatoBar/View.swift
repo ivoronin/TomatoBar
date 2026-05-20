@@ -315,7 +315,9 @@ struct TBPopoverView: View {
             VStack(spacing: 2) {
                 Button {
                     NSApp.activate(ignoringOtherApps: true)
-                    NSApp.orderFrontStandardAboutPanel()
+                    NSApp.orderFrontStandardAboutPanel(options: [
+                        .applicationIcon: NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath)
+                    ])
                 } label: {
                     Label(NSLocalizedString("TBPopoverView.about.label",
                                             comment: "About label"),
