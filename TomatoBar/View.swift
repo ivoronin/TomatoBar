@@ -43,8 +43,13 @@ private extension Binding where Value == Int {
 }
 
 private func aboutPanelIcon() -> NSImage {
-    let image = NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath).copy() as? NSImage
-    let icon = image ?? NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath)
+    guard
+        let iconURL = Bundle.main.url(forResource: "tomatobar", withExtension: "icns"),
+        let icon = NSImage(contentsOf: iconURL)
+    else {
+        return NSImage()
+    }
+
     icon.size = NSSize(width: 64, height: 64)
     return icon
 }
