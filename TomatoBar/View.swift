@@ -42,6 +42,13 @@ private extension Binding where Value == Int {
     }
 }
 
+private func aboutPanelIcon() -> NSImage {
+    let image = NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath).copy() as? NSImage
+    let icon = image ?? NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath)
+    icon.size = NSSize(width: 64, height: 64)
+    return icon
+}
+
 private struct NumericStepperRow: View {
     let title: String
     let suffix: String?
@@ -316,7 +323,7 @@ struct TBPopoverView: View {
                 Button {
                     NSApp.activate(ignoringOtherApps: true)
                     NSApp.orderFrontStandardAboutPanel(options: [
-                        .applicationIcon: NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath)
+                        .applicationIcon: aboutPanelIcon()
                     ])
                 } label: {
                     Label(NSLocalizedString("TBPopoverView.about.label",
