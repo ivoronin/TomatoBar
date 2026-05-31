@@ -25,3 +25,12 @@
 "TBTimer.onRestStart.skip.title" = "Skip";
 "TBTimer.onRestFinish.title" = "Break is over";
 "TBTimer.onRestFinish.body" = "Keep up the good work!";
+"TBPopoverView.stats.label" = "Stats";
+"StatsView.worked.label" = "Worked";
+"StatsView.recent.label" = "Recent days";
+"StatsView.empty.label" = "No tracked sessions yet";
+"StatsView.error.label" = "Cannot read history";
+"StatsView.noData.label" = "No activity";
+"StatsView.work.label" = "Work";
+"StatsView.shortRest.label" = "Short break";
+"StatsView.longRest.label" = "Long break";

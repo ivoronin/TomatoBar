@@ -25,3 +25,12 @@
 "TBTimer.onRestStart.skip.title" = "건너뛰기";
 "TBTimer.onRestFinish.title" = "휴식 시간 종료";
 "TBTimer.onRestFinish.body" = "다시 작업을 시작하세요!";
+"TBPopoverView.stats.label" = "통계";
+"StatsView.worked.label" = "작업함";
+"StatsView.recent.label" = "최근 날짜";
+"StatsView.empty.label" = "아직 기록된 세션이 없습니다";
+"StatsView.error.label" = "기록을 읽을 수 없습니다";
+"StatsView.noData.label" = "활동 없음";
+"StatsView.work.label" = "작업";
+"StatsView.shortRest.label" = "짧은 휴식";
+"StatsView.longRest.label" = "긴 휴식";

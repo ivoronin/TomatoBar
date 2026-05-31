@@ -125,8 +125,247 @@ private struct SoundsView: View {
     }
 }
 
+private func tbColor(_ kind: TBIntervalKind) -> Color {
+    switch kind {
+    case .work: return .accentColor
+    case .shortRest: return .blue
+    case .longRest: return .orange
+    }
+}
+
+private func tbKindLabel(_ kind: TBIntervalKind) -> String {
+    switch kind {
+    case .work:
+        return NSLocalizedString("StatsView.work.label", comment: "Work")
+    case .shortRest:
+        return NSLocalizedString("StatsView.shortRest.label", comment: "Short break")
+    case .longRest:
+        return NSLocalizedString("StatsView.longRest.label", comment: "Long break")
+    }
+}
+
+private let tbHMFormatter: DateComponentsFormatter = {
+    let f = DateComponentsFormatter()
+    f.unitsStyle = .abbreviated
+    f.allowedUnits = [.hour, .minute]
+    return f
+}()
+
+private func tbFormatHM(_ seconds: TimeInterval) -> String {
+    if seconds < 60 { return "0m" }
+    return tbHMFormatter.string(from: seconds) ?? "0m"
+}
+
+private let tbClockFormatter: DateFormatter = {
+    let f = DateFormatter()
+    f.timeStyle = .short
+    f.dateStyle = .none
+    return f
+}()
+
+private let tbDayFormatter: DateFormatter = {
+    let f = DateFormatter()
+    f.setLocalizedDateFormatFromTemplate("MMMd")
+    return f
+}()
+
+/* Anything under a minute is treated as "no data" so a just-started or
+ * idle day renders as an empty track instead of a full bar. */
+private let tbMinTracked: TimeInterval = 60
+private let tbTrackColor = Color.primary.opacity(0.08)
+private let tbBarRadius: CGFloat = 3
+
+/* Stacked colored bar over a faint track. The overall fill width is scaled
+ * by `scaleMax` (the busiest recent day) so short days look short and the
+ * longest day fills the bar - they are never normalised to themselves. */
+private struct TBBar: View {
+    /* (color, seconds) in draw order. */
+    let segments: [(Color, TimeInterval)]
+    let scaleMax: TimeInterval
+
+    var body: some View {
+        let total = segments.reduce(0) { $0 + $1.1 }
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: tbBarRadius).fill(tbTrackColor)
+                if total >= tbMinTracked, scaleMax >= tbMinTracked {
+                    let fillW = geo.size.width
+                        * CGFloat(min(1, total / scaleMax))
+                    HStack(spacing: 0) {
+                        ForEach(Array(segments.enumerated()), id: \.offset) { _, s in
+                            Rectangle().fill(s.0)
+                                .frame(width: total > 0
+                                       ? fillW * CGFloat(s.1 / total) : 0)
+                        }
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: tbBarRadius))
+                }
+            }
+        }
+    }
+}
+
+private struct TBRecentRow: View {
+    let summary: TBDaySummary
+    let scaleMax: TimeInterval
+    let isSelected: Bool
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Text(tbDayFormatter.string(from: summary.day))
+                .font(.caption.monospacedDigit())
+                .foregroundColor(isSelected ? .primary : .secondary)
+                .frame(width: 46, alignment: .leading)
+            TBBar(segments: [(.accentColor, summary.workSeconds)],
+                  scaleMax: scaleMax)
+                .frame(height: 6)
+            Text(tbFormatHM(summary.workSeconds))
+                .font(.caption.monospacedDigit())
+                .foregroundColor(summary.workSeconds >= tbMinTracked
+                                 ? .primary : .secondary)
+                .frame(width: 48, alignment: .trailing)
+        }
+        .padding(.horizontal, 4)
+        .padding(.vertical, 3)
+        .background(
+            RoundedRectangle(cornerRadius: 4)
+                .fill(isSelected ? Color.accentColor.opacity(0.14) : .clear)
+        )
+        .contentShape(Rectangle())
+    }
+}
+
+private struct StatsView: View {
+    @EnvironmentObject var timer: TBTimer
+    @StateObject private var store = TBStatsStore()
+    @State private var selectedDate = Date()
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            DatePicker("", selection: $selectedDate,
+                       in: ...Date(), displayedComponents: .date)
+                .datePickerStyle(.field)
+                .labelsHidden()
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            if store.loadError {
+                placeholder("StatsView.error.label")
+            } else if store.days.isEmpty {
+                placeholder("StatsView.empty.label")
+            } else {
+                content
+            }
+
+            Spacer().frame(minHeight: 0)
+        }
+        .padding(6)
+        .onAppear {
+            store.load(workLen: timer.workIntervalLength,
+                       shortLen: timer.shortRestIntervalLength,
+                       longLen: timer.longRestIntervalLength)
+        }
+    }
+
+    private func placeholder(_ key: String) -> some View {
+        VStack {
+            Spacer()
+            Text(NSLocalizedString(key, comment: ""))
+                .font(.caption).foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .center)
+            Spacer()
+        }
+    }
+
+    @ViewBuilder private var content: some View {
+        let recent = store.recentDays(7)
+        let scaleMax = recent
+            .map { $0.workSeconds + $0.shortRestSeconds + $0.longRestSeconds }
+            .max() ?? 0
+        let workScale = recent.map(\.workSeconds).max() ?? 0
+        let summary = store.summary(for: selectedDate)
+        let selectedDay = Calendar.current.startOfDay(for: selectedDate)
+
+        // Selected day summary
+        VStack(alignment: .leading, spacing: 5) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(NSLocalizedString("StatsView.worked.label",
+                                       comment: "Worked"))
+                    .font(.caption).foregroundColor(.secondary)
+                Spacer()
+                Text(tbFormatHM(summary.workSeconds))
+                    .font(.system(.title3).monospacedDigit())
+            }
+            TBBar(segments: [(.accentColor, summary.workSeconds),
+                             (.blue, summary.shortRestSeconds),
+                             (.orange, summary.longRestSeconds)],
+                  scaleMax: scaleMax)
+                .frame(height: 7)
+        }
+
+        if summary.intervals.isEmpty {
+            Text(NSLocalizedString("StatsView.noData.label",
+                                   comment: "No activity"))
+                .font(.caption).foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.vertical, 8)
+        } else {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(summary.intervals) { iv in
+                        intervalRow(iv)
+                    }
+                }
+                .padding(.trailing, 2)
+            }
+            .frame(maxHeight: 90)
+        }
+
+        Divider()
+
+        Text(NSLocalizedString("StatsView.recent.label",
+                               comment: "Recent days"))
+            .font(.caption).foregroundColor(.secondary)
+        VStack(spacing: 1) {
+            ForEach(recent) { day in
+                TBRecentRow(summary: day, scaleMax: workScale,
+                            isSelected: day.day == selectedDay)
+                    .onTapGesture { selectedDate = day.day }
+            }
+        }
+    }
+
+    private func intervalRow(_ iv: TBInterval) -> some View {
+        HStack(spacing: 6) {
+            Circle().fill(tbColor(iv.kind)).frame(width: 6, height: 6)
+            Text(tbClockFormatter.string(from: iv.start)
+                 + " – "
+                 + (iv.continuesToNextDay ? "00:00"
+                    : tbClockFormatter.string(from: iv.end)))
+                .font(.caption.monospacedDigit())
+                .fixedSize()
+            Text(tbKindLabel(iv.kind))
+                .font(.caption).foregroundColor(.secondary)
+                .lineLimit(1).truncationMode(.tail)
+            Spacer(minLength: 4)
+            if iv.continuesFromPrevDay {
+                Text("↰").font(.caption2).foregroundColor(.secondary)
+            }
+            if iv.continuesToNextDay {
+                Text("↴").font(.caption2).foregroundColor(.secondary)
+            }
+            if iv.isOpenEnded {
+                Text("…").font(.caption2).foregroundColor(.secondary)
+            }
+            Text(tbFormatHM(iv.duration))
+                .font(.caption.monospacedDigit())
+                .foregroundColor(.secondary)
+                .frame(width: 42, alignment: .trailing)
+        }
+    }
+}
+
 private enum ChildView {
-    case intervals, settings, sounds
+    case intervals, settings, sounds, stats
 }
 
 struct TBPopoverView: View {
@@ -168,6 +407,8 @@ struct TBPopoverView: View {
                                        comment: "Settings label")).tag(ChildView.settings)
                 Text(NSLocalizedString("TBPopoverView.sounds.label",
                                        comment: "Sounds label")).tag(ChildView.sounds)
+                Text(NSLocalizedString("TBPopoverView.stats.label",
+                                       comment: "Stats label")).tag(ChildView.stats)
             }
             .labelsHidden()
             .frame(maxWidth: .infinity)
@@ -181,6 +422,8 @@ struct TBPopoverView: View {
                     SettingsView().environmentObject(timer)
                 case .sounds:
                     SoundsView().environmentObject(timer.player)
+                case .stats:
+                    StatsView().environmentObject(timer)
                 }
             }
 
