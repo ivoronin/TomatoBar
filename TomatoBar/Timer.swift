@@ -11,9 +11,11 @@ class TBTimer: ObservableObject {
     @AppStorage("workIntervalsInSet") var workIntervalsInSet = 4
     // This preference is "hidden"
     @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60.0
+    @AppStorage("enableRestOverlay") var enableRestOverlay = true
 
     private var stateMachine = TBStateMachine(state: .idle)
     public let player = TBPlayer()
+    private let overlayController = TBRestOverlayController()
     private var consecutiveWorkIntervals: Int = 0
     private var notificationCenter = TBNotificationCenter()
     private var finishTime: Date!
@@ -126,6 +128,9 @@ class TBTimer: ObservableObject {
         } else {
             TBStatusItem.shared.setTitle(title: nil)
         }
+        if timer != nil {
+            overlayController.updateCountdown(timeLeftString)
+        }
     }
 
     private func startTimer(seconds: Int) {
@@ -195,10 +200,12 @@ class TBTimer: ObservableObject {
         var body = NSLocalizedString("TBTimer.onRestStart.short.body", comment: "Short break body")
         var length = shortRestIntervalLength
         var imgName = NSImage.Name.shortRest
+        var restType = TBRestOverlayController.RestType.shortRest
         if consecutiveWorkIntervals >= workIntervalsInSet {
             body = NSLocalizedString("TBTimer.onRestStart.long.body", comment: "Long break body")
             length = longRestIntervalLength
             imgName = .longRest
+            restType = .longRest
             consecutiveWorkIntervals = 0
         }
         notificationCenter.send(
@@ -208,9 +215,17 @@ class TBTimer: ObservableObject {
         )
         TBStatusItem.shared.setIcon(name: imgName)
         startTimer(seconds: length * 60)
+        if enableRestOverlay {
+            overlayController.showOverlays(
+                restType: restType,
+                countdown: timeLeftString,
+                skipHandler: { [weak self] in self?.skipRest() }
+            )
+        }
     }
 
     private func onRestFinish(context ctx: TBStateMachine.Context) {
+        overlayController.closeOverlays()
         if ctx.event == .skipRest {
             return
         }
@@ -225,5 +240,6 @@ class TBTimer: ObservableObject {
         stopTimer()
         TBStatusItem.shared.setIcon(name: .idle)
         consecutiveWorkIntervals = 0
+        overlayController.closeOverlays()
     }
 }
