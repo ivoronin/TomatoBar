@@ -25,3 +25,5 @@
 "TBTimer.onRestStart.skip.title" = "Skip";
 "TBTimer.onRestFinish.title" = "Break is over";
 "TBTimer.onRestFinish.body" = "Keep up the good work!";
+"TBRestOverlayView.shortRest.label" = "Short Rest";
+"TBRestOverlayView.longRest.label" = "Long Rest";

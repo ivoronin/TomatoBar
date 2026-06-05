@@ -1,5 +1,9 @@
 import SwiftUI
 
+private class TBRestOverlayWindow: NSWindow {
+    override var canBecomeKey: Bool { true }
+}
+
 class TBRestOverlayController {
     enum RestType {
         case shortRest
@@ -12,6 +16,7 @@ class TBRestOverlayController {
     func showOverlays(
         restType: RestType,
         countdown: String,
+        backgroundImageName: String? = nil,
         skipHandler: @escaping () -> Void
     ) {
         closeOverlays()
@@ -27,12 +32,12 @@ class TBRestOverlayController {
                 restType: restType,
                 countdown: countdown,
                 skipHandler: skipHandler,
-                backgroundImageName: nil
+                backgroundImageName: backgroundImageName
             )
             let hostingView = NSHostingView(rootView: overlayView)
             hostingView.frame = window.contentRect(forFrameRect: window.frame)
             window.contentView = hostingView
-            window.makeKeyAndOrderFront(nil)
+            window.orderFront(nil)
             windows.append(window)
         }
     }
@@ -62,7 +67,7 @@ class TBRestOverlayController {
     }
 
     private func createOverlayWindow(for screen: NSScreen) -> NSWindow {
-        let window = NSWindow(
+        let window = TBRestOverlayWindow(
             contentRect: screen.frame,
             styleMask: .borderless,
             backing: .buffered,

@@ -25,3 +25,5 @@
 "TBTimer.onRestStart.skip.title" = "跳过";
 "TBTimer.onRestFinish.title" = "休息结束";
 "TBTimer.onRestFinish.body" = "继续努力!";
+"TBRestOverlayView.shortRest.label" = "Short Rest";
+"TBRestOverlayView.longRest.label" = "Long Rest";
