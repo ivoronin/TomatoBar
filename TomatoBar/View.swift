@@ -78,6 +78,11 @@ private struct SettingsView: View {
                 .onChange(of: timer.showTimerInMenuBar) { _ in
                     timer.updateTimeLeft()
                 }
+            Toggle(isOn: $timer.enableRestOverlay) {
+                Text(NSLocalizedString("SettingsView.enableRestOverlay.label",
+                                       comment: "Show screen overlay during breaks label"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }.toggleStyle(.switch)
             Toggle(isOn: $launchAtLogin.isEnabled) {
                 Text(NSLocalizedString("SettingsView.launchAtLogin.label",
                                        comment: "Launch at login label"))

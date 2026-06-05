@@ -8,6 +8,7 @@
 "SettingsView.shortcut.label" = "단축키";
 "SettingsView.stopAfterBreak.label" = "휴식 후 중지";
 "SettingsView.showTimerInMenuBar.label" = "메뉴 막대에서 타이머 보기";
+"SettingsView.enableRestOverlay.label" = "Show screen overlay during breaks";
 "SettingsView.launchAtLogin.label" = "로그인 후 실행";
 "SoundsView.isWindupEnabled.label" = "Windup";
 "SoundsView.isDingEnabled.label" = "Ding";

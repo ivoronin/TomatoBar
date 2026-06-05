@@ -8,6 +8,7 @@
 "SettingsView.shortcut.label" = "Shortcut";
 "SettingsView.stopAfterBreak.label" = "Stop after break";
 "SettingsView.showTimerInMenuBar.label" = "Show timer in menu bar";
+"SettingsView.enableRestOverlay.label" = "Show screen overlay during breaks";
 "SettingsView.launchAtLogin.label" = "Launch at login";
 "SoundsView.isWindupEnabled.label" = "Windup";
 "SoundsView.isDingEnabled.label" = "Ding";
