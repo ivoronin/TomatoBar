@@ -4,6 +4,7 @@ private class TBRestOverlayWindow: NSWindow {
     override var canBecomeKey: Bool { true }
 }
 
+@MainActor
 class TBRestOverlayViewModel: ObservableObject {
     @Published var restType: TBRestOverlayController.RestType
     @Published var countdown: String
@@ -14,6 +15,7 @@ class TBRestOverlayViewModel: ObservableObject {
     }
 }
 
+@MainActor
 class TBRestOverlayController {
     enum RestType {
         case shortRest
@@ -44,9 +46,7 @@ class TBRestOverlayController {
                 skipHandler: skipHandler,
                 backgroundImageName: backgroundImageName
             )
-            let hostingView = NSHostingView(rootView: overlayView)
-            hostingView.frame = window.contentRect(forFrameRect: window.frame)
-            window.contentView = hostingView
+            window.contentView = NSHostingView(rootView: overlayView)
             window.orderFront(nil)
             windows.append(window)
         }
@@ -73,10 +73,11 @@ class TBRestOverlayController {
             screen: screen
         )
         window.level = .modalPanel
-        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenDisallowsTiling]
+        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenDisallowsTiling, .ignoresCycle]
         window.isReleasedWhenClosed = false
         window.isMovable = false
         window.isMovableByWindowBackground = false
+        window.isOpaque = false
         window.backgroundColor = .clear
         window.hasShadow = false
         return window
