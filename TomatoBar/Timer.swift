@@ -128,7 +128,7 @@ class TBTimer: ObservableObject {
         } else {
             TBStatusItem.shared.setTitle(title: nil)
         }
-        if timer != nil {
+        if timer != nil, enableRestOverlay {
             overlayController.updateCountdown(timeLeftString)
         }
     }
@@ -216,9 +216,10 @@ class TBTimer: ObservableObject {
         TBStatusItem.shared.setIcon(name: imgName)
         startTimer(seconds: length * 60)
         if enableRestOverlay {
+            let initialCountdown = timerFormatter.string(from: Date(), to: finishTime)!
             overlayController.showOverlays(
                 restType: restType,
-                countdown: timeLeftString,
+                countdown: initialCountdown,
                 skipHandler: { [weak self] in self?.skipRest() }
             )
         }
