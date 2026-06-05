@@ -28,7 +28,7 @@ class TBRestOverlayController {
     func showOverlays(
         restType: RestType,
         countdown: String,
-        backgroundImageName: String? = nil,
+        backgroundImageName: String? = "RestBackground",
         skipHandler: @escaping () -> Void
     ) {
         closeOverlays()
