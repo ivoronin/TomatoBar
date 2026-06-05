@@ -4,6 +4,16 @@ private class TBRestOverlayWindow: NSWindow {
     override var canBecomeKey: Bool { true }
 }
 
+class TBRestOverlayViewModel: ObservableObject {
+    @Published var restType: TBRestOverlayController.RestType
+    @Published var countdown: String
+
+    init(restType: TBRestOverlayController.RestType, countdown: String) {
+        self.restType = restType
+        self.countdown = countdown
+    }
+}
+
 class TBRestOverlayController {
     enum RestType {
         case shortRest
@@ -11,7 +21,7 @@ class TBRestOverlayController {
     }
 
     private var windows: [NSWindow] = []
-    private var skipHandler: (() -> Void)?
+    private var viewModel: TBRestOverlayViewModel?
 
     func showOverlays(
         restType: RestType,
@@ -24,13 +34,13 @@ class TBRestOverlayController {
         let screens = NSScreen.screens
         guard !screens.isEmpty else { return }
 
-        self.skipHandler = skipHandler
+        let viewModel = TBRestOverlayViewModel(restType: restType, countdown: countdown)
+        self.viewModel = viewModel
 
         for screen in screens {
             let window = createOverlayWindow(for: screen)
             let overlayView = TBRestOverlayView(
-                restType: restType,
-                countdown: countdown,
+                viewModel: viewModel,
                 skipHandler: skipHandler,
                 backgroundImageName: backgroundImageName
             )
@@ -43,19 +53,7 @@ class TBRestOverlayController {
     }
 
     func updateCountdown(_ text: String) {
-        for window in windows {
-            guard let hostingView = window.contentView as? NSHostingView<TBRestOverlayView> else {
-                continue
-            }
-            // Recreate the hosting view with updated countdown text
-            let updatedView = TBRestOverlayView(
-                restType: hostingView.rootView.restType,
-                countdown: text,
-                skipHandler: hostingView.rootView.skipHandler,
-                backgroundImageName: hostingView.rootView.backgroundImageName
-            )
-            hostingView.rootView = updatedView
-        }
+        viewModel?.countdown = text
     }
 
     func closeOverlays() {
@@ -63,7 +61,7 @@ class TBRestOverlayController {
             window.orderOut(nil)
         }
         windows.removeAll()
-        skipHandler = nil
+        viewModel = nil
     }
 
     private func createOverlayWindow(for screen: NSScreen) -> NSWindow {

@@ -1,8 +1,7 @@
 import SwiftUI
 
 struct TBRestOverlayView: View {
-    let restType: TBRestOverlayController.RestType
-    let countdown: String
+    @ObservedObject var viewModel: TBRestOverlayViewModel
     let skipHandler: () -> Void
     let backgroundImageName: String?
 
@@ -31,13 +30,13 @@ struct TBRestOverlayView: View {
 
             // Centered content
             VStack(spacing: 16) {
-                Text(restType == .shortRest
+                Text(viewModel.restType == .shortRest
                     ? NSLocalizedString("TBRestOverlayView.shortRest.label", comment: "Short rest label")
                     : NSLocalizedString("TBRestOverlayView.longRest.label", comment: "Long rest label"))
                     .font(.system(size: 48, weight: .semibold, design: .rounded))
                     .foregroundColor(.white)
 
-                Text(countdown)
+                Text(viewModel.countdown)
                     .font(.system(size: 96, weight: .thin, design: .monospaced))
                     .foregroundColor(.white)
             }
