@@ -14,6 +14,8 @@
 "SoundsView.isDingEnabled.label" = "Ding";
 "SoundsView.isTickingEnabled.label" = "Ticking";
 "TBPopoverView.start.label" = "시작";
+"TBPopoverView.work.label" = "Work";
+"TBPopoverView.rest.label" = "Rest";
 "TBPopoverView.stop.label" = "중지";
 "TBPopoverView.intervals.label" = "간격";
 "TBPopoverView.settings.label" = "설정";

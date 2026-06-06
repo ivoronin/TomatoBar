@@ -139,32 +139,64 @@ struct TBPopoverView: View {
     @State private var buttonHovered = false
     @State private var activeChildView = ChildView.intervals
 
-    private var startLabel = NSLocalizedString("TBPopoverView.start.label", comment: "Start label")
+    private var workLabel = NSLocalizedString("TBPopoverView.work.label", comment: "Work label")
+    private var restLabel = NSLocalizedString("TBPopoverView.rest.label", comment: "Rest label")
     private var stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+    private var runningButton: some View {
+        Button {
+            timer.startStop()
+            TBStatusItem.shared.closePopover(nil)
+        } label: {
+            Text(buttonHovered ? stopLabel : timer.timeLeftString)
+                /*
+                  When appearance is set to "Dark" and accent color is set to "Graphite"
+                  "defaultAction" button label's color is set to the same color as the
+                  button, making the button look blank. #24
+                 */
+                .foregroundColor(Color.white)
+                .font(.system(.body).monospacedDigit())
+                .frame(maxWidth: .infinity)
+        }
+        .onHover { over in
+            buttonHovered = over
+        }
+        .controlSize(.large)
+        .keyboardShortcut(.defaultAction)
+    }
+
+    private var idleButtons: some View {
+        HStack(spacing: 6) {
             Button {
                 timer.startStop()
                 TBStatusItem.shared.closePopover(nil)
             } label: {
-                Text(timer.timer != nil ?
-                     (buttonHovered ? stopLabel : timer.timeLeftString) :
-                        startLabel)
-                    /*
-                      When appearance is set to "Dark" and accent color is set to "Graphite"
-                      "defaultAction" button label's color is set to the same color as the
-                      button, making the button look blank. #24
-                     */
+                Text(workLabel)
                     .foregroundColor(Color.white)
-                    .font(.system(.body).monospacedDigit())
                     .frame(maxWidth: .infinity)
-            }
-            .onHover { over in
-                buttonHovered = over
             }
             .controlSize(.large)
             .keyboardShortcut(.defaultAction)
+
+            Button {
+                timer.startRest()
+                TBStatusItem.shared.closePopover(nil)
+            } label: {
+                Text(restLabel)
+                    .foregroundColor(Color.white)
+                    .frame(maxWidth: .infinity)
+            }
+            .controlSize(.large)
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if timer.timer == nil {
+                idleButtons
+            } else {
+                runningButton
+            }
 
             Picker("", selection: $activeChildView) {
                 Text(NSLocalizedString("TBPopoverView.intervals.label",

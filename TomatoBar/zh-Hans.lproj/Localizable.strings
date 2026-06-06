@@ -14,6 +14,8 @@
 "SoundsView.isDingEnabled.label" = "叮";
 "SoundsView.isTickingEnabled.label" = "滴答声";
 "TBPopoverView.start.label" = "开始";
+"TBPopoverView.work.label" = "工作";
+"TBPopoverView.rest.label" = "休息";
 "TBPopoverView.stop.label" = "停止";
 "TBPopoverView.intervals.label" = "时长";
 "TBPopoverView.settings.label" = "设置";
