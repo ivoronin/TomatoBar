@@ -58,6 +58,42 @@ private struct SettingsView: View {
     @EnvironmentObject var timer: TBTimer
     @ObservedObject private var launchAtLogin = LaunchAtLogin.observable
 
+    private var restBackgroundFolderLabel: String {
+        NSLocalizedString("SettingsView.restBackgroundFolder.label",
+                          comment: "Rest background folder label")
+    }
+
+    private var defaultBackgroundLabel: String {
+        NSLocalizedString("SettingsView.restBackgroundFolder.default",
+                          comment: "Default rest background label")
+    }
+
+    private var chooseBackgroundFolderLabel: String {
+        NSLocalizedString("SettingsView.restBackgroundFolder.choose",
+                          comment: "Choose rest background folder label")
+    }
+
+    private var selectedBackgroundFolderName: String {
+        guard !timer.restBackgroundFolderPath.isEmpty else {
+            return defaultBackgroundLabel
+        }
+
+        return URL(fileURLWithPath: timer.restBackgroundFolderPath).lastPathComponent
+    }
+
+    private func chooseRestBackgroundFolder() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.canCreateDirectories = false
+        panel.prompt = chooseBackgroundFolderLabel
+
+        if panel.runModal() == .OK, let url = panel.url {
+            timer.restBackgroundFolderPath = url.path
+        }
+    }
+
     var body: some View {
         VStack {
             KeyboardShortcuts.Recorder(for: .startStopTimer) {
@@ -83,6 +119,20 @@ private struct SettingsView: View {
                                        comment: "Show screen overlay during breaks label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(restBackgroundFolderLabel)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(selectedBackgroundFolderName)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+                Button(chooseBackgroundFolderLabel) {
+                    chooseRestBackgroundFolder()
+                }
+            }
             Toggle(isOn: $launchAtLogin.isEnabled) {
                 Text(NSLocalizedString("SettingsView.launchAtLogin.label",
                                        comment: "Launch at login label"))
