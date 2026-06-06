@@ -20,6 +20,7 @@ class TBTimer: ObservableObject {
     private var notificationCenter = TBNotificationCenter()
     private var finishTime: Date!
     private var timerFormatter = DateComponentsFormatter()
+    private var didAutoStartOnLaunch = false
     @Published var timeLeftString: String = ""
     @Published var timer: DispatchSourceTimer?
 
@@ -86,6 +87,8 @@ class TBTimer: ObservableObject {
                             andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)),
                             forEventClass: AEEventClass(kInternetEventClass),
                             andEventID: AEEventID(kAEGetURL))
+
+        startWorkOnLaunch()
     }
 
     @objc func handleGetURLEvent(_ event: NSAppleEventDescriptor,
@@ -116,6 +119,12 @@ class TBTimer: ObservableObject {
 
     func startStop() {
         stateMachine <-! .startStop
+    }
+
+    private func startWorkOnLaunch() {
+        guard !didAutoStartOnLaunch, stateMachine.state == .idle else { return }
+        didAutoStartOnLaunch = true
+        startStop()
     }
 
     func startRest() {
