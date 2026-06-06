@@ -48,6 +48,7 @@ class TBTimer: ObservableObject {
         stateMachine.addRoutes(event: .startStop, transitions: [
             .idle => .work, .work => .idle, .rest => .idle,
         ])
+        stateMachine.addRoutes(event: .startRest, transitions: [.idle => .rest])
         stateMachine.addRoutes(event: .timerFired, transitions: [.work => .rest])
         stateMachine.addRoutes(event: .timerFired, transitions: [.rest => .idle]) { _ in
             self.stopAfterBreak
@@ -115,6 +116,10 @@ class TBTimer: ObservableObject {
 
     func startStop() {
         stateMachine <-! .startStop
+    }
+
+    func startRest() {
+        stateMachine <-! .startRest
     }
 
     func skipRest() {
