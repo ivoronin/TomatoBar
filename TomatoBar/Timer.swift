@@ -12,10 +12,12 @@ class TBTimer: ObservableObject {
     // This preference is "hidden"
     @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60.0
     @AppStorage("enableRestOverlay") var enableRestOverlay = true
+    @AppStorage("restBackgroundFolderPath") var restBackgroundFolderPath = ""
 
     private var stateMachine = TBStateMachine(state: .idle)
     public let player = TBPlayer()
     private let overlayController = TBRestOverlayController()
+    private let restBackgroundProvider = TBRestBackgroundProvider()
     private var consecutiveWorkIntervals: Int = 0
     private var notificationCenter = TBNotificationCenter()
     private var finishTime: Date!
@@ -231,9 +233,12 @@ class TBTimer: ObservableObject {
         startTimer(seconds: length * 60)
         if enableRestOverlay {
             let initialCountdown = timerFormatter.string(from: Date(), to: finishTime)!
+            let configuredImage = restBackgroundProvider.randomImage(folderPath: restBackgroundFolderPath)
+            let backgroundImage = configuredImage ?? NSImage(named: "RestBackground")
             overlayController.showOverlays(
                 restType: restType,
                 countdown: initialCountdown,
+                backgroundImage: backgroundImage,
                 skipHandler: { [weak self] in self?.skipRest() }
             )
         }

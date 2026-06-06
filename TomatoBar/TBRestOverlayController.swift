@@ -28,7 +28,7 @@ class TBRestOverlayController {
     func showOverlays(
         restType: RestType,
         countdown: String,
-        backgroundImageName: String? = "RestBackground",
+        backgroundImage: NSImage?,
         skipHandler: @escaping () -> Void
     ) {
         closeOverlays()
@@ -44,7 +44,7 @@ class TBRestOverlayController {
             let overlayView = TBRestOverlayView(
                 viewModel: viewModel,
                 skipHandler: skipHandler,
-                backgroundImageName: backgroundImageName
+                backgroundImage: backgroundImage
             )
             window.contentView = NSHostingView(rootView: overlayView)
             window.orderFront(nil)

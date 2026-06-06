@@ -1,15 +1,15 @@
+import AppKit
 import SwiftUI
 
 struct TBRestOverlayView: View {
     @ObservedObject var viewModel: TBRestOverlayViewModel
     let skipHandler: () -> Void
-    let backgroundImageName: String?
+    let backgroundImage: NSImage?
 
     var body: some View {
         ZStack {
             // Background layer: image or gradient fallback
-            if let imageName = backgroundImageName,
-               let image = NSImage(named: imageName) {
+            if let image = backgroundImage {
                 Image(nsImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
