@@ -12,7 +12,7 @@ private struct IntervalsView: View {
 
     var body: some View {
         VStack {
-            Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
+            Stepper(value: $timer.workIntervalLength, in: 1 ... 120) {
                 HStack {
                     Text(NSLocalizedString("IntervalsView.workIntervalLength.label",
                                            comment: "Work interval label"))
@@ -20,7 +20,7 @@ private struct IntervalsView: View {
                     Text(String.localizedStringWithFormat(minStr, timer.workIntervalLength))
                 }
             }
-            Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
+            Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 120) {
                 HStack {
                     Text(NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
                                            comment: "Short rest interval label"))
@@ -28,7 +28,7 @@ private struct IntervalsView: View {
                     Text(String.localizedStringWithFormat(minStr, timer.shortRestIntervalLength))
                 }
             }
-            Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
+            Stepper(value: $timer.longRestIntervalLength, in: 1 ... 120) {
                 HStack {
                     Text(NSLocalizedString("IntervalsView.longRestIntervalLength.label",
                                            comment: "Long rest interval label"))
@@ -83,6 +83,25 @@ private struct SettingsView: View {
                                        comment: "Launch at login label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
+            Divider()
+            Toggle(isOn: $timer.focusModeEnabled) {
+                Text("Focus Mode")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }.toggleStyle(.switch)
+            if timer.focusModeEnabled {
+                HStack {
+                    Text("Start:")
+                        .frame(width: 36, alignment: .leading)
+                    TextField("Shortcut name", text: $timer.startFocusShortcut)
+                        .textFieldStyle(.roundedBorder)
+                }
+                HStack {
+                    Text("Stop:")
+                        .frame(width: 36, alignment: .leading)
+                    TextField("Shortcut name", text: $timer.stopFocusShortcut)
+                        .textFieldStyle(.roundedBorder)
+                }
+            }
             Spacer().frame(minHeight: 0)
         }
         .padding(4)
@@ -130,36 +149,56 @@ private enum ChildView {
 }
 
 struct TBPopoverView: View {
-    @ObservedObject var timer = TBTimer()
+    @ObservedObject var timer = TBTimer.shared!
     @State private var buttonHovered = false
     @State private var activeChildView = ChildView.intervals
 
     private var startLabel = NSLocalizedString("TBPopoverView.start.label", comment: "Start label")
     private var stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
+    private var pauseLabel = NSLocalizedString("TBPopoverView.pause.label", comment: "Pause label")
+    private var resumeLabel = NSLocalizedString("TBPopoverView.resume.label", comment: "Resume label")
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Button {
-                timer.startStop()
-                TBStatusItem.shared.closePopover(nil)
-            } label: {
-                Text(timer.timer != nil ?
-                     (buttonHovered ? stopLabel : timer.timeLeftString) :
-                        startLabel)
-                    /*
-                      When appearance is set to "Dark" and accent color is set to "Graphite"
-                      "defaultAction" button label's color is set to the same color as the
-                      button, making the button look blank. #24
-                     */
-                    .foregroundColor(Color.white)
-                    .font(.system(.body).monospacedDigit())
-                    .frame(maxWidth: .infinity)
+            HStack(spacing: 8) {
+                Button {
+                    timer.startStop()
+                    TBStatusItem.shared.closePopover(nil)
+                } label: {
+                    Text(timer.timer != nil || timer.isPaused ?
+                         (buttonHovered ? stopLabel : timer.timeLeftString) :
+                            startLabel)
+                        /*
+                          When appearance is set to "Dark" and accent color is set to "Graphite"
+                          "defaultAction" button label's color is set to the same color as the
+                          button, making the button look blank. #24
+                         */
+                        .foregroundColor(Color.white)
+                        .font(.system(.body).monospacedDigit())
+                        .frame(maxWidth: .infinity)
+                }
+                .onHover { over in
+                    buttonHovered = over
+                }
+                .controlSize(.large)
+                .keyboardShortcut(.defaultAction)
+
+                if timer.timer != nil || timer.isPaused {
+                    Button {
+                        if timer.isPaused {
+                            timer.resume()
+                        } else {
+                            timer.pause()
+                        }
+                        TBStatusItem.shared.closePopover(nil)
+                    } label: {
+                        Text(timer.isPaused ? resumeLabel : pauseLabel)
+                            .foregroundColor(Color.white)
+                            .font(.system(.body))
+                    }
+                    .controlSize(.large)
+                }
             }
-            .onHover { over in
-                buttonHovered = over
-            }
-            .controlSize(.large)
-            .keyboardShortcut(.defaultAction)
 
             Picker("", selection: $activeChildView) {
                 Text(NSLocalizedString("TBPopoverView.intervals.label",

@@ -16,6 +16,7 @@ struct TBApp: App {
 
     init() {
         TBStatusItem.shared = appDelegate
+        TBTimer.shared = TBTimer()
         LaunchAtLogin.migrateIfNeeded()
         logger.append(event: TBLogEventAppStart())
     }
@@ -46,7 +47,8 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
         )
         statusBarItem?.button?.imagePosition = .imageLeft
         setIcon(name: .idle)
-        statusBarItem?.button?.action = #selector(TBStatusItem.togglePopover(_:))
+        statusBarItem?.button?.action = #selector(TBStatusItem.handleClick(_:))
+        statusBarItem?.button?.sendAction(on: [.leftMouseUp, .rightMouseUp])
     }
 
     func setTitle(title: String?) {
@@ -77,6 +79,15 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
 
     func closePopover(_ sender: AnyObject?) {
         popover.performClose(sender)
+    }
+
+    @objc func handleClick(_ sender: AnyObject?) {
+        guard let event = NSApp.currentEvent else { return }
+        if event.type == .rightMouseUp {
+            TBTimer.shared.startStop()
+        } else {
+            togglePopover(sender)
+        }
     }
 
     @objc func togglePopover(_ sender: AnyObject?) {

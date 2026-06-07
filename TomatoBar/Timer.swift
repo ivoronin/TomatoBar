@@ -3,12 +3,18 @@ import SwiftState
 import SwiftUI
 
 class TBTimer: ObservableObject {
+    static var shared: TBTimer!
+
     @AppStorage("stopAfterBreak") var stopAfterBreak = false
     @AppStorage("showTimerInMenuBar") var showTimerInMenuBar = true
     @AppStorage("workIntervalLength") var workIntervalLength = 25
     @AppStorage("shortRestIntervalLength") var shortRestIntervalLength = 5
     @AppStorage("longRestIntervalLength") var longRestIntervalLength = 15
     @AppStorage("workIntervalsInSet") var workIntervalsInSet = 4
+    // Focus mode integration
+    @AppStorage("focusModeEnabled") var focusModeEnabled = false
+    @AppStorage("startFocusShortcut") var startFocusShortcut = ""
+    @AppStorage("stopFocusShortcut") var stopFocusShortcut = ""
     // This preference is "hidden"
     @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60.0
 
@@ -20,6 +26,9 @@ class TBTimer: ObservableObject {
     private var timerFormatter = DateComponentsFormatter()
     @Published var timeLeftString: String = ""
     @Published var timer: DispatchSourceTimer?
+    @Published var isPaused = false
+    private var pausedTimeRemaining: TimeInterval = 0
+    private var pausedFromState: TBStateMachineStates?
 
     init() {
         /*
@@ -112,11 +121,38 @@ class TBTimer: ObservableObject {
     }
 
     func startStop() {
+        // Reset pause state when manually starting/stopping
+        isPaused = false
+        pausedFromState = nil
+        pausedTimeRemaining = 0
         stateMachine <-! .startStop
     }
 
     func skipRest() {
         stateMachine <-! .skipRest
+    }
+
+    func pause() {
+        guard timer != nil, !isPaused else { return }
+        pausedTimeRemaining = finishTime.timeIntervalSince(Date())
+        pausedFromState = stateMachine.state
+        stopTimer()
+        isPaused = true
+        player.stopTicking()
+        if pausedFromState == .work {
+            runShortcut(stopFocusShortcut)
+        }
+    }
+
+    func resume() {
+        guard isPaused, pausedFromState != nil else { return }
+        isPaused = false
+        startTimer(seconds: Int(pausedTimeRemaining.rounded(.up)))
+        if pausedFromState == .work {
+            player.startTicking()
+            runShortcut(startFocusShortcut)
+        }
+        pausedFromState = nil
     }
 
     func updateTimeLeft() {
@@ -140,7 +176,7 @@ class TBTimer: ObservableObject {
     }
 
     private func stopTimer() {
-        timer!.cancel()
+        timer?.cancel()
         timer = nil
     }
 
@@ -175,10 +211,21 @@ class TBTimer: ObservableObject {
         }
     }
 
+    private func runShortcut(_ name: String) {
+        guard focusModeEnabled, !name.isEmpty else { return }
+        let task = Process()
+        task.launchPath = "/usr/bin/shortcuts"
+        task.arguments = ["run", name]
+        task.standardOutput = FileHandle.nullDevice
+        task.standardError = FileHandle.nullDevice
+        try? task.run()
+    }
+
     private func onWorkStart(context _: TBStateMachine.Context) {
         TBStatusItem.shared.setIcon(name: .work)
         player.playWindup()
         player.startTicking()
+        runShortcut(startFocusShortcut)
         startTimer(seconds: workIntervalLength * 60)
     }
 
@@ -192,6 +239,7 @@ class TBTimer: ObservableObject {
     }
 
     private func onRestStart(context _: TBStateMachine.Context) {
+        runShortcut(stopFocusShortcut)
         var body = NSLocalizedString("TBTimer.onRestStart.short.body", comment: "Short break body")
         var length = shortRestIntervalLength
         var imgName = NSImage.Name.shortRest
@@ -214,6 +262,7 @@ class TBTimer: ObservableObject {
         if ctx.event == .skipRest {
             return
         }
+        player.playWindup()
         notificationCenter.send(
             title: NSLocalizedString("TBTimer.onRestFinish.title", comment: "Break is over title"),
             body: NSLocalizedString("TBTimer.onRestFinish.body", comment: "Break is over body"),
@@ -222,6 +271,7 @@ class TBTimer: ObservableObject {
     }
 
     private func onIdleStart(context _: TBStateMachine.Context) {
+        runShortcut(stopFocusShortcut)
         stopTimer()
         TBStatusItem.shared.setIcon(name: .idle)
         consecutiveWorkIntervals = 0
