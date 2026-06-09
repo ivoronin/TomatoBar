@@ -2,6 +2,7 @@ import KeyboardShortcuts
 import SwiftState
 import SwiftUI
 
+@MainActor
 class TBTimer: ObservableObject {
     @AppStorage("stopAfterBreak") var stopAfterBreak = false
     @AppStorage("showTimerInMenuBar") var showTimerInMenuBar = true
@@ -11,15 +12,23 @@ class TBTimer: ObservableObject {
     @AppStorage("workIntervalsInSet") var workIntervalsInSet = 4
     // This preference is "hidden"
     @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60.0
+    @AppStorage("enableRestOverlay") var enableRestOverlay = true
+    @AppStorage("restBackgroundFolderPath") var restBackgroundFolderPath = ""
+    @AppStorage("restBackgroundFolderBookmark") var restBackgroundFolderBookmark = Data()
 
     private var stateMachine = TBStateMachine(state: .idle)
     public let player = TBPlayer()
+    private let overlayController = TBRestOverlayController()
+    private let restBackgroundProvider = TBRestBackgroundProvider()
     private var consecutiveWorkIntervals: Int = 0
     private var notificationCenter = TBNotificationCenter()
     private var finishTime: Date!
     private var timerFormatter = DateComponentsFormatter()
+    private var didAutoStartOnLaunch = false
+    private var timerGeneration = 0
+    private let timerRefreshInterval = 0.25
     @Published var timeLeftString: String = ""
-    @Published var timer: DispatchSourceTimer?
+    @Published var timer: Timer?
 
     init() {
         /*
@@ -46,6 +55,7 @@ class TBTimer: ObservableObject {
         stateMachine.addRoutes(event: .startStop, transitions: [
             .idle => .work, .work => .idle, .rest => .idle,
         ])
+        stateMachine.addRoutes(event: .startRest, transitions: [.idle => .rest])
         stateMachine.addRoutes(event: .timerFired, transitions: [.work => .rest])
         stateMachine.addRoutes(event: .timerFired, transitions: [.rest => .idle]) { _ in
             self.stopAfterBreak
@@ -83,6 +93,8 @@ class TBTimer: ObservableObject {
                             andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)),
                             forEventClass: AEEventClass(kInternetEventClass),
                             andEventID: AEEventID(kAEGetURL))
+
+        startWorkOnLaunch()
     }
 
     @objc func handleGetURLEvent(_ event: NSAppleEventDescriptor,
@@ -115,57 +127,84 @@ class TBTimer: ObservableObject {
         stateMachine <-! .startStop
     }
 
+    private func startWorkOnLaunch() {
+        guard !didAutoStartOnLaunch, stateMachine.state == .idle else { return }
+        didAutoStartOnLaunch = true
+        startStop()
+    }
+
+    func startRest() {
+        stateMachine <-! .startRest
+    }
+
     func skipRest() {
         stateMachine <-! .skipRest
     }
 
-    func updateTimeLeft() {
-        timeLeftString = timerFormatter.string(from: Date(), to: finishTime)!
+    func setRestBackgroundFolder(url: URL) {
+        restBackgroundFolderPath = url.path
+        restBackgroundFolderBookmark = (try? url.bookmarkData(
+            options: .withSecurityScope,
+            includingResourceValuesForKeys: nil,
+            relativeTo: nil
+        )) ?? Data()
+    }
+
+    func updateTimeLeft(now: Date = Date()) {
+        timeLeftString = formattedTimeLeft(now: now)
         if timer != nil, showTimerInMenuBar {
             TBStatusItem.shared.setTitle(title: timeLeftString)
         } else {
             TBStatusItem.shared.setTitle(title: nil)
         }
-    }
-
-    private func startTimer(seconds: Int) {
-        finishTime = Date().addingTimeInterval(TimeInterval(seconds))
-
-        let queue = DispatchQueue(label: "Timer")
-        timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
-        timer!.schedule(deadline: .now(), repeating: .seconds(1), leeway: .never)
-        timer!.setEventHandler(handler: onTimerTick)
-        timer!.setCancelHandler(handler: onTimerCancel)
-        timer!.resume()
-    }
-
-    private func stopTimer() {
-        timer!.cancel()
-        timer = nil
-    }
-
-    private func onTimerTick() {
-        /* Cannot publish updates from background thread */
-        DispatchQueue.main.async { [self] in
-            updateTimeLeft()
-            let timeLeft = finishTime.timeIntervalSince(Date())
-            if timeLeft <= 0 {
-                /*
-                 Ticks can be missed during the machine sleep.
-                 Stop the timer if it goes beyond an overrun time limit.
-                 */
-                if timeLeft < overrunTimeLimit {
-                    stateMachine <-! .startStop
-                } else {
-                    stateMachine <-! .timerFired
-                }
-            }
+        if timer != nil, enableRestOverlay {
+            overlayController.updateCountdown(timeLeftString)
         }
     }
 
-    private func onTimerCancel() {
-        DispatchQueue.main.async { [self] in
-            updateTimeLeft()
+    private func formattedTimeLeft(now: Date = Date()) -> String {
+        let secondsLeft = max(0, ceil(finishTime.timeIntervalSince(now)))
+        return timerFormatter.string(from: secondsLeft)!
+    }
+
+    private func startTimer(seconds: Int) {
+        stopTimer()
+        timerGeneration += 1
+        let generation = timerGeneration
+        finishTime = Date().addingTimeInterval(TimeInterval(seconds))
+
+        let activeTimer = Timer(timeInterval: timerRefreshInterval, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                self?.onTimerTick(generation: generation)
+            }
+        }
+        timer = activeTimer
+        RunLoop.main.add(activeTimer, forMode: .common)
+    }
+
+    private func stopTimer() {
+        timerGeneration += 1
+        timer?.invalidate()
+        timer = nil
+    }
+
+    private func onTimerTick(generation: Int) {
+        guard generation == timerGeneration else { return }
+
+        let now = Date()
+        updateTimeLeft(now: now)
+        let timeLeft = finishTime.timeIntervalSince(now)
+        if timeLeft <= 0 {
+            stopTimer()
+            /*
+             Ticks can be missed during the machine sleep.
+             Stop the timer if it goes beyond an overrun time limit.
+             */
+            if timeLeft < overrunTimeLimit {
+                stateMachine <-! .startStop
+            } else {
+                stateMachine <-! .timerFired
+            }
         }
     }
 
@@ -195,10 +234,12 @@ class TBTimer: ObservableObject {
         var body = NSLocalizedString("TBTimer.onRestStart.short.body", comment: "Short break body")
         var length = shortRestIntervalLength
         var imgName = NSImage.Name.shortRest
+        var restType = TBRestOverlayController.RestType.shortRest
         if consecutiveWorkIntervals >= workIntervalsInSet {
             body = NSLocalizedString("TBTimer.onRestStart.long.body", comment: "Long break body")
             length = longRestIntervalLength
             imgName = .longRest
+            restType = .longRest
             consecutiveWorkIntervals = 0
         }
         notificationCenter.send(
@@ -208,9 +249,24 @@ class TBTimer: ObservableObject {
         )
         TBStatusItem.shared.setIcon(name: imgName)
         startTimer(seconds: length * 60)
+        if enableRestOverlay {
+            let initialCountdown = formattedTimeLeft()
+            let configuredImage = restBackgroundProvider.randomImage(
+                folderPath: restBackgroundFolderPath,
+                bookmarkData: restBackgroundFolderBookmark
+            )
+            let backgroundImage = configuredImage ?? NSImage(named: "RestBackground")
+            overlayController.showOverlays(
+                restType: restType,
+                countdown: initialCountdown,
+                backgroundImage: backgroundImage,
+                skipHandler: { [weak self] in self?.skipRest() }
+            )
+        }
     }
 
     private func onRestFinish(context ctx: TBStateMachine.Context) {
+        overlayController.closeOverlays()
         if ctx.event == .skipRest {
             return
         }
@@ -225,5 +281,6 @@ class TBTimer: ObservableObject {
         stopTimer()
         TBStatusItem.shared.setIcon(name: .idle)
         consecutiveWorkIntervals = 0
+        overlayController.closeOverlays()
     }
 }

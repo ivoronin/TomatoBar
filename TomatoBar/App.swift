@@ -31,6 +31,13 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
     static var shared: TBStatusItem!
 
     func applicationDidFinishLaunching(_: Notification) {
+        statusBarItem = NSStatusBar.system.statusItem(
+            withLength: NSStatusItem.variableLength
+        )
+        statusBarItem?.button?.imagePosition = .imageLeft
+        setIcon(name: .idle)
+        statusBarItem?.button?.action = #selector(TBStatusItem.togglePopover(_:))
+
         let view = TBPopoverView()
 
         popover.behavior = .transient
@@ -40,13 +47,6 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
             popover.contentSize.height = contentViewController.view.intrinsicContentSize.height
             popover.contentSize.width = 240
         }
-
-        statusBarItem = NSStatusBar.system.statusItem(
-            withLength: NSStatusItem.variableLength
-        )
-        statusBarItem?.button?.imagePosition = .imageLeft
-        setIcon(name: .idle)
-        statusBarItem?.button?.action = #selector(TBStatusItem.togglePopover(_:))
     }
 
     func setTitle(title: String?) {

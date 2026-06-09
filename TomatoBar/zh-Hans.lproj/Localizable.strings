@@ -8,11 +8,17 @@
 "SettingsView.shortcut.label" = "快捷键";
 "SettingsView.stopAfterBreak.label" = "在休息后停止";
 "SettingsView.showTimerInMenuBar.label" = "在菜单栏中显示计时器";
+"SettingsView.enableRestOverlay.label" = "休息时间锁屏";
+"SettingsView.restBackgroundFolder.label" = "休息背景文件夹";
+"SettingsView.restBackgroundFolder.default" = "默认背景";
+"SettingsView.restBackgroundFolder.choose" = "选择...";
 "SettingsView.launchAtLogin.label" = "登录时启动";
 "SoundsView.isWindupEnabled.label" = "发条声";
 "SoundsView.isDingEnabled.label" = "叮";
 "SoundsView.isTickingEnabled.label" = "滴答声";
 "TBPopoverView.start.label" = "开始";
+"TBPopoverView.work.label" = "工作";
+"TBPopoverView.rest.label" = "休息";
 "TBPopoverView.stop.label" = "停止";
 "TBPopoverView.intervals.label" = "时长";
 "TBPopoverView.settings.label" = "设置";
@@ -25,3 +31,5 @@
 "TBTimer.onRestStart.skip.title" = "跳过";
 "TBTimer.onRestFinish.title" = "休息结束";
 "TBTimer.onRestFinish.body" = "继续努力!";
+"TBRestOverlayView.shortRest.label" = "Short Rest";
+"TBRestOverlayView.longRest.label" = "Long Rest";

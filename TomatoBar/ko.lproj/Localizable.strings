@@ -8,11 +8,17 @@
 "SettingsView.shortcut.label" = "단축키";
 "SettingsView.stopAfterBreak.label" = "휴식 후 중지";
 "SettingsView.showTimerInMenuBar.label" = "메뉴 막대에서 타이머 보기";
+"SettingsView.enableRestOverlay.label" = "Show screen overlay during breaks";
+"SettingsView.restBackgroundFolder.label" = "Rest background folder";
+"SettingsView.restBackgroundFolder.default" = "Default background";
+"SettingsView.restBackgroundFolder.choose" = "Choose...";
 "SettingsView.launchAtLogin.label" = "로그인 후 실행";
 "SoundsView.isWindupEnabled.label" = "Windup";
 "SoundsView.isDingEnabled.label" = "Ding";
 "SoundsView.isTickingEnabled.label" = "Ticking";
 "TBPopoverView.start.label" = "시작";
+"TBPopoverView.work.label" = "Work";
+"TBPopoverView.rest.label" = "Rest";
 "TBPopoverView.stop.label" = "중지";
 "TBPopoverView.intervals.label" = "간격";
 "TBPopoverView.settings.label" = "설정";
@@ -25,3 +31,5 @@
 "TBTimer.onRestStart.skip.title" = "건너뛰기";
 "TBTimer.onRestFinish.title" = "휴식 시간 종료";
 "TBTimer.onRestFinish.body" = "다시 작업을 시작하세요!";
+"TBRestOverlayView.shortRest.label" = "Short Rest";
+"TBRestOverlayView.longRest.label" = "Long Rest";

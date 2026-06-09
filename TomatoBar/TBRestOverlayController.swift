@@ -1,0 +1,102 @@
+import SwiftUI
+
+private class TBRestOverlayWindow: NSWindow {
+    override var canBecomeKey: Bool { true }
+}
+
+@MainActor
+class TBRestOverlayViewModel: ObservableObject {
+    @Published var restType: TBRestOverlayController.RestType
+    @Published var countdown: String
+
+    init(restType: TBRestOverlayController.RestType, countdown: String) {
+        self.restType = restType
+        self.countdown = countdown
+    }
+}
+
+@MainActor
+class TBRestOverlayController {
+    enum RestType {
+        case shortRest
+        case longRest
+    }
+
+    private var windows: [NSWindow] = []
+    private var viewModel: TBRestOverlayViewModel?
+
+    func showOverlays(
+        restType: RestType,
+        countdown: String,
+        backgroundImage: NSImage?,
+        skipHandler: @escaping () -> Void
+    ) {
+        closeOverlays()
+
+        let screens = NSScreen.screens
+        guard !screens.isEmpty else { return }
+
+        let viewModel = TBRestOverlayViewModel(restType: restType, countdown: countdown)
+        self.viewModel = viewModel
+
+        for screen in screens {
+            let window = createOverlayWindow(for: screen)
+            let overlayView = TBRestOverlayView(
+                viewModel: viewModel,
+                skipHandler: skipHandler,
+                backgroundImage: backgroundImage
+            )
+            window.contentView = createHostingView(for: overlayView, on: screen)
+            window.orderFrontRegardless()
+            windows.append(window)
+        }
+    }
+
+    func updateCountdown(_ text: String) {
+        viewModel?.countdown = text
+    }
+
+    func closeOverlays() {
+        for window in windows {
+            window.orderOut(nil)
+        }
+        windows.removeAll()
+        viewModel = nil
+    }
+
+    private func createOverlayWindow(for screen: NSScreen) -> NSWindow {
+        let frame = screen.frame
+        let window = TBRestOverlayWindow(
+            contentRect: frame,
+            styleMask: .borderless,
+            backing: .buffered,
+            defer: false
+        )
+        window.setFrame(frame, display: false)
+        window.level = .screenSaver
+        window.collectionBehavior = [
+            .canJoinAllSpaces,
+            .fullScreenAuxiliary,
+            .fullScreenDisallowsTiling,
+            .ignoresCycle,
+            .stationary,
+        ]
+        window.isReleasedWhenClosed = false
+        window.isMovable = false
+        window.isMovableByWindowBackground = false
+        window.isOpaque = false
+        window.backgroundColor = .clear
+        window.hasShadow = false
+        return window
+    }
+
+    private func createHostingView(
+        for overlayView: TBRestOverlayView,
+        on screen: NSScreen
+    ) -> NSHostingView<TBRestOverlayView> {
+        let hostingView = NSHostingView(rootView: overlayView)
+        hostingView.frame = NSRect(origin: .zero, size: screen.frame.size)
+        hostingView.autoresizingMask = [.width, .height]
+        return hostingView
+    }
+}

@@ -58,6 +58,51 @@ private struct SettingsView: View {
     @EnvironmentObject var timer: TBTimer
     @ObservedObject private var launchAtLogin = LaunchAtLogin.observable
 
+    private var restBackgroundFolderLabel: String {
+        NSLocalizedString("SettingsView.restBackgroundFolder.label",
+                          comment: "Rest background folder label")
+    }
+
+    private var defaultBackgroundLabel: String {
+        NSLocalizedString("SettingsView.restBackgroundFolder.default",
+                          comment: "Default rest background label")
+    }
+
+    private var chooseBackgroundFolderLabel: String {
+        NSLocalizedString("SettingsView.restBackgroundFolder.choose",
+                          comment: "Choose rest background folder label")
+    }
+
+    private var selectedBackgroundFolderName: String {
+        guard !timer.restBackgroundFolderPath.isEmpty else {
+            return defaultBackgroundLabel
+        }
+
+        return URL(fileURLWithPath: timer.restBackgroundFolderPath).lastPathComponent
+    }
+
+    private func chooseRestBackgroundFolder() {
+        let panel = NSOpenPanel()
+        NSApp.activate(ignoringOtherApps: true)
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.canCreateDirectories = false
+        panel.title = restBackgroundFolderLabel
+        panel.message = restBackgroundFolderLabel
+        panel.prompt = chooseBackgroundFolderLabel
+        panel.level = .floating
+
+        if !timer.restBackgroundFolderPath.isEmpty {
+            panel.directoryURL = URL(fileURLWithPath: timer.restBackgroundFolderPath,
+                                     isDirectory: true)
+        }
+
+        if panel.runModal() == .OK, let url = panel.url {
+            timer.setRestBackgroundFolder(url: url)
+        }
+    }
+
     var body: some View {
         VStack {
             KeyboardShortcuts.Recorder(for: .startStopTimer) {
@@ -78,6 +123,14 @@ private struct SettingsView: View {
                 .onChange(of: timer.showTimerInMenuBar) { _ in
                     timer.updateTimeLeft()
                 }
+            HStack {
+                Text(restBackgroundFolderLabel)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Button(chooseBackgroundFolderLabel) {
+                    chooseRestBackgroundFolder()
+                }
+            }
+            .help(selectedBackgroundFolderName)
             Toggle(isOn: $launchAtLogin.isEnabled) {
                 Text(NSLocalizedString("SettingsView.launchAtLogin.label",
                                        comment: "Launch at login label"))
@@ -129,37 +182,79 @@ private enum ChildView {
     case intervals, settings, sounds
 }
 
+private struct QuickStartButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity, minHeight: 28)
+            .background(Color.accentColor.opacity(configuration.isPressed ? 0.75 : 1.0))
+            .cornerRadius(6)
+    }
+}
+
 struct TBPopoverView: View {
     @ObservedObject var timer = TBTimer()
     @State private var buttonHovered = false
     @State private var activeChildView = ChildView.intervals
 
-    private var startLabel = NSLocalizedString("TBPopoverView.start.label", comment: "Start label")
+    private var workLabel = NSLocalizedString("TBPopoverView.work.label", comment: "Work label")
+    private var restLabel = NSLocalizedString("TBPopoverView.rest.label", comment: "Rest label")
     private var stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+    private var runningButton: some View {
+        Button {
+            timer.startStop()
+            TBStatusItem.shared.closePopover(nil)
+        } label: {
+            Text(buttonHovered ? stopLabel : timer.timeLeftString)
+                /*
+                  When appearance is set to "Dark" and accent color is set to "Graphite"
+                  "defaultAction" button label's color is set to the same color as the
+                  button, making the button look blank. #24
+                 */
+                .foregroundColor(Color.white)
+                .font(.system(.body).monospacedDigit())
+                .frame(maxWidth: .infinity)
+        }
+        .onHover { over in
+            buttonHovered = over
+        }
+        .controlSize(.large)
+        .keyboardShortcut(.defaultAction)
+    }
+
+    private var idleButtons: some View {
+        HStack(spacing: 6) {
             Button {
                 timer.startStop()
                 TBStatusItem.shared.closePopover(nil)
             } label: {
-                Text(timer.timer != nil ?
-                     (buttonHovered ? stopLabel : timer.timeLeftString) :
-                        startLabel)
-                    /*
-                      When appearance is set to "Dark" and accent color is set to "Graphite"
-                      "defaultAction" button label's color is set to the same color as the
-                      button, making the button look blank. #24
-                     */
-                    .foregroundColor(Color.white)
-                    .font(.system(.body).monospacedDigit())
+                Text(workLabel)
                     .frame(maxWidth: .infinity)
-            }
-            .onHover { over in
-                buttonHovered = over
             }
             .controlSize(.large)
             .keyboardShortcut(.defaultAction)
+            .buttonStyle(QuickStartButtonStyle())
+
+            Button {
+                timer.startRest()
+                TBStatusItem.shared.closePopover(nil)
+            } label: {
+                Text(restLabel)
+                    .frame(maxWidth: .infinity)
+            }
+            .controlSize(.large)
+            .buttonStyle(QuickStartButtonStyle())
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if timer.timer == nil {
+                idleButtons
+            } else {
+                runningButton
+            }
 
             Picker("", selection: $activeChildView) {
                 Text(NSLocalizedString("TBPopoverView.intervals.label",
