@@ -11,10 +11,41 @@ struct TBRestBackgroundProvider {
         self.fileManager = fileManager
     }
 
-    func randomImage(folderPath: String) -> NSImage? {
+    func randomImage(folderPath: String, bookmarkData: Data) -> NSImage? {
+        if let image = randomImage(bookmarkData: bookmarkData) {
+            return image
+        }
+
         guard !folderPath.isEmpty else { return nil }
 
         let folderURL = URL(fileURLWithPath: folderPath, isDirectory: true)
+        return randomImage(folderURL: folderURL)
+    }
+
+    private func randomImage(bookmarkData: Data) -> NSImage? {
+        guard !bookmarkData.isEmpty else { return nil }
+
+        var isStale = false
+        guard let folderURL = try? URL(
+            resolvingBookmarkData: bookmarkData,
+            options: .withSecurityScope,
+            relativeTo: nil,
+            bookmarkDataIsStale: &isStale
+        ), !isStale else {
+            return nil
+        }
+
+        let didStartAccessing = folderURL.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                folderURL.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        return randomImage(folderURL: folderURL)
+    }
+
+    private func randomImage(folderURL: URL) -> NSImage? {
         var isDirectory: ObjCBool = false
         guard fileManager.fileExists(atPath: folderURL.path, isDirectory: &isDirectory),
               isDirectory.boolValue else {

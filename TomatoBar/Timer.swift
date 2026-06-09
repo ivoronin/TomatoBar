@@ -2,6 +2,7 @@ import KeyboardShortcuts
 import SwiftState
 import SwiftUI
 
+@MainActor
 class TBTimer: ObservableObject {
     @AppStorage("stopAfterBreak") var stopAfterBreak = false
     @AppStorage("showTimerInMenuBar") var showTimerInMenuBar = true
@@ -13,6 +14,7 @@ class TBTimer: ObservableObject {
     @AppStorage("overrunTimeLimit") var overrunTimeLimit = -60.0
     @AppStorage("enableRestOverlay") var enableRestOverlay = true
     @AppStorage("restBackgroundFolderPath") var restBackgroundFolderPath = ""
+    @AppStorage("restBackgroundFolderBookmark") var restBackgroundFolderBookmark = Data()
 
     private var stateMachine = TBStateMachine(state: .idle)
     public let player = TBPlayer()
@@ -23,8 +25,10 @@ class TBTimer: ObservableObject {
     private var finishTime: Date!
     private var timerFormatter = DateComponentsFormatter()
     private var didAutoStartOnLaunch = false
+    private var timerGeneration = 0
+    private let timerRefreshInterval = 0.25
     @Published var timeLeftString: String = ""
-    @Published var timer: DispatchSourceTimer?
+    @Published var timer: Timer?
 
     init() {
         /*
@@ -137,8 +141,17 @@ class TBTimer: ObservableObject {
         stateMachine <-! .skipRest
     }
 
-    func updateTimeLeft() {
-        timeLeftString = timerFormatter.string(from: Date(), to: finishTime)!
+    func setRestBackgroundFolder(url: URL) {
+        restBackgroundFolderPath = url.path
+        restBackgroundFolderBookmark = (try? url.bookmarkData(
+            options: .withSecurityScope,
+            includingResourceValuesForKeys: nil,
+            relativeTo: nil
+        )) ?? Data()
+    }
+
+    func updateTimeLeft(now: Date = Date()) {
+        timeLeftString = formattedTimeLeft(now: now)
         if timer != nil, showTimerInMenuBar {
             TBStatusItem.shared.setTitle(title: timeLeftString)
         } else {
@@ -149,44 +162,49 @@ class TBTimer: ObservableObject {
         }
     }
 
+    private func formattedTimeLeft(now: Date = Date()) -> String {
+        let secondsLeft = max(0, ceil(finishTime.timeIntervalSince(now)))
+        return timerFormatter.string(from: secondsLeft)!
+    }
+
     private func startTimer(seconds: Int) {
+        stopTimer()
+        timerGeneration += 1
+        let generation = timerGeneration
         finishTime = Date().addingTimeInterval(TimeInterval(seconds))
 
-        let queue = DispatchQueue(label: "Timer")
-        timer = DispatchSource.makeTimerSource(flags: .strict, queue: queue)
-        timer!.schedule(deadline: .now(), repeating: .seconds(1), leeway: .never)
-        timer!.setEventHandler(handler: onTimerTick)
-        timer!.setCancelHandler(handler: onTimerCancel)
-        timer!.resume()
+        let activeTimer = Timer(timeInterval: timerRefreshInterval, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                self?.onTimerTick(generation: generation)
+            }
+        }
+        timer = activeTimer
+        RunLoop.main.add(activeTimer, forMode: .common)
     }
 
     private func stopTimer() {
-        timer!.cancel()
+        timerGeneration += 1
+        timer?.invalidate()
         timer = nil
     }
 
-    private func onTimerTick() {
-        /* Cannot publish updates from background thread */
-        DispatchQueue.main.async { [self] in
-            updateTimeLeft()
-            let timeLeft = finishTime.timeIntervalSince(Date())
-            if timeLeft <= 0 {
-                /*
-                 Ticks can be missed during the machine sleep.
-                 Stop the timer if it goes beyond an overrun time limit.
-                 */
-                if timeLeft < overrunTimeLimit {
-                    stateMachine <-! .startStop
-                } else {
-                    stateMachine <-! .timerFired
-                }
-            }
-        }
-    }
+    private func onTimerTick(generation: Int) {
+        guard generation == timerGeneration else { return }
 
-    private func onTimerCancel() {
-        DispatchQueue.main.async { [self] in
-            updateTimeLeft()
+        let now = Date()
+        updateTimeLeft(now: now)
+        let timeLeft = finishTime.timeIntervalSince(now)
+        if timeLeft <= 0 {
+            stopTimer()
+            /*
+             Ticks can be missed during the machine sleep.
+             Stop the timer if it goes beyond an overrun time limit.
+             */
+            if timeLeft < overrunTimeLimit {
+                stateMachine <-! .startStop
+            } else {
+                stateMachine <-! .timerFired
+            }
         }
     }
 
@@ -232,8 +250,11 @@ class TBTimer: ObservableObject {
         TBStatusItem.shared.setIcon(name: imgName)
         startTimer(seconds: length * 60)
         if enableRestOverlay {
-            let initialCountdown = timerFormatter.string(from: Date(), to: finishTime)!
-            let configuredImage = restBackgroundProvider.randomImage(folderPath: restBackgroundFolderPath)
+            let initialCountdown = formattedTimeLeft()
+            let configuredImage = restBackgroundProvider.randomImage(
+                folderPath: restBackgroundFolderPath,
+                bookmarkData: restBackgroundFolderBookmark
+            )
             let backgroundImage = configuredImage ?? NSImage(named: "RestBackground")
             overlayController.showOverlays(
                 restType: restType,

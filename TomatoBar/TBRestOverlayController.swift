@@ -46,8 +46,8 @@ class TBRestOverlayController {
                 skipHandler: skipHandler,
                 backgroundImage: backgroundImage
             )
-            window.contentView = NSHostingView(rootView: overlayView)
-            window.orderFront(nil)
+            window.contentView = createHostingView(for: overlayView, on: screen)
+            window.orderFrontRegardless()
             windows.append(window)
         }
     }
@@ -65,15 +65,22 @@ class TBRestOverlayController {
     }
 
     private func createOverlayWindow(for screen: NSScreen) -> NSWindow {
+        let frame = screen.frame
         let window = TBRestOverlayWindow(
-            contentRect: screen.frame,
+            contentRect: frame,
             styleMask: .borderless,
             backing: .buffered,
-            defer: false,
-            screen: screen
+            defer: false
         )
-        window.level = .modalPanel
-        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenDisallowsTiling, .ignoresCycle]
+        window.setFrame(frame, display: false)
+        window.level = .screenSaver
+        window.collectionBehavior = [
+            .canJoinAllSpaces,
+            .fullScreenAuxiliary,
+            .fullScreenDisallowsTiling,
+            .ignoresCycle,
+            .stationary,
+        ]
         window.isReleasedWhenClosed = false
         window.isMovable = false
         window.isMovableByWindowBackground = false
@@ -81,5 +88,15 @@ class TBRestOverlayController {
         window.backgroundColor = .clear
         window.hasShadow = false
         return window
+    }
+
+    private func createHostingView(
+        for overlayView: TBRestOverlayView,
+        on screen: NSScreen
+    ) -> NSHostingView<TBRestOverlayView> {
+        let hostingView = NSHostingView(rootView: overlayView)
+        hostingView.frame = NSRect(origin: .zero, size: screen.frame.size)
+        hostingView.autoresizingMask = [.width, .height]
+        return hostingView
     }
 }

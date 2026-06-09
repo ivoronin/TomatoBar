@@ -83,14 +83,23 @@ private struct SettingsView: View {
 
     private func chooseRestBackgroundFolder() {
         let panel = NSOpenPanel()
+        NSApp.activate(ignoringOtherApps: true)
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
         panel.canCreateDirectories = false
+        panel.title = restBackgroundFolderLabel
+        panel.message = restBackgroundFolderLabel
         panel.prompt = chooseBackgroundFolderLabel
+        panel.level = .floating
+
+        if !timer.restBackgroundFolderPath.isEmpty {
+            panel.directoryURL = URL(fileURLWithPath: timer.restBackgroundFolderPath,
+                                     isDirectory: true)
+        }
 
         if panel.runModal() == .OK, let url = panel.url {
-            timer.restBackgroundFolderPath = url.path
+            timer.setRestBackgroundFolder(url: url)
         }
     }
 
@@ -114,25 +123,14 @@ private struct SettingsView: View {
                 .onChange(of: timer.showTimerInMenuBar) { _ in
                     timer.updateTimeLeft()
                 }
-            Toggle(isOn: $timer.enableRestOverlay) {
-                Text(NSLocalizedString("SettingsView.enableRestOverlay.label",
-                                       comment: "Show screen overlay during breaks label"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }.toggleStyle(.switch)
             HStack {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(restBackgroundFolderLabel)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(selectedBackgroundFolderName)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                }
+                Text(restBackgroundFolderLabel)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 Button(chooseBackgroundFolderLabel) {
                     chooseRestBackgroundFolder()
                 }
             }
+            .help(selectedBackgroundFolderName)
             Toggle(isOn: $launchAtLogin.isEnabled) {
                 Text(NSLocalizedString("SettingsView.launchAtLogin.label",
                                        comment: "Launch at login label"))
@@ -184,6 +182,16 @@ private enum ChildView {
     case intervals, settings, sounds
 }
 
+private struct QuickStartButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity, minHeight: 28)
+            .background(Color.accentColor.opacity(configuration.isPressed ? 0.75 : 1.0))
+            .cornerRadius(6)
+    }
+}
+
 struct TBPopoverView: View {
     @ObservedObject var timer = TBTimer()
     @State private var buttonHovered = false
@@ -222,21 +230,21 @@ struct TBPopoverView: View {
                 TBStatusItem.shared.closePopover(nil)
             } label: {
                 Text(workLabel)
-                    .foregroundColor(Color.white)
                     .frame(maxWidth: .infinity)
             }
             .controlSize(.large)
             .keyboardShortcut(.defaultAction)
+            .buttonStyle(QuickStartButtonStyle())
 
             Button {
                 timer.startRest()
                 TBStatusItem.shared.closePopover(nil)
             } label: {
                 Text(restLabel)
-                    .foregroundColor(Color.white)
                     .frame(maxWidth: .infinity)
             }
             .controlSize(.large)
+            .buttonStyle(QuickStartButtonStyle())
         }
     }
 
