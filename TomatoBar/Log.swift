@@ -32,13 +32,15 @@ private let lineEnd = "\n".data(using: .utf8)!
 internal let logger = TBLogger()
 
 class TBLogger {
-    private let logHandle: FileHandle?
     private let encoder = JSONEncoder()
 
     init() {
         encoder.outputFormatting = .sortedKeys
         encoder.dateEncodingStrategy = .secondsSince1970
-
+    }
+    
+    func openFileHandle() -> FileHandle? {
+        let logHandle: FileHandle?
         let fileManager = FileManager.default
         let logPath = fileManager
             .urls(for: .cachesDirectory, in: .userDomainMask)
@@ -50,21 +52,25 @@ class TBLogger {
             guard fileManager.createFile(atPath: logPath, contents: nil) else {
                 print("cannot create log file")
                 logHandle = nil
-                return
+                return nil
             }
         }
 
         logHandle = FileHandle(forUpdatingAtPath: logPath)
         guard logHandle != nil else {
             print("cannot open log file")
-            return
+            return nil
         }
+
+        return logHandle
     }
 
     func append(event: TBLogEvent) {
+        let logHandle = openFileHandle()
         guard let logHandle = logHandle else {
             return
         }
+        
         do {
             let jsonData = try encoder.encode(event)
             try logHandle.seekToEnd()
