@@ -8,6 +8,8 @@
 "SettingsView.shortcut.label" = "Shortcut";
 "SettingsView.stopAfterBreak.label" = "Stop after break";
 "SettingsView.showTimerInMenuBar.label" = "Show timer in menu bar";
+"SettingsView.showFullScreenMask.label" = "Use full-screen mask";
+"SettingsView.showFullScreenMask.help" = "During breaks, use full-screen masks instead of notifications";
 "SettingsView.launchAtLogin.label" = "Launch at login";
 "SoundsView.isWindupEnabled.label" = "Windup";
 "SoundsView.isDingEnabled.label" = "Ding";
@@ -25,3 +27,4 @@
 "TBTimer.onRestStart.skip.title" = "Skip";
 "TBTimer.onRestFinish.title" = "Break is over";
 "TBTimer.onRestFinish.body" = "Keep up the good work!";
+"TBMask.skip.label" = "Double-click any area to skip";
