@@ -20,7 +20,7 @@ private struct IntervalsView: View {
                     Text(String.localizedStringWithFormat(minStr, timer.workIntervalLength))
                 }
             }
-            Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
+            Stepper(value: $timer.shortRestIntervalLength, in: 0 ... 60) {
                 HStack {
                     Text(NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
                                            comment: "Short rest interval label"))
