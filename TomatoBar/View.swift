@@ -6,51 +6,129 @@ extension KeyboardShortcuts.Name {
     static let startStopTimer = Self("startStopTimer")
 }
 
+private struct LiquidGlassPanel: ViewModifier {
+    var cornerRadius: CGFloat = 14
+    var interactive = false
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(macOS 26.0, *) {
+            if interactive {
+                content.glassEffect(.regular.interactive(), in: .rect(cornerRadius: cornerRadius))
+            } else {
+                content.glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
+            }
+        } else {
+            content
+                .background(Color(NSColor.controlBackgroundColor).opacity(0.86))
+                .cornerRadius(cornerRadius)
+        }
+    }
+}
+
+private extension View {
+    func liquidGlassPanel(cornerRadius: CGFloat = 14, interactive: Bool = false) -> some View {
+        modifier(LiquidGlassPanel(cornerRadius: cornerRadius, interactive: interactive))
+    }
+}
+
+private extension Binding where Value == Int {
+    func clamped(to range: ClosedRange<Int>) -> Binding<Int> {
+        Binding {
+            wrappedValue
+        } set: { newValue in
+            wrappedValue = Swift.min(Swift.max(newValue, range.lowerBound), range.upperBound)
+        }
+    }
+}
+
+private func aboutPanelIcon() -> NSImage {
+    guard
+        let iconURL = Bundle.main.url(forResource: "tomatobar", withExtension: "icns"),
+        let icon = NSImage(contentsOf: iconURL)
+    else {
+        return NSImage()
+    }
+
+    icon.size = NSSize(width: 64, height: 64)
+    return icon
+}
+
+private struct NumericStepperRow: View {
+    let title: String
+    let suffix: String?
+    let range: ClosedRange<Int>
+    @Binding var value: Int
+
+    private var formatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.allowsFloats = false
+        formatter.minimum = NSNumber(value: range.lowerBound)
+        formatter.maximum = NSNumber(value: range.upperBound)
+        formatter.numberStyle = .none
+        return formatter
+    }
+
+    private var validatedValue: Binding<Int> {
+        $value.clamped(to: range)
+    }
+
+    var body: some View {
+        Stepper(value: validatedValue, in: range) {
+            HStack {
+                Text(title)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                HStack(spacing: 3) {
+                    TextField("", value: validatedValue, formatter: formatter)
+                        .multilineTextAlignment(.trailing)
+                        .font(.system(.body).monospacedDigit())
+                        .frame(width: 32)
+                    if let suffix {
+                        Text(suffix)
+                    }
+                }
+                .accessibilityLabel(title)
+            }
+        }
+    }
+}
+
 private struct IntervalsView: View {
     @EnvironmentObject var timer: TBTimer
     private var minStr = NSLocalizedString("IntervalsView.min", comment: "min")
+    private var minSuffix: String {
+        String.localizedStringWithFormat(minStr, 0).replacingOccurrences(of: "0", with: "").trimmingCharacters(in: .whitespaces)
+    }
 
     var body: some View {
-        VStack {
-            Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.workIntervalLength.label",
-                                           comment: "Work interval label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.workIntervalLength))
-                }
-            }
-            Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
-                                           comment: "Short rest interval label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.shortRestIntervalLength))
-                }
-            }
-            Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.longRestIntervalLength.label",
-                                           comment: "Long rest interval label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.longRestIntervalLength))
-                }
-            }
+        VStack(spacing: 8) {
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.workIntervalLength.label",
+                                                       comment: "Work interval label"),
+                              suffix: minSuffix,
+                              range: 1 ... 60,
+                              value: $timer.workIntervalLength)
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
+                                                       comment: "Short rest interval label"),
+                              suffix: minSuffix,
+                              range: 1 ... 60,
+                              value: $timer.shortRestIntervalLength)
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.longRestIntervalLength.label",
+                                                       comment: "Long rest interval label"),
+                              suffix: minSuffix,
+                              range: 1 ... 60,
+                              value: $timer.longRestIntervalLength)
             .help(NSLocalizedString("IntervalsView.longRestIntervalLength.help",
                                     comment: "Long rest interval hint"))
-            Stepper(value: $timer.workIntervalsInSet, in: 1 ... 10) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.workIntervalsInSet.label",
-                                           comment: "Work intervals in a set label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("\(timer.workIntervalsInSet)")
-                }
-            }
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.workIntervalsInSet.label",
+                                                       comment: "Work intervals in a set label"),
+                              suffix: nil,
+                              range: 1 ... 10,
+                              value: $timer.workIntervalsInSet)
             .help(NSLocalizedString("IntervalsView.workIntervalsInSet.help",
                                     comment: "Work intervals in set hint"))
-            Spacer().frame(minHeight: 0)
         }
-        .padding(4)
+        .padding(10)
+        .frame(maxHeight: .infinity, alignment: .center)
     }
 }
 
@@ -59,7 +137,7 @@ private struct SettingsView: View {
     @ObservedObject private var launchAtLogin = LaunchAtLogin.observable
 
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
             KeyboardShortcuts.Recorder(for: .startStopTimer) {
                 Text(NSLocalizedString("SettingsView.shortcut.label",
                                        comment: "Shortcut label"))
@@ -83,9 +161,9 @@ private struct SettingsView: View {
                                        comment: "Launch at login label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }.toggleStyle(.switch)
-            Spacer().frame(minHeight: 0)
         }
-        .padding(4)
+        .padding(10)
+        .frame(maxHeight: .infinity, alignment: .center)
     }
 }
 
@@ -110,7 +188,7 @@ private struct SoundsView: View {
     ]
 
     var body: some View {
-        LazyVGrid(columns: columns, alignment: .leading, spacing: 4) {
+        LazyVGrid(columns: columns, alignment: .leading, spacing: 16) {
             Text(NSLocalizedString("SoundsView.isWindupEnabled.label",
                                    comment: "Windup label"))
             VolumeSlider(volume: $player.windupVolume)
@@ -120,13 +198,88 @@ private struct SoundsView: View {
             Text(NSLocalizedString("SoundsView.isTickingEnabled.label",
                                    comment: "Ticking label"))
             VolumeSlider(volume: $player.tickingVolume)
-        }.padding(4)
-        Spacer().frame(minHeight: 0)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 18)
+        .frame(maxHeight: .infinity, alignment: .center)
     }
 }
 
 private enum ChildView {
     case intervals, settings, sounds
+}
+
+private struct GlassTabBar: View {
+    @Binding var selection: ChildView
+    @Namespace private var selectionNamespace
+
+    var body: some View {
+        if #available(macOS 26.0, *) {
+            GlassEffectContainer {
+                tabs
+            }
+        } else {
+            tabs
+        }
+    }
+
+    private var tabs: some View {
+        HStack(spacing: 0) {
+            tab(.intervals, title: NSLocalizedString("TBPopoverView.intervals.label",
+                                                     comment: "Intervals label"))
+            tab(.settings, title: NSLocalizedString("TBPopoverView.settings.label",
+                                                    comment: "Settings label"))
+            tab(.sounds, title: NSLocalizedString("TBPopoverView.sounds.label",
+                                                  comment: "Sounds label"))
+        }
+        .padding(4)
+        .frame(maxWidth: .infinity)
+        .liquidGlassPanel(cornerRadius: 18, interactive: true)
+        .animation(.snappy(duration: 0.18), value: selection)
+    }
+
+    private func tab(_ childView: ChildView, title: String) -> some View {
+        Button {
+            withAnimation(.snappy(duration: 0.18)) {
+                selection = childView
+            }
+        } label: {
+            ZStack {
+                if selection == childView {
+                    selectedTabBackground
+                        .matchedGeometryEffect(id: "selectedTab", in: selectionNamespace)
+                }
+
+                Text(title)
+                    .font(.system(size: 12, weight: selection == childView ? .semibold : .regular))
+                    .foregroundColor(selection == childView ? .primary : .primary.opacity(0.82))
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+            }
+            .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .animation(.snappy(duration: 0.18), value: selection)
+    }
+
+    private var selectedTabBackground: some View {
+        RoundedRectangle(cornerRadius: 14, style: .continuous)
+            .fill(Color(red: 0.55, green: 0.18, blue: 0.16).opacity(0.24))
+            .modifier(ActiveTabGlass())
+    }
+}
+
+private struct ActiveTabGlass: ViewModifier {
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(macOS 26.0, *) {
+            content
+                .glassEffect(.regular.interactive(), in: .rect(cornerRadius: 14))
+        } else {
+            content.cornerRadius(14)
+        }
+    }
 }
 
 struct TBPopoverView: View {
@@ -138,7 +291,7 @@ struct TBPopoverView: View {
     private var stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             Button {
                 timer.startStop()
                 TBStatusItem.shared.closePopover(nil)
@@ -146,12 +299,6 @@ struct TBPopoverView: View {
                 Text(timer.timer != nil ?
                      (buttonHovered ? stopLabel : timer.timeLeftString) :
                         startLabel)
-                    /*
-                      When appearance is set to "Dark" and accent color is set to "Graphite"
-                      "defaultAction" button label's color is set to the same color as the
-                      button, making the button look blank. #24
-                     */
-                    .foregroundColor(Color.white)
                     .font(.system(.body).monospacedDigit())
                     .frame(maxWidth: .infinity)
             }
@@ -159,21 +306,12 @@ struct TBPopoverView: View {
                 buttonHovered = over
             }
             .controlSize(.large)
+            .modifier(PrimaryActionButton())
             .keyboardShortcut(.defaultAction)
 
-            Picker("", selection: $activeChildView) {
-                Text(NSLocalizedString("TBPopoverView.intervals.label",
-                                       comment: "Intervals label")).tag(ChildView.intervals)
-                Text(NSLocalizedString("TBPopoverView.settings.label",
-                                       comment: "Settings label")).tag(ChildView.settings)
-                Text(NSLocalizedString("TBPopoverView.sounds.label",
-                                       comment: "Sounds label")).tag(ChildView.sounds)
-            }
-            .labelsHidden()
-            .frame(maxWidth: .infinity)
-            .pickerStyle(.segmented)
+            GlassTabBar(selection: $activeChildView)
 
-            GroupBox {
+            Group {
                 switch activeChildView {
                 case .intervals:
                     IntervalsView().environmentObject(timer)
@@ -183,30 +321,41 @@ struct TBPopoverView: View {
                     SoundsView().environmentObject(timer.player)
                 }
             }
+            .frame(height: 150)
+            .liquidGlassPanel()
 
-            Group {
+            VStack(spacing: 2) {
                 Button {
                     NSApp.activate(ignoringOtherApps: true)
-                    NSApp.orderFrontStandardAboutPanel()
+                    NSApp.orderFrontStandardAboutPanel(options: [
+                        .applicationIcon: aboutPanelIcon()
+                    ])
                 } label: {
-                    Text(NSLocalizedString("TBPopoverView.about.label",
-                                           comment: "About label"))
+                    Label(NSLocalizedString("TBPopoverView.about.label",
+                                            comment: "About label"),
+                          systemImage: "info.circle")
                     Spacer()
-                    Text("⌘ A").foregroundColor(Color.gray)
+                    Text("⌘ A").foregroundColor(.gray)
                 }
                 .buttonStyle(.plain)
                 .keyboardShortcut("a")
+                .padding(.horizontal, 8)
+                .padding(.vertical, 6)
                 Button {
                     NSApplication.shared.terminate(self)
                 } label: {
-                    Text(NSLocalizedString("TBPopoverView.quit.label",
-                                           comment: "Quit label"))
+                    Label(NSLocalizedString("TBPopoverView.quit.label",
+                                            comment: "Quit label"),
+                          systemImage: "power")
                     Spacer()
-                    Text("⌘ Q").foregroundColor(Color.gray)
+                    Text("⌘ Q").foregroundColor(.gray)
                 }
                 .buttonStyle(.plain)
                 .keyboardShortcut("q")
+                .padding(.horizontal, 8)
+                .padding(.vertical, 6)
             }
+            .liquidGlassPanel(cornerRadius: 12, interactive: true)
         }
         #if DEBUG
             /*
@@ -224,7 +373,21 @@ struct TBPopoverView: View {
         #endif
             /* Use values from GeometryReader */
 //            .frame(width: 240, height: 276)
+            .frame(height: 308)
             .padding(12)
+    }
+}
+
+private struct PrimaryActionButton: ViewModifier {
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(macOS 26.0, *) {
+            content.buttonStyle(.glassProminent)
+        } else if #available(macOS 12.0, *) {
+            content.buttonStyle(.borderedProminent)
+        } else {
+            content.buttonStyle(DefaultButtonStyle())
+        }
     }
 }
 

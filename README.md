@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/ivoronin/TomatoBar/main/TomatoBar/Assets.xcassets/AppIcon.appiconset/icon_128x128%402x.png" width="128" height="128"/>
+<img src="https://raw.githubusercontent.com/ivoronin/TomatoBar/main/Icons/tomatobar.icon/Assets/51A01A57-21FC-43D0-BE3C-7B54A0A7F708.png" width="128" height="128"/>
 <p>
  
 <h1 align="center">TomatoBar</h1>
