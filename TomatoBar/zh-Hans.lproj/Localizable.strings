@@ -14,6 +14,8 @@
 "SoundsView.isTickingEnabled.label" = "滴答声";
 "TBPopoverView.start.label" = "开始";
 "TBPopoverView.stop.label" = "停止";
+"TBPopoverView.pause.label" = "暂停";
+"TBPopoverView.resume.label" = "继续";
 "TBPopoverView.intervals.label" = "时长";
 "TBPopoverView.settings.label" = "设置";
 "TBPopoverView.sounds.label" = "声音";
