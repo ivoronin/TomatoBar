@@ -136,30 +136,50 @@ struct TBPopoverView: View {
 
     private var startLabel = NSLocalizedString("TBPopoverView.start.label", comment: "Start label")
     private var stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
+    private var pauseLabel = NSLocalizedString("TBPopoverView.pause.label", comment: "Pause label")
+    private var resumeLabel = NSLocalizedString("TBPopoverView.resume.label", comment: "Resume label")
+
+    private var primaryButtonLabel: String {
+        if timer.isSessionActive {
+            return buttonHovered ? stopLabel : timer.timeLeftString
+        }
+        return startLabel
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Button {
-                timer.startStop()
-                TBStatusItem.shared.closePopover(nil)
-            } label: {
-                Text(timer.timer != nil ?
-                     (buttonHovered ? stopLabel : timer.timeLeftString) :
-                        startLabel)
-                    /*
-                      When appearance is set to "Dark" and accent color is set to "Graphite"
-                      "defaultAction" button label's color is set to the same color as the
-                      button, making the button look blank. #24
-                     */
-                    .foregroundColor(Color.white)
-                    .font(.system(.body).monospacedDigit())
-                    .frame(maxWidth: .infinity)
+            HStack(spacing: 8) {
+                Button {
+                    timer.startStop()
+                    TBStatusItem.shared.closePopover(nil)
+                } label: {
+                    Text(primaryButtonLabel)
+                        /*
+                          When appearance is set to "Dark" and accent color is set to "Graphite"
+                          "defaultAction" button label's color is set to the same color as the
+                          button, making the button look blank. #24
+                         */
+                        .foregroundColor(Color.white)
+                        .font(.system(.body).monospacedDigit())
+                        .frame(maxWidth: .infinity)
+                }
+                .onHover { over in
+                    buttonHovered = over
+                }
+                .controlSize(.large)
+                .keyboardShortcut(.defaultAction)
+
+                if timer.isWorkActive || timer.isPaused {
+                    Button {
+                        timer.pauseResume()
+                        TBStatusItem.shared.closePopover(nil)
+                    } label: {
+                        Image(systemName: timer.isPaused ? "play.fill" : "pause.fill")
+                    }
+                    .help(timer.isPaused ? resumeLabel : pauseLabel)
+                    .controlSize(.large)
+                }
             }
-            .onHover { over in
-                buttonHovered = over
-            }
-            .controlSize(.large)
-            .keyboardShortcut(.defaultAction)
 
             Picker("", selection: $activeChildView) {
                 Text(NSLocalizedString("TBPopoverView.intervals.label",
