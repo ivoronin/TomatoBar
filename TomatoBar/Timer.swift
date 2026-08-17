@@ -198,7 +198,6 @@ class TBTimer: ObservableObject {
     }
 
     private func onFunWorkStart(context _: TBStateMachine.Context) {
-        player.playDing()
         startTimer(seconds: funWorkIntervalLength * 60)
 //        startTimer(seconds: 3)  // for debugging
         TBStatusItem.shared.setIcon(name: .longRest)
