@@ -12,12 +12,20 @@ private struct IntervalsView: View {
 
     var body: some View {
         VStack {
-            Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
+            Stepper(value: $timer.importantWorkIntervalLength, in: 1 ... 60) {
                 HStack {
-                    Text(NSLocalizedString("IntervalsView.workIntervalLength.label",
-                                           comment: "Work interval label"))
+                    Text(NSLocalizedString("IntervalsView.importantWorkIntervalLength.label",
+                                           comment: "Important Work interval label"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    Text(String.localizedStringWithFormat(minStr, timer.importantWorkIntervalLength))
+                }
+            }
+            Stepper(value: $timer.funWorkIntervalLength, in: 1 ... 60) {
+                HStack {
+                    Text(NSLocalizedString("IntervalsView.funWorkIntervalLength.label",
+                                           comment: "Fun Work interval label"))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.workIntervalLength))
+                    Text(String.localizedStringWithFormat(minStr, timer.funWorkIntervalLength))
                 }
             }
             Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {

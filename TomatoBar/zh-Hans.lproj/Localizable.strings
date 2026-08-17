@@ -1,5 +1,6 @@
 "IntervalsView.min" = "%d 分";
-"IntervalsView.workIntervalLength.label" = "工作时间:";
+"IntervalsView.importantWorkIntervalLength.label" = "重要工作时间:";
+"IntervalsView.funWorkIntervalLength.label" = "有趣工作时间:";
 "IntervalsView.shortRestIntervalLength.label" = "小憩时间:";
 "IntervalsView.longRestIntervalLength.label" = "长休息时间:";
 "IntervalsView.longRestIntervalLength.help" = "在完成一组工作后的长休息时长";

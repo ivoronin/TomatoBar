@@ -1,5 +1,6 @@
 "IntervalsView.min" = "%d min";
-"IntervalsView.workIntervalLength.label" = "Work interval:";
+"IntervalsView.importantWorkIntervalLength.label" = "Important Work interval:";
+"IntervalsView.funWorkIntervalLength.label" = "Fun Work interval:";
 "IntervalsView.shortRestIntervalLength.label" = "Short rest interval:";
 "IntervalsView.longRestIntervalLength.label" = "Long rest interval:";
 "IntervalsView.longRestIntervalLength.help" = "Duration of the lengthy break, taken after finishing work interval set";

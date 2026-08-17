@@ -5,7 +5,8 @@ import SwiftUI
 class TBTimer: ObservableObject {
     @AppStorage("stopAfterBreak") var stopAfterBreak = false
     @AppStorage("showTimerInMenuBar") var showTimerInMenuBar = true
-    @AppStorage("workIntervalLength") var workIntervalLength = 25
+    @AppStorage("importantWorkIntervalLength") var importantWorkIntervalLength = 30
+    @AppStorage("funWorkIntervalLength") var funWorkIntervalLength = 10
     @AppStorage("shortRestIntervalLength") var shortRestIntervalLength = 5
     @AppStorage("longRestIntervalLength") var longRestIntervalLength = 15
     @AppStorage("workIntervalsInSet") var workIntervalsInSet = 4
@@ -26,44 +27,47 @@ class TBTimer: ObservableObject {
          * State diagram
          *
          *                 start/stop
-         *       +--------------+-------------+
-         *       |              |             |
-         *       |  start/stop  |  timerFired |
-         *       V    |         |    |        |
-         * +--------+ |  +--------+  | +--------+
-         * | idle   |--->| work   |--->| rest   |
-         * +--------+    +--------+    +--------+
-         *   A                  A        |    |
-         *   |                  |        |    |
-         *   |                  +--------+    |
-         *   |  timerFired (!stopAfterBreak)  |
-         *   |             skipRest           |
-         *   |                                |
-         *   +--------------------------------+
+         *       +--------------+-------------+------------+
+         *       |              |             |            |
+         *       |  start/stop  |  startFun   | timerFired |
+         *       V    |         |       |     |    |       |
+         * +--------+ |  +-----------+    +-----+  | +--------+
+         * | idle   |--->| important |--->|fun  |--->| rest   |
+         * +--------+    +-----------+    +-----+    +--------+
+         *   A                  A                       |    |
+         *   |                  |                       |    |
+         *   |                  +-----------------------+    |
+         *   |  timerFired (!stopAfterBreak)                 |
+         *   |             skipRest                          |
+         *   |                                               |
+         *   +-----------------------------------------------+
          *      timerFired (stopAfterBreak)
          *
          */
         stateMachine.addRoutes(event: .startStop, transitions: [
-            .idle => .work, .work => .idle, .rest => .idle,
+            .idle => .important, .important => .idle, .fun => .idle, .rest => .idle,
         ])
-        stateMachine.addRoutes(event: .timerFired, transitions: [.work => .rest])
+        stateMachine.addRoutes(event: .startFun, transitions: [.important => .fun])
+        stateMachine.addRoutes(event: .timerFired, transitions: [.fun => .rest])
         stateMachine.addRoutes(event: .timerFired, transitions: [.rest => .idle]) { _ in
             self.stopAfterBreak
         }
-        stateMachine.addRoutes(event: .timerFired, transitions: [.rest => .work]) { _ in
+        stateMachine.addRoutes(event: .timerFired, transitions: [.rest => .important]) { _ in
             !self.stopAfterBreak
         }
-        stateMachine.addRoutes(event: .skipRest, transitions: [.rest => .work])
+        stateMachine.addRoutes(event: .skipRest, transitions: [.rest => .important])
 
         /*
          * "Finish" handlers are called when time interval ended
          * "End"    handlers are called when time interval ended or was cancelled
          */
-        stateMachine.addAnyHandler(.any => .work, handler: onWorkStart)
-        stateMachine.addAnyHandler(.work => .rest, order: 0, handler: onWorkFinish)
-        stateMachine.addAnyHandler(.work => .any, order: 1, handler: onWorkEnd)
+        stateMachine.addAnyHandler(.any => .important, handler: onImportantWorkStart)
+        stateMachine.addAnyHandler(.important => .fun, order: 0, handler: onImportantWorkFinish)
+        stateMachine.addAnyHandler(.fun => .rest, order: 0, handler: onFunWorkFinish)
+        stateMachine.addAnyHandler(.any => .fun, handler: onFunWorkStart)
+        stateMachine.addAnyHandler(.important => .any, order: 1, handler: onImportantWorkEnd)
         stateMachine.addAnyHandler(.any => .rest, handler: onRestStart)
-        stateMachine.addAnyHandler(.rest => .work, handler: onRestFinish)
+        stateMachine.addAnyHandler(.rest => .important, handler: onRestFinish)
         stateMachine.addAnyHandler(.any => .idle, handler: onIdleStart)
         stateMachine.addAnyHandler(.any => .any, handler: { ctx in
             logger.append(event: TBLogEventTransition(fromContext: ctx))
@@ -156,7 +160,9 @@ class TBTimer: ObservableObject {
                  */
                 if timeLeft < overrunTimeLimit {
                     stateMachine <-! .startStop
-                } else {
+                } else if stateMachine.state == .important {
+                    stateMachine <-! .startFun
+                } else { // fun state or rest state
                     stateMachine <-! .timerFired
                 }
             }
@@ -175,20 +181,31 @@ class TBTimer: ObservableObject {
         }
     }
 
-    private func onWorkStart(context _: TBStateMachine.Context) {
+    private func onImportantWorkStart(context _: TBStateMachine.Context) {
         TBStatusItem.shared.setIcon(name: .work)
         player.playWindup()
         player.startTicking()
-        startTimer(seconds: workIntervalLength * 60)
+//        startTimer(seconds: 5) // for debugging
+        startTimer(seconds: importantWorkIntervalLength * 60)
     }
 
-    private func onWorkFinish(context _: TBStateMachine.Context) {
-        consecutiveWorkIntervals += 1
+    private func onImportantWorkFinish(context _: TBStateMachine.Context) {
         player.playDing()
     }
 
-    private func onWorkEnd(context _: TBStateMachine.Context) {
+    private func onImportantWorkEnd(context _: TBStateMachine.Context) {
         player.stopTicking()
+    }
+
+    private func onFunWorkStart(context _: TBStateMachine.Context) {
+        player.playDing()
+        startTimer(seconds: funWorkIntervalLength * 60)
+//        startTimer(seconds: 3)  // for debugging
+        TBStatusItem.shared.setIcon(name: .longRest)
+    }
+
+    private func onFunWorkFinish(context _: TBStateMachine.Context) {
+        player.playDing()
     }
 
     private func onRestStart(context _: TBStateMachine.Context) {
@@ -208,6 +225,7 @@ class TBTimer: ObservableObject {
         )
         TBStatusItem.shared.setIcon(name: imgName)
         startTimer(seconds: length * 60)
+//        startTimer(seconds: 5)// for debugging
     }
 
     private func onRestFinish(context ctx: TBStateMachine.Context) {
