@@ -26,6 +26,19 @@ class TBLogEventTransition: TBLogEvent {
     }
 }
 
+class TBLogEventSoundLoadError: TBLogEvent {
+    internal let type = "soundloaderror"
+    internal let timestamp: Date = Date()
+
+    private let sound: String
+    private let error: String
+
+    init(sound: TBSound, error: Error) {
+        self.sound = sound.rawValue
+        self.error = "\(error)"
+    }
+}
+
 private let logFileName = "TomatoBar.log"
 private let lineEnd = "\n".data(using: .utf8)!
 

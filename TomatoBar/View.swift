@@ -1,51 +1,92 @@
 import KeyboardShortcuts
 import LaunchAtLogin
 import SwiftUI
+import UniformTypeIdentifiers
 
 extension KeyboardShortcuts.Name {
     static let startStopTimer = Self("startStopTimer")
 }
 
+private extension Binding where Value == Int {
+    func clamped(to range: ClosedRange<Int>) -> Binding<Int> {
+        Binding {
+            wrappedValue
+        } set: { newValue in
+            wrappedValue = Swift.min(Swift.max(newValue, range.lowerBound), range.upperBound)
+        }
+    }
+}
+
+private struct NumericStepperRow: View {
+    let title: String
+    let suffix: String?
+    let range: ClosedRange<Int>
+    @Binding var value: Int
+
+    private var formatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.allowsFloats = false
+        formatter.minimum = NSNumber(value: range.lowerBound)
+        formatter.maximum = NSNumber(value: range.upperBound)
+        formatter.numberStyle = .none
+        return formatter
+    }
+
+    private var validatedValue: Binding<Int> {
+        $value.clamped(to: range)
+    }
+
+    var body: some View {
+        Stepper(value: validatedValue, in: range) {
+            HStack {
+                Text(title)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                HStack(spacing: 3) {
+                    TextField("", value: validatedValue, formatter: formatter)
+                        .multilineTextAlignment(.trailing)
+                        .font(.system(.body).monospacedDigit())
+                        .frame(width: 32)
+                    if let suffix {
+                        Text(suffix)
+                    }
+                }
+                .accessibilityLabel(title)
+            }
+        }
+    }
+}
+
 private struct IntervalsView: View {
     @EnvironmentObject var timer: TBTimer
     private var minStr = NSLocalizedString("IntervalsView.min", comment: "min")
+    private var minSuffix: String {
+        String.localizedStringWithFormat(minStr, 0).replacingOccurrences(of: "0", with: "").trimmingCharacters(in: .whitespaces)
+    }
 
     var body: some View {
         VStack {
-            Stepper(value: $timer.workIntervalLength, in: 1 ... 60) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.workIntervalLength.label",
-                                           comment: "Work interval label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.workIntervalLength))
-                }
-            }
-            Stepper(value: $timer.shortRestIntervalLength, in: 1 ... 60) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
-                                           comment: "Short rest interval label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.shortRestIntervalLength))
-                }
-            }
-            Stepper(value: $timer.longRestIntervalLength, in: 1 ... 60) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.longRestIntervalLength.label",
-                                           comment: "Long rest interval label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text(String.localizedStringWithFormat(minStr, timer.longRestIntervalLength))
-                }
-            }
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.workIntervalLength.label",
+                                                       comment: "Work interval label"),
+                              suffix: minSuffix,
+                              range: 1 ... 60,
+                              value: $timer.workIntervalLength)
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.shortRestIntervalLength.label",
+                                                       comment: "Short rest interval label"),
+                              suffix: minSuffix,
+                              range: 1 ... 60,
+                              value: $timer.shortRestIntervalLength)
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.longRestIntervalLength.label",
+                                                       comment: "Long rest interval label"),
+                              suffix: minSuffix,
+                              range: 1 ... 60,
+                              value: $timer.longRestIntervalLength)
             .help(NSLocalizedString("IntervalsView.longRestIntervalLength.help",
                                     comment: "Long rest interval hint"))
-            Stepper(value: $timer.workIntervalsInSet, in: 1 ... 10) {
-                HStack {
-                    Text(NSLocalizedString("IntervalsView.workIntervalsInSet.label",
-                                           comment: "Work intervals in a set label"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("\(timer.workIntervalsInSet)")
-                }
-            }
+            NumericStepperRow(title: NSLocalizedString("IntervalsView.workIntervalsInSet.label",
+                                                       comment: "Work intervals per set label"),
+                              suffix: nil,
+                              range: 1 ... 10,
+                              value: $timer.workIntervalsInSet)
             .help(NSLocalizedString("IntervalsView.workIntervalsInSet.help",
                                     comment: "Work intervals in set hint"))
             Spacer().frame(minHeight: 0)
@@ -78,6 +119,16 @@ private struct SettingsView: View {
                 .onChange(of: timer.showTimerInMenuBar) { _ in
                     timer.updateTimeLeft()
                 }
+            Toggle(isOn: $timer.showSecondsInMenuBar) {
+                Text(NSLocalizedString("SettingsView.showSecondsInMenuBar.label",
+                                       comment: "Show seconds in menu bar label"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }.toggleStyle(.switch)
+                .padding(.leading, 16)
+                .disabled(!timer.showTimerInMenuBar)
+                .onChange(of: timer.showSecondsInMenuBar) { _ in
+                    timer.updateTimeLeft()
+                }
             Toggle(isOn: $launchAtLogin.isEnabled) {
                 Text(NSLocalizedString("SettingsView.launchAtLogin.label",
                                        comment: "Launch at login label"))
@@ -92,35 +143,106 @@ private struct SettingsView: View {
 private struct VolumeSlider: View {
     @Binding var volume: Double
 
+    private var level: Int {
+        Int((volume * 5).rounded())
+    }
+
     var body: some View {
-        Slider(value: $volume, in: 0...2) {
-            Text(String(format: "%.1f", volume))
-        }.gesture(TapGesture(count: 2).onEnded({
-            volume = 1.0
-        }))
+        /* Shown as 0-10; 5 is the sound's natural loudness */
+        HStack(spacing: 4) {
+            /* Fixed widths so the track doesn't shift with the icon or between 9 and 10 */
+            Image(systemName: level == 0 ? "speaker.slash.fill" : "speaker.wave.2.fill")
+                .foregroundColor(.secondary)
+                .frame(width: 20, alignment: .leading)
+                .accessibilityHidden(true)
+            Text("\(level)")
+                .frame(width: 20, alignment: .center)
+            Slider(value: $volume, in: 0...2, step: 0.2)
+                .labelsHidden()
+                .gesture(TapGesture(count: 2).onEnded({
+                    volume = 1.0
+                }))
+        }
+    }
+}
+
+private struct SoundRow: View {
+    @EnvironmentObject var player: TBPlayer
+    let sound: TBSound
+    let label: String
+    @Binding var volume: Double
+
+    private func chooseFile() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.audio]
+        panel.directoryURL = player.customSoundURL(sound)?.deletingLastPathComponent()
+            ?? URL(fileURLWithPath: "/System/Library/Sounds")
+        if TBStatusItem.shared.runModalKeepingPopover(panel) == .OK, let url = panel.url {
+            player.setCustomSound(sound, url: url)
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack {
+                Text(label)
+                Spacer()
+                Text(player.customSoundNames[sound] ??
+                     NSLocalizedString("SoundsView.defaultSound.label", comment: "Default sound name"))
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .foregroundColor(.secondary)
+                if player.customSoundNames[sound] != nil {
+                    Button {
+                        player.resetSound(sound)
+                    } label: {
+                        Image(systemName: "arrow.counterclockwise")
+                    }
+                    .buttonStyle(.borderless)
+                    .help(NSLocalizedString("SoundsView.resetSound.help", comment: "Use default sound hint"))
+                    .accessibilityLabel(NSLocalizedString("SoundsView.resetSound.help",
+                                                          comment: "Use default sound hint"))
+                }
+                Button {
+                    chooseFile()
+                } label: {
+                    Image(systemName: "folder")
+                }
+                .buttonStyle(.borderless)
+                .help(NSLocalizedString("SoundsView.chooseSound.help", comment: "Choose sound file hint"))
+                .accessibilityLabel(NSLocalizedString("SoundsView.chooseSound.help",
+                                                      comment: "Choose sound file hint"))
+            }
+            VolumeSlider(volume: $volume)
+        }
     }
 }
 
 private struct SoundsView: View {
     @EnvironmentObject var player: TBPlayer
 
-    private var columns = [
-        GridItem(.flexible()),
-        GridItem(.fixed(110))
-    ]
-
     var body: some View {
-        LazyVGrid(columns: columns, alignment: .leading, spacing: 4) {
-            Text(NSLocalizedString("SoundsView.isWindupEnabled.label",
-                                   comment: "Windup label"))
-            VolumeSlider(volume: $player.windupVolume)
-            Text(NSLocalizedString("SoundsView.isDingEnabled.label",
-                                   comment: "Ding label"))
-            VolumeSlider(volume: $player.dingVolume)
-            Text(NSLocalizedString("SoundsView.isTickingEnabled.label",
-                                   comment: "Ticking label"))
-            VolumeSlider(volume: $player.tickingVolume)
-        }.padding(4)
+        VStack(spacing: 8) {
+            SoundRow(sound: .windup,
+                     label: NSLocalizedString("SoundsView.isWindupEnabled.label",
+                                              comment: "Windup label"),
+                     volume: $player.windupVolume)
+            SoundRow(sound: .ding,
+                     label: NSLocalizedString("SoundsView.isDingEnabled.label",
+                                              comment: "Ding label"),
+                     volume: $player.dingVolume)
+            SoundRow(sound: .ticking,
+                     label: NSLocalizedString("SoundsView.isTickingEnabled.label",
+                                              comment: "Ticking label"),
+                     volume: $player.tickingVolume)
+        }
+        .padding(4)
+        .onDisappear {
+            player.stopPreview()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSPopover.didCloseNotification)) { _ in
+            player.stopPreview()
+        }
         Spacer().frame(minHeight: 0)
     }
 }
@@ -174,13 +296,21 @@ struct TBPopoverView: View {
             .pickerStyle(.segmented)
 
             GroupBox {
-                switch activeChildView {
-                case .intervals:
-                    IntervalsView().environmentObject(timer)
-                case .settings:
-                    SettingsView().environmentObject(timer)
-                case .sounds:
-                    SoundsView().environmentObject(timer.player)
+                if #available(macOS 13.0, *) {
+                    childView(activeChildView)
+                } else {
+                    /*
+                     Popover can't resize before macOS 13, so keep every tab in
+                     the layout to size it to the tallest, showing only the active one
+                     */
+                    ZStack(alignment: .top) {
+                        ForEach([ChildView.intervals, .settings, .sounds], id: \.self) { child in
+                            childView(child)
+                                .opacity(child == activeChildView ? 1 : 0)
+                                .allowsHitTesting(child == activeChildView)
+                                .accessibilityHidden(child != activeChildView)
+                        }
+                    }
                 }
             }
 
@@ -189,48 +319,53 @@ struct TBPopoverView: View {
                     NSApp.activate(ignoringOtherApps: true)
                     NSApp.orderFrontStandardAboutPanel()
                 } label: {
-                    Text(NSLocalizedString("TBPopoverView.about.label",
-                                           comment: "About label"))
-                    Spacer()
-                    Text("⌘ A").foregroundColor(Color.gray)
+                    HStack {
+                        Text(NSLocalizedString("TBPopoverView.about.label",
+                                               comment: "About label"))
+                        Spacer()
+                        Text("⌘ A").foregroundColor(Color.gray)
+                    }
+                    /* Plain buttons only hit-test drawn content; include the Spacer gap */
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .keyboardShortcut("a")
                 Button {
                     NSApplication.shared.terminate(self)
                 } label: {
-                    Text(NSLocalizedString("TBPopoverView.quit.label",
-                                           comment: "Quit label"))
-                    Spacer()
-                    Text("⌘ Q").foregroundColor(Color.gray)
+                    HStack {
+                        Text(NSLocalizedString("TBPopoverView.quit.label",
+                                               comment: "Quit label"))
+                        Spacer()
+                        Text("⌘ Q").foregroundColor(Color.gray)
+                    }
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .keyboardShortcut("q")
             }
         }
-        #if DEBUG
-            /*
-             After several hours of Googling and trying various StackOverflow
-             recipes I still haven't figured a reliable way to auto resize
-             popover to fit all it's contents (pull requests are welcome!).
-             The following code block is used to determine the optimal
-             geometry of the popover.
-             */
-            .overlay(
-                GeometryReader { proxy in
-                    debugSize(proxy: proxy)
-                }
-            )
-        #endif
-            /* Use values from GeometryReader */
-//            .frame(width: 240, height: 276)
-            .padding(12)
+        .padding(12)
+        .frame(width: popoverWidth)
+    }
+
+    /* macOS 26 controls are larger; at 240pt rows overflow and labels truncate */
+    private var popoverWidth: CGFloat {
+        if #available(macOS 26.0, *) {
+            return 280
+        }
+        return 240
+    }
+
+    @ViewBuilder
+    private func childView(_ child: ChildView) -> some View {
+        switch child {
+        case .intervals:
+            IntervalsView().environmentObject(timer)
+        case .settings:
+            SettingsView().environmentObject(timer)
+        case .sounds:
+            SoundsView().environmentObject(timer.player)
+        }
     }
 }
-
-#if DEBUG
-    func debugSize(proxy: GeometryProxy) -> some View {
-        print("Optimal popover size:", proxy.size)
-        return Color.clear
-    }
-#endif

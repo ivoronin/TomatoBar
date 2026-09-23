@@ -5,6 +5,7 @@ import SwiftUI
 class TBTimer: ObservableObject {
     @AppStorage("stopAfterBreak") var stopAfterBreak = false
     @AppStorage("showTimerInMenuBar") var showTimerInMenuBar = true
+    @AppStorage("showSecondsInMenuBar") var showSecondsInMenuBar = true
     @AppStorage("workIntervalLength") var workIntervalLength = 25
     @AppStorage("shortRestIntervalLength") var shortRestIntervalLength = 5
     @AppStorage("longRestIntervalLength") var longRestIntervalLength = 15
@@ -18,6 +19,8 @@ class TBTimer: ObservableObject {
     private var notificationCenter = TBNotificationCenter()
     private var finishTime: Date!
     private var timerFormatter = DateComponentsFormatter()
+    private var minutesFormatter = DateComponentsFormatter()
+    private var secondsFormatter = DateComponentsFormatter()
     @Published var timeLeftString: String = ""
     @Published var timer: DispatchSourceTimer?
 
@@ -74,6 +77,10 @@ class TBTimer: ObservableObject {
         timerFormatter.unitsStyle = .positional
         timerFormatter.allowedUnits = [.minute, .second]
         timerFormatter.zeroFormattingBehavior = .pad
+        minutesFormatter.unitsStyle = .abbreviated
+        minutesFormatter.allowedUnits = [.minute]
+        secondsFormatter.unitsStyle = .abbreviated
+        secondsFormatter.allowedUnits = [.second]
 
         KeyboardShortcuts.onKeyUp(for: .startStopTimer, action: startStop)
         notificationCenter.setActionHandler(handler: onNotificationAction)
@@ -120,12 +127,24 @@ class TBTimer: ObservableObject {
     }
 
     func updateTimeLeft() {
+        /* No timer has run yet (e.g. a setting was toggled right after launch) */
+        guard finishTime != nil else { return }
         timeLeftString = timerFormatter.string(from: Date(), to: finishTime)!
         if timer != nil, showTimerInMenuBar {
-            TBStatusItem.shared.setTitle(title: timeLeftString)
+            TBStatusItem.shared.setTitle(title: showSecondsInMenuBar ? timeLeftString : minutesLeftString())
         } else {
             TBStatusItem.shared.setTitle(title: nil)
         }
+    }
+
+    /* Minutes rounded up, switching to seconds for the final minute */
+    private func minutesLeftString() -> String {
+        let secondsLeft = Int(finishTime.timeIntervalSince(Date()))
+        if secondsLeft > 60 {
+            let minutesLeft = (secondsLeft + 59) / 60
+            return minutesFormatter.string(from: TimeInterval(minutesLeft * 60))!
+        }
+        return secondsFormatter.string(from: TimeInterval(secondsLeft))!
     }
 
     private func startTimer(seconds: Int) {
