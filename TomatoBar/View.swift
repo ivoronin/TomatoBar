@@ -129,37 +129,45 @@ private enum ChildView {
     case intervals, settings, sounds
 }
 
-struct TBPopoverView: View {
-    @ObservedObject var timer = TBTimer()
+private struct TimerButton: View {
+    @ObservedObject var timer: TBTimer
     @State private var buttonHovered = false
-    @State private var activeChildView = ChildView.intervals
+    
+    private let startLabel = NSLocalizedString("TBPopoverView.start.label", comment: "Start label")
+    private let stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
 
-    private var startLabel = NSLocalizedString("TBPopoverView.start.label", comment: "Start label")
-    private var stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
+    var body: some View {
+        Button {
+            timer.startStop()
+            TBStatusItem.shared.closePopover(nil)
+        } label: {
+            Text(timer.timer != nil ?
+                 (buttonHovered ? stopLabel : timer.timeLeftString) :
+                    startLabel)
+                /*
+                  When appearance is set to "Dark" and accent color is set to "Graphite"
+                  "defaultAction" button label's color is set to the same color as the
+                  button, making the button look blank. #24
+                 */
+                .foregroundColor(Color.white)
+                .font(.system(.body).monospacedDigit())
+                .frame(maxWidth: .infinity)
+        }
+        .onHover { over in
+            buttonHovered = over
+        }
+        .controlSize(.large)
+        .keyboardShortcut(.defaultAction)
+    }
+}
+
+struct TBPopoverView: View {
+    private let timer = TBTimer()
+    @State private var activeChildView = ChildView.intervals
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Button {
-                timer.startStop()
-                TBStatusItem.shared.closePopover(nil)
-            } label: {
-                Text(timer.timer != nil ?
-                     (buttonHovered ? stopLabel : timer.timeLeftString) :
-                        startLabel)
-                    /*
-                      When appearance is set to "Dark" and accent color is set to "Graphite"
-                      "defaultAction" button label's color is set to the same color as the
-                      button, making the button look blank. #24
-                     */
-                    .foregroundColor(Color.white)
-                    .font(.system(.body).monospacedDigit())
-                    .frame(maxWidth: .infinity)
-            }
-            .onHover { over in
-                buttonHovered = over
-            }
-            .controlSize(.large)
-            .keyboardShortcut(.defaultAction)
+            TimerButton(timer: timer)
 
             Picker("", selection: $activeChildView) {
                 Text(NSLocalizedString("TBPopoverView.intervals.label",
