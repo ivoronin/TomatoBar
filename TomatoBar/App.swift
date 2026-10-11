@@ -50,12 +50,18 @@ class TBStatusItem: NSObject, NSApplicationDelegate {
     }
 
     func setTitle(title: String?) {
+        let string = title != nil ? " \(title!)" : ""
+        /* Every assignment redraws the status item, even when the title is unchanged */
+        if statusBarItem?.button?.attributedTitle.string == string {
+            return
+        }
+
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 0.9
         paragraphStyle.alignment = NSTextAlignment.center
 
         let attributedTitle = NSAttributedString(
-            string: title != nil ? " \(title!)" : "",
+            string: string,
             attributes: [
                 NSAttributedString.Key.font: digitFont,
                 NSAttributedString.Key.paragraphStyle: paragraphStyle
