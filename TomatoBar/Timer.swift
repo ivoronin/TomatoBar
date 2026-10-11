@@ -2,6 +2,11 @@ import KeyboardShortcuts
 import SwiftState
 import SwiftUI
 
+/* Separate observable so only TimerLabel re-renders on each tick, not the whole popover */
+class TBDisplay: ObservableObject {
+    @Published var timeLeftString: String = ""
+}
+
 class TBTimer: ObservableObject {
     @AppStorage("stopAfterBreak") var stopAfterBreak = false
     @AppStorage("showTimerInMenuBar") var showTimerInMenuBar = true
@@ -18,7 +23,7 @@ class TBTimer: ObservableObject {
     private var notificationCenter = TBNotificationCenter()
     private var finishTime: Date!
     private var timerFormatter = DateComponentsFormatter()
-    @Published var timeLeftString: String = ""
+    let display = TBDisplay()
     @Published var timer: DispatchSourceTimer?
 
     init() {
@@ -120,9 +125,9 @@ class TBTimer: ObservableObject {
     }
 
     func updateTimeLeft() {
-        timeLeftString = timerFormatter.string(from: Date(), to: finishTime)!
+        display.timeLeftString = timerFormatter.string(from: Date(), to: finishTime)!
         if timer != nil, showTimerInMenuBar {
-            TBStatusItem.shared.setTitle(title: timeLeftString)
+            TBStatusItem.shared.setTitle(title: display.timeLeftString)
         } else {
             TBStatusItem.shared.setTitle(title: nil)
         }

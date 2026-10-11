@@ -129,6 +129,15 @@ private enum ChildView {
     case intervals, settings, sounds
 }
 
+/* The only view observing TBDisplay */
+private struct TimerLabel: View {
+    @ObservedObject var display: TBDisplay
+
+    var body: some View {
+        Text(display.timeLeftString)
+    }
+}
+
 struct TBPopoverView: View {
     @ObservedObject var timer = TBTimer()
     @State private var buttonHovered = false
@@ -143,17 +152,23 @@ struct TBPopoverView: View {
                 timer.startStop()
                 TBStatusItem.shared.closePopover(nil)
             } label: {
-                Text(timer.timer != nil ?
-                     (buttonHovered ? stopLabel : timer.timeLeftString) :
-                        startLabel)
-                    /*
-                      When appearance is set to "Dark" and accent color is set to "Graphite"
-                      "defaultAction" button label's color is set to the same color as the
-                      button, making the button look blank. #24
-                     */
-                    .foregroundColor(Color.white)
-                    .font(.system(.body).monospacedDigit())
-                    .frame(maxWidth: .infinity)
+                Group {
+                    if timer.timer == nil {
+                        Text(startLabel)
+                    } else if buttonHovered {
+                        Text(stopLabel)
+                    } else {
+                        TimerLabel(display: timer.display)
+                    }
+                }
+                /*
+                  When appearance is set to "Dark" and accent color is set to "Graphite"
+                  "defaultAction" button label's color is set to the same color as the
+                  button, making the button look blank. #24
+                 */
+                .foregroundColor(Color.white)
+                .font(.system(.body).monospacedDigit())
+                .frame(maxWidth: .infinity)
             }
             .onHover { over in
                 buttonHovered = over
