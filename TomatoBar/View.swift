@@ -48,13 +48,12 @@ private struct IntervalsView: View {
             }
             .help(NSLocalizedString("IntervalsView.workIntervalsInSet.help",
                                     comment: "Work intervals in set hint"))
-            Spacer().frame(minHeight: 0)
         }
         .padding(4)
     }
 }
 
-private struct SettingsView: View {
+private struct GeneralSettingsView: View {
     @EnvironmentObject var timer: TBTimer
     @ObservedObject private var launchAtLogin = LaunchAtLogin.observable
 
@@ -69,21 +68,26 @@ private struct SettingsView: View {
                 Text(NSLocalizedString("SettingsView.stopAfterBreak.label",
                                        comment: "Stop after break label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
-            }.toggleStyle(.switch)
+            }
+            .toggleStyle(.switch)
+            .controlSize(.small)
             Toggle(isOn: $timer.showTimerInMenuBar) {
                 Text(NSLocalizedString("SettingsView.showTimerInMenuBar.label",
                                        comment: "Show timer in menu bar label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
-            }.toggleStyle(.switch)
-                .onChange(of: timer.showTimerInMenuBar) { _ in
-                    timer.updateTimeLeft()
-                }
+            }
+            .toggleStyle(.switch)
+            .controlSize(.small)
+            .onChange(of: timer.showTimerInMenuBar) { _ in
+                timer.updateTimeLeft()
+            }
             Toggle(isOn: $launchAtLogin.isEnabled) {
                 Text(NSLocalizedString("SettingsView.launchAtLogin.label",
                                        comment: "Launch at login label"))
                     .frame(maxWidth: .infinity, alignment: .leading)
-            }.toggleStyle(.switch)
-            Spacer().frame(minHeight: 0)
+            }
+            .toggleStyle(.switch)
+            .controlSize(.small)
         }
         .padding(4)
     }
@@ -121,68 +125,153 @@ private struct SoundsView: View {
                                    comment: "Ticking label"))
             VolumeSlider(volume: $player.tickingVolume)
         }.padding(4)
-        Spacer().frame(minHeight: 0)
     }
 }
 
-private enum ChildView {
-    case intervals, settings, sounds
+private struct SettingsView: View {
+    @EnvironmentObject var timer: TBTimer
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            section(NSLocalizedString("SettingsView.general.label", comment: "General settings section")) {
+                GeneralSettingsView()
+            }
+            Divider()
+            section(NSLocalizedString("TBPopoverView.intervals.label", comment: "Intervals label")) {
+                IntervalsView()
+            }
+            Divider()
+            section(NSLocalizedString("TBPopoverView.sounds.label", comment: "Sounds label")) {
+                SoundsView().environmentObject(timer.player)
+            }
+        }
+    }
+
+    private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.subheadline.weight(.semibold))
+                .padding(.horizontal, 4)
+                .accessibilityAddTraits(.isHeader)
+            content()
+        }
+    }
+}
+
+private struct TBPopoverSize: PreferenceKey {
+    static let defaultValue: CGSize = .zero
+
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
+    }
 }
 
 struct TBPopoverView: View {
-    @ObservedObject var timer = TBTimer()
+    @ObservedObject var timer: TBTimer
+    @ObservedObject var stats: TBStatsPanelModel
+    let showCurrentStats: () -> Void
+    let retryHistory: () -> Void
+    let resize: (CGSize) -> Void
+
     @State private var buttonHovered = false
-    @State private var activeChildView = ChildView.intervals
+
+    init(timer: TBTimer, stats: TBStatsPanelModel, showCurrentStats: @escaping () -> Void,
+         retryHistory: @escaping () -> Void, resize: @escaping (CGSize) -> Void) {
+        self.timer = timer
+        self.stats = stats
+        self.showCurrentStats = showCurrentStats
+        self.retryHistory = retryHistory
+        self.resize = resize
+    }
 
     private var startLabel = NSLocalizedString("TBPopoverView.start.label", comment: "Start label")
     private var stopLabel = NSLocalizedString("TBPopoverView.stop.label", comment: "Stop label")
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Button {
-                timer.startStop()
-                TBStatusItem.shared.closePopover(nil)
-            } label: {
-                Text(timer.timer != nil ?
-                     (buttonHovered ? stopLabel : timer.timeLeftString) :
-                        startLabel)
-                    /*
-                      When appearance is set to "Dark" and accent color is set to "Graphite"
-                      "defaultAction" button label's color is set to the same color as the
-                      button, making the button look blank. #24
-                     */
-                    .foregroundColor(Color.white)
-                    .font(.system(.body).monospacedDigit())
-                    .frame(maxWidth: .infinity)
-            }
-            .onHover { over in
-                buttonHovered = over
-            }
-            .controlSize(.large)
-            .keyboardShortcut(.defaultAction)
+            HStack(spacing: 6) {
+                Button {
+                    timer.startStop()
+                    TBStatusItem.shared.closePopover(nil)
+                } label: {
+                    Text(timer.canTogglePause ?
+                         (buttonHovered && !timer.isPaused ? stopLabel : timer.timeLeftString) :
+                            startLabel)
+                        /*
+                          When appearance is set to "Dark" and accent color is set to "Graphite"
+                          "defaultAction" button label's color is set to the same color as the
+                          button, making the button look blank. #24
+                         */
+                        .foregroundColor(Color.white)
+                        .font(.system(.body).monospacedDigit())
+                        .frame(maxWidth: .infinity)
+                }
+                .onHover { over in
+                    buttonHovered = over
+                }
+                .controlSize(.large)
+                .keyboardShortcut(.defaultAction)
+                .disabled(timer.isPaused)
 
-            Picker("", selection: $activeChildView) {
-                Text(NSLocalizedString("TBPopoverView.intervals.label",
-                                       comment: "Intervals label")).tag(ChildView.intervals)
-                Text(NSLocalizedString("TBPopoverView.settings.label",
-                                       comment: "Settings label")).tag(ChildView.settings)
-                Text(NSLocalizedString("TBPopoverView.sounds.label",
-                                       comment: "Sounds label")).tag(ChildView.sounds)
-            }
-            .labelsHidden()
-            .frame(maxWidth: .infinity)
-            .pickerStyle(.segmented)
+                Button(action: timer.togglePause) {
+                    Image(systemName: "pause.fill")
+                        .frame(width: 26, height: 26)
+                        .foregroundColor(timer.isPaused ? .black : .primary)
+                        .background(timer.isPaused ? Color(TBTimer.pauseColor) : Color.primary.opacity(0.10))
+                        .cornerRadius(6)
+                }
+                .buttonStyle(.borderless)
+                .accessibilityLabel(Text("Pause"))
+                .accessibilityAddTraits(timer.isPaused ? .isSelected : [])
+                .disabled(!timer.canTogglePause)
+                .opacity(timer.canTogglePause ? 1 : 0.5)
 
-            GroupBox {
-                switch activeChildView {
-                case .intervals:
-                    IntervalsView().environmentObject(timer)
-                case .settings:
-                    SettingsView().environmentObject(timer)
-                case .sounds:
-                    SoundsView().environmentObject(timer.player)
+                Button(action: timer.skipInterval) {
+                    Text("Skip")
+                        .padding(.horizontal, 6)
+                        .frame(minHeight: 26)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .disabled(!timer.canSkipInterval)
+                .opacity(timer.canSkipInterval ? 1 : 0.5)
+            }
+
+            HStack(spacing: 2) {
+                ForEach(TBPanelTab.allCases, id: \.self) { tab in
+                    Button {
+                        if tab == .stats {
+                            showCurrentStats()
+                        } else {
+                            stats.selection.previewDay = nil
+                            stats.tab = tab
+                        }
+                    } label: {
+                        Text(tab.title)
+                            .font(.callout)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                            .frame(maxWidth: .infinity, minHeight: 24)
+                            .background(RoundedRectangle(cornerRadius: 5)
+                                .fill(Color.primary.opacity(stats.tab == tab ? 0.16 : 0)))
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(stats.tab == tab ? .isSelected : [])
                 }
             }
+            .padding(2)
+            .background(RoundedRectangle(cornerRadius: 7).fill(Color.primary.opacity(0.07)))
+
+            GroupBox {
+                switch stats.tab {
+                case .stats:
+                    TBStatsView(model: stats, retry: retryHistory)
+                case .settings:
+                    SettingsView().environmentObject(timer)
+                }
+            }
+            .frame(maxWidth: .infinity)
 
             Group {
                 Button {
@@ -208,29 +297,12 @@ struct TBPopoverView: View {
                 .keyboardShortcut("q")
             }
         }
-        #if DEBUG
-            /*
-             After several hours of Googling and trying various StackOverflow
-             recipes I still haven't figured a reliable way to auto resize
-             popover to fit all it's contents (pull requests are welcome!).
-             The following code block is used to determine the optimal
-             geometry of the popover.
-             */
-            .overlay(
-                GeometryReader { proxy in
-                    debugSize(proxy: proxy)
-                }
-            )
-        #endif
-            /* Use values from GeometryReader */
-//            .frame(width: 240, height: 276)
-            .padding(12)
+        .padding(12)
+        .frame(width: 328)
+        .fixedSize(horizontal: false, vertical: true)
+        .background(GeometryReader { geometry in
+            Color.clear.preference(key: TBPopoverSize.self, value: geometry.size)
+        })
+        .onPreferenceChange(TBPopoverSize.self, perform: resize)
     }
 }
-
-#if DEBUG
-    func debugSize(proxy: GeometryProxy) -> some View {
-        print("Optimal popover size:", proxy.size)
-        return Color.clear
-    }
-#endif

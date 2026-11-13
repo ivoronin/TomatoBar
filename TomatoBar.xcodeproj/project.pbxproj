@@ -19,6 +19,21 @@
 		8AA5B3EB281295DB00BE1A6C /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 8AA5B3EA281295DB00BE1A6C /* KeyboardShortcuts */; };
 		8AA5B3F22812A74600BE1A6C /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA5B3F12812A74600BE1A6C /* Notifications.swift */; };
 		8AEE49AF2AA75A5E00243D2F /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEE49AE2AA75A5E00243D2F /* Log.swift */; };
+		C00100000000000000000001 /* LogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00100000000000000000002 /* LogTests.swift */; };
+		C00100000000000000000003 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEE49AE2AA75A5E00243D2F /* Log.swift */; };
+		C00100000000000000000004 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F700827EE396E0012A1EC /* State.swift */; };
+		C00100000000000000000005 /* SwiftState in Frameworks */ = {isa = PBXBuildFile; productRef = 8A8CFE3F2821D8C300F9F303 /* SwiftState */; };
+		C00200000000000000000003 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00200000000000000000001 /* History.swift */; };
+		C00200000000000000000004 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00200000000000000000001 /* History.swift */; };
+		C00200000000000000000005 /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00200000000000000000002 /* HistoryTests.swift */; };
+		C00300000000000000000003 /* TimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00300000000000000000001 /* TimerTests.swift */; };
+		C00400000000000000000003 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00400000000000000000001 /* Statistics.swift */; };
+		C00500000000000000000002 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00500000000000000000001 /* StatsView.swift */; };
+		C00400000000000000000004 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00400000000000000000001 /* Statistics.swift */; };
+		C00400000000000000000005 /* StatisticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00400000000000000000002 /* StatisticsTests.swift */; };
+		C00300000000000000000004 /* TimerTestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00300000000000000000002 /* TimerTestSupport.swift */; };
+		C00300000000000000000005 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9F701827EE3DAF0012A1EC /* Timer.swift */; };
+		C00300000000000000000006 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 8AA5B3EA281295DB00BE1A6C /* KeyboardShortcuts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +50,15 @@
 		8AEE49AE2AA75A5E00243D2F /* Log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		C4C8DE0E2930DBB4003B1110 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		4CC11A472B6A28500012E8EC /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		C00100000000000000000002 /* LogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogTests.swift; sourceTree = "<group>"; };
+		C00100000000000000000006 /* TomatoBarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TomatoBarTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C00200000000000000000001 /* History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
+		C00200000000000000000002 /* HistoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
+		C00300000000000000000001 /* TimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTests.swift; sourceTree = "<group>"; };
+		C00400000000000000000001 /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
+		C00500000000000000000001 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		C00400000000000000000002 /* StatisticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsTests.swift; sourceTree = "<group>"; };
+		C00300000000000000000002 /* TimerTestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTestSupport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +72,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C00100000000000000000008 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (C00100000000000000000005 /* SwiftState in Frameworks */, C00300000000000000000006 /* KeyboardShortcuts in Frameworks */,);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -56,6 +86,7 @@
 			children = (
 				8A21B78A27EE31A20009E5DB /* TomatoBar */,
 				8A21B78927EE31A20009E5DB /* Products */,
+				C00100000000000000000007 /* TomatoBarTests */,
 				8A9F700D27EE3AED0012A1EC /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -64,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				8A21B78827EE31A20009E5DB /* TomatoBar.app */,
+				C00100000000000000000006 /* TomatoBarTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,6 +105,9 @@
 			children = (
 				8A21B78B27EE31A20009E5DB /* App.swift */,
 				8AEE49AE2AA75A5E00243D2F /* Log.swift */,
+				C00200000000000000000001 /* History.swift */,
+				C00400000000000000000001 /* Statistics.swift */,
+				C00500000000000000000001 /* StatsView.swift */,
 				8A21B78D27EE31A20009E5DB /* View.swift */,
 				8A9F700827EE396E0012A1EC /* State.swift */,
 				8A9F701827EE3DAF0012A1EC /* Timer.swift */,
@@ -90,6 +125,12 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C00100000000000000000007 /* TomatoBarTests */ = {
+			isa = PBXGroup;
+			children = (C00100000000000000000002 /* LogTests.swift */, C00300000000000000000001 /* TimerTests.swift */, C00300000000000000000002 /* TimerTestSupport.swift */, C00200000000000000000002 /* HistoryTests.swift */, C00400000000000000000002 /* StatisticsTests.swift */,);
+			path = TomatoBarTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -117,6 +158,18 @@
 			productName = TomatoBar;
 			productReference = 8A21B78827EE31A20009E5DB /* TomatoBar.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C0010000000000000000000A /* TomatoBarTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0010000000000000000000B /* Build configuration list for PBXNativeTarget "TomatoBarTests" */;
+			buildPhases = (C00100000000000000000009 /* Sources */, C00100000000000000000008 /* Frameworks */,);
+			buildRules = ();
+			dependencies = ();
+			name = TomatoBarTests;
+			packageProductDependencies = (8A8CFE3F2821D8C300F9F303 /* SwiftState */, 8AA5B3EA281295DB00BE1A6C /* KeyboardShortcuts */,);
+			productName = TomatoBarTests;
+			productReference = C00100000000000000000006 /* TomatoBarTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -154,6 +207,7 @@
 			projectRoot = "";
 			targets = (
 				8A21B78727EE31A20009E5DB /* TomatoBar */,
+				C0010000000000000000000A /* TomatoBarTests */,
 			);
 		};
 /* End PBXProject section */
@@ -199,11 +253,31 @@
 			files = (
 				8A9F701F27EE536D0012A1EC /* Player.swift in Sources */,
 				8AEE49AF2AA75A5E00243D2F /* Log.swift in Sources */,
+				C00200000000000000000003 /* History.swift in Sources */,
+				C00400000000000000000003 /* Statistics.swift in Sources */,
+				C00500000000000000000002 /* StatsView.swift in Sources */,
 				8A21B78E27EE31A20009E5DB /* View.swift in Sources */,
 				8A9F701927EE3DAF0012A1EC /* Timer.swift in Sources */,
 				8A21B78C27EE31A20009E5DB /* App.swift in Sources */,
 				8AA5B3F22812A74600BE1A6C /* Notifications.swift in Sources */,
 				8A9F700927EE396E0012A1EC /* State.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C00100000000000000000009 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C00100000000000000000001 /* LogTests.swift in Sources */,
+				C00200000000000000000004 /* History.swift in Sources */,
+				C00400000000000000000004 /* Statistics.swift in Sources */,
+				C00400000000000000000005 /* StatisticsTests.swift in Sources */,
+				C00200000000000000000005 /* HistoryTests.swift in Sources */,
+				C00100000000000000000003 /* Log.swift in Sources */,
+				C00100000000000000000004 /* State.swift in Sources */,
+				C00300000000000000000005 /* Timer.swift in Sources */,
+				C00300000000000000000004 /* TimerTestSupport.swift in Sources */,
+				C00300000000000000000003 /* TimerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +484,34 @@
 			};
 			name = Release;
 		};
+		C0010000000000000000000C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@loader_path/../Frameworks", "@executable_path/../Frameworks",);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBarTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C0010000000000000000000D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@loader_path/../Frameworks", "@executable_path/../Frameworks",);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.ivoronin.TomatoBarTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -428,6 +530,12 @@
 				8A21B79827EE31A30009E5DB /* Debug */,
 				8A21B79927EE31A30009E5DB /* Release */,
 			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0010000000000000000000B /* Build configuration list for PBXNativeTarget "TomatoBarTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (C0010000000000000000000C /* Debug */, C0010000000000000000000D /* Release */,);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
